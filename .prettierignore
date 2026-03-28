@@ -1,0 +1,11 @@
+node_modules/
+
+dist/
+out/
+build/
+release/
+
+*.md
+*.html
+.env*
+package-lock.json

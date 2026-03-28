@@ -1,0 +1,28 @@
+# =========================
+# Dependencias de Node
+# =========================
+node_modules/
+
+# =========================
+# Archivos de compilación (Vite y Electron)
+# =========================
+dist/
+out/
+build/
+release/
+*.tsbuildinfo
+
+# =========================
+# Variables de entorno
+# =========================
+.env
+.env.local
+.env.*.local
+
+# =========================
+# Archivos de Sistema Operativo e IDEs
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
