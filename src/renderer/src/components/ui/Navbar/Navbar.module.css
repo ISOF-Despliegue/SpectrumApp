@@ -1,0 +1,29 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 60px;
+  background-color: #121212;
+  border-bottom: 1px solid #333;
+  color: white;
+}
+
+.logo h1 {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profileCircle {
+  width: 40px;
+  height: 40px;
+  background-color: #555;
+  border-radius: 50%; /* Lo hace redondo */
+}
