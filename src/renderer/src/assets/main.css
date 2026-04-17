@@ -1,4 +1,5 @@
 @import './base.css';
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
 body {
   display: flex;
@@ -32,6 +33,7 @@ code {
   justify-content: center;
   flex-direction: column;
   margin-bottom: 80px;
+  font-family: 'Outfit', sans-serif;
 }
 
 .logo {
