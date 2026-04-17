@@ -25,9 +25,9 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "i18next": "^26.0.4",
+    "i18next": "^26.0.5",
     "i18next-browser-languagedetector": "^8.2.1",
-    "react-i18next": "^17.0.3"
+    "react-i18next": "^17.0.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
