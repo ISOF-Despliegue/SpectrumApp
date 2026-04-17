@@ -7,7 +7,7 @@ import esCommon from './languages/es/common.json';
 import esHome from './languages/es/home.json';
 import esNavbar from './languages/es/navbar.json';
 
-// IEnglish modules
+// English modules
 import enCommon from './languages/en/common.json';
 import enHome from './languages/en/home.json';
 import enNavbar from './languages/en/navbar.json';

@@ -1,7 +1,12 @@
 {
 
-  "title": {
-    "hi ": "¡Hola, "
+  "greeting": "¡Hola, {{name}}!",
+  "nav": {
+    "home": "Inicio",
+    "games": "Videojuegos",
+    "trending": "Tendencias",
+    "clips": "Clips semanales",
+    "cripta": "La Cripta"
   }
 
 }

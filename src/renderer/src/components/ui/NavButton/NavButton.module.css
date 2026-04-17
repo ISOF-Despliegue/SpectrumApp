@@ -1,0 +1,27 @@
+.navBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.navBtn:hover {
+  color: #6200ee;
+}
+
+.cripta {
+  color: #a3a3a3; /* Color más tétrico */
+}
+
+.web {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+}

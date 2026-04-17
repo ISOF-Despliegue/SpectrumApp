@@ -1,18 +1,35 @@
-.navbar {
+.navbarContainer {
+  width: 100%;
+  background-color: #121212;
+  border-bottom: 2px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nivel superior */
+.topBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  height: 60px;
-  background-color: #121212;
-  border-bottom: 1px solid #333;
-  color: white;
+  padding: 10px 30px;
 }
 
-.logo h1 {
-  font-size: 24px;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.charImg {
+  height: 50px; /* Ajusta según tu PNG */
+  width: auto;
+}
+
+.logoText {
+  font-size: 1.8rem;
   font-weight: bold;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  color: white;
 }
 
 .userSection {
@@ -21,9 +38,37 @@
   gap: 15px;
 }
 
+.greeting {
+  color: #ccc;
+  font-style: italic;
+}
+
+.profileBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 .profileCircle {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background-color: #555;
-  border-radius: 50%; /* Lo hace redondo */
+  border-radius: 50%;
+  border: 2px solid #6200ee;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.profileCircle:hover {
+  transform: scale(1.1);
+}
+
+/* Nivel inferior (Los botones) */
+.navBar {
+  display: flex;
+  justify-content: center; /* Centramos los botones de navegación */
+  gap: 40px;
+  padding: 5px 0;
+  background-color: #1a1a1a; /* Un tono ligeramente distinto */
 }
