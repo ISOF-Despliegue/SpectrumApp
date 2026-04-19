@@ -1,0 +1,21 @@
+/* src/renderer/src/assets/styles/main.css */
+@import './variables.css';
+@import './reset.css';
+@import './typography.css';
+
+body {
+  background-color: var(--color-background);
+  background-image: url('../wavy-lines.svg');
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

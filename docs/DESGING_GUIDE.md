@@ -1,5 +1,17 @@
 # GUÍA DE DISEÑO
 
+## Intro y contexto
+
+### Distribución de styles (src/assets/styles)
+
+**variables.css:** Define el "qué" (qué colores, qué fuentes).
+
+**typography.css:** Define el "cómo" para los textos (el h1 se ve así, el p se ve asá).
+
+**reset.css:** Limpia los errores que traen los navegadores por defecto.
+
+**main.css:** Es el "pegamento" que importa los tres anteriores y maneja el diseño general de la pantalla (el fondo, el contenedor).
+
 ## 1. Fondo de páginas
 **Degradado:** #2b2146  a #5e4a87
 

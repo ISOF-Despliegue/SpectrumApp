@@ -1,0 +1,28 @@
+body {
+  font-family: var(--font-global);
+  text-rendering: optimizeLegibility;
+}
+
+h1 {
+  color: var(--color-brand-accent);
+  font-weight: bold;
+  font-size: 30px;
+}
+
+h2 {
+  color: var(--color-white);
+  font-weight: 400;
+  font-size: 22px;
+}
+
+p {
+  color: var(--color-white);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.smallText {
+  color: var(--color-white);
+  font-size: 12px;
+}
