@@ -1,22 +1,34 @@
 .adminPage {
   min-height: 100vh;
+  width: 100%;
+  max-width: 1200px;
   padding: 2rem;
   background: radial-gradient(circle at top, #132945 0%, #0b1726 55%, #060f1b 100%);
   color: #f7fafc;
-  width: 100%;
   display: flex;
   flex-direction: column;
   border: 1px solid #1f2a56;
 }
 
+.logoutButton {
+  align-self: flex-start;
+  margin-bottom: 1rem;
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #ef4444;
+  color: #ffffff;
+  cursor: pointer;
+}
+
 .topBanner {
-  min-height: 100px;
+  min-height: 120px;
   border-bottom: 1px solid #1f2a56;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  margin-bottom: 2rem;
+  padding: 1rem 0 1.5rem;
+  margin-bottom: 1.5rem;
   gap: 1rem;
   flex-wrap: wrap;
 }
@@ -27,23 +39,31 @@
   gap: 1rem;
 }
 
+.brandText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .logoPlaceholder {
-  width: 80px;
-  min-height: 80px;
+  width: 84px;
+  height: 84px;
   display: grid;
   place-items: center;
   border: 1px solid #1f2a56;
-  text-align: center;
   border-radius: 12px;
   background-color: rgba(15, 23, 42, 0.55);
   color: #cbd5e0;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  text-align: center;
   padding: 0.5rem;
 }
 
 .brandTitle {
   margin: 0;
-  color: #cbd5e0;
+  color: #e2e8f0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
 }
 
 .profileSummary {
@@ -52,12 +72,98 @@
   gap: 1rem;
 }
 
+.profileName {
+  margin: 0;
+  color: #f8fafc;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
 .avatarPlaceholder {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   border: 1px solid #1f2a56;
   background-color: rgba(15, 23, 42, 0.55);
+}
+
+.bodyLayout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar {
+  border-right: 1px solid #1f2a56;
+  padding-right: 1rem;
+  min-height: 100%;
+}
+
+.sidebarNav {
+  width: 100%;
+}
+
+.sidebarList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarItem {
+  width: 100%;
+}
+
+.sidebarButton {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #1f2a56;
+  background: transparent;
+  color: #f7fafc;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
+}
+
+.sidebarButton:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  background-color: rgba(49, 130, 206, 0.12);
+}
+
+.sidebarButton:focus-visible {
+  outline: 3px solid #90cdf4;
+  outline-offset: 2px;
+}
+
+.sidebarButtonActive {
+  background: linear-gradient(135deg, #3182ce, #2b6cb0);
+  color: #ffffff;
+  font-weight: 700;
+  border-color: transparent;
+}
+
+.contentArea {
+  min-width: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.contentPanel {
+  width: 100%;
+  min-height: 100%;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero {
@@ -88,48 +194,6 @@
   margin: 0;
   color: #cbd5e0;
   max-width: 70ch;
-}
-
-.bodyLayout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: calc(100vh - 100px);
-  gap: 1.5rem;
-}
-
-.sidebar {
-  border-right: 1px solid #1f2a56;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding-right: 1rem;
-}
-
-.sidebarButton {
-  min-height: 48px;
-  border: 1px solid #1f2a56;
-  background: transparent;
-  color: #f7fafc;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  cursor: pointer;
-  transition: transform 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
-}
-
-.sidebarButton:hover {
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  background-color: rgba(49, 130, 206, 0.12);
-}
-
-.sidebarButton:focus-visible {
-  outline: 3px solid #90cdf4;
-  outline-offset: 2px;
-}
-
-.contentArea {
-  padding: 1.5rem;
 }
 
 .actionsSection {
@@ -202,7 +266,11 @@
   outline-offset: 2px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .adminPage {
+    padding: 1rem;
+  }
+
   .bodyLayout {
     grid-template-columns: 1fr;
   }
@@ -214,7 +282,11 @@
     padding-bottom: 1rem;
   }
 
-  .contentArea {
+  .sidebarList {
+    gap: 0.5rem;
+  }
+
+  .contentPanel {
     padding: 1rem 0 0;
   }
 }
