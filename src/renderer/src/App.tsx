@@ -16,6 +16,7 @@ function App(): React.JSX.Element {
         <Login
           onSwitchToRegister={() => setCurrentView('register')}
           onLoginSuccess={() => setCurrentView('home')}
+           onGoToAdmin={() => setCurrentView('admin')}
         />
       )
     case 'register':

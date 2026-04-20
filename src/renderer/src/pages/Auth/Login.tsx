@@ -5,9 +5,10 @@ import styles from "./Auth.module.css";
 interface LoginProps {
   onSwitchToRegister: () => void;
   onLoginSuccess: () => void;
+  onGoToAdmin: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onSwitchToRegister, onLoginSuccess }) => {
+export const Login: React.FC<LoginProps> = ({ onSwitchToRegister, onLoginSuccess, onGoToAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -57,6 +58,11 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister, onLoginSuccess
           </svg>
           Continuar con Google
         </button>
+
+        <button type="button" onClick={onGoToAdmin}>
+          Ir al panel de admin
+        </button>
+
         <p className={styles.switchLink}>
           ¿No tienes cuenta?
           <span className={styles.accentText} onClick={onSwitchToRegister}>
