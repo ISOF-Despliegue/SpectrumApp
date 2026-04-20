@@ -42,32 +42,71 @@ const ADMIN_ACTIONS: AdminAction[] = [
 export const Admin = () => {
   return (
     <main className={styles.adminPage}>
-      <header className={styles.hero}>
-        <p className={styles.badge}>SpectrumApp · Administración</p>
-        <h1 className={styles.title}>Panel principal de administrador</h1>
-        <p className={styles.subtitle}>
-          Accesos rápidos a las operaciones críticas para monitoreo, moderación y gestión de cuentas.
-        </p>
-      </header>
-
-      <section className={styles.actionsSection} aria-labelledby="admin-actions-title">
-        <h2 id="admin-actions-title" className={styles.sectionTitle}>
-          Acciones disponibles
-        </h2>
-
-        <div className={styles.actionsGrid}>
-          {ADMIN_ACTIONS.map((action) => (
-            <article key={action.id} className={styles.actionCard}>
-              <p className={styles.actionId}>{action.id}</p>
-              <h3 className={styles.actionTitle}>{action.title}</h3>
-              <p className={styles.actionDescription}>{action.description}</p>
-              <button type="button" className={styles.actionButton}>
-                Ir a módulo
-              </button>
-            </article>
-          ))}
+      <div className={styles.topBanner}>
+        <div className={styles.brandContainer}>
+          <div className={styles.logoPlaceholder}>Logo</div>
+          <div>
+            <p className={styles.badge}>SpectrumApp · Administración</p>
+            <h2 className={styles.brandTitle}>Panel de control</h2>
+          </div>
         </div>
-      </section>
+
+        <div className={styles.profileSummary}>
+          <div className={styles.avatarPlaceholder} />
+          <div>
+            <p className={styles.badge}>Administrador</p>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.bodyLayout}>
+        <aside className={styles.sidebar} aria-label="Navegación del administrador">
+          <button type="button" className={styles.sidebarButton}>
+            Dashboard
+          </button>
+          <button type="button" className={styles.sidebarButton}>
+            Reseñas
+          </button>
+          <button type="button" className={styles.sidebarButton}>
+            Usuarios
+          </button>
+          <button type="button" className={styles.sidebarButton}>
+            Permisos
+          </button>
+          <button type="button" className={styles.sidebarButton}>
+            Configuración
+          </button>
+        </aside>
+
+        <div className={styles.contentArea}>
+          <header className={styles.hero}>
+            <h1 className={styles.title}>Panel principal de administrador</h1>
+            <p className={styles.subtitle}>
+              Accesos rápidos a las operaciones críticas para monitoreo, moderación y gestión de
+              cuentas.
+            </p>
+          </header>
+
+          <section className={styles.actionsSection} aria-labelledby="admin-actions-title">
+            <h2 id="admin-actions-title" className={styles.sectionTitle}>
+              Acciones disponibles
+            </h2>
+
+            <div className={styles.actionsGrid}>
+              {ADMIN_ACTIONS.map((action) => (
+                <article key={action.id} className={styles.actionCard}>
+                  <p className={styles.actionId}>{action.id}</p>
+                  <h3 className={styles.actionTitle}>{action.title}</h3>
+                  <p className={styles.actionDescription}>{action.description}</p>
+                  <button type="button" className={styles.actionButton}>
+                    Ir a módulo
+                  </button>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
   );
 };

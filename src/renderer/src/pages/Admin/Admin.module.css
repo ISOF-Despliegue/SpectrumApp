@@ -3,11 +3,67 @@
   padding: 2rem;
   background: radial-gradient(circle at top, #132945 0%, #0b1726 55%, #060f1b 100%);
   color: #f7fafc;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #1f2a56;
+}
+
+.topBanner {
+  min-height: 100px;
+  border-bottom: 1px solid #1f2a56;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.brandContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logoPlaceholder {
+  width: 80px;
+  min-height: 80px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #1f2a56;
+  text-align: center;
+  border-radius: 12px;
+  background-color: rgba(15, 23, 42, 0.55);
+  color: #cbd5e0;
+  font-size: 0.85rem;
+  padding: 0.5rem;
+}
+
+.brandTitle {
+  margin: 0;
+  color: #cbd5e0;
+}
+
+.profileSummary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatarPlaceholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid #1f2a56;
+  background-color: rgba(15, 23, 42, 0.55);
 }
 
 .hero {
   max-width: 900px;
   margin: 0 auto 2rem;
+  width: 100%;
 }
 
 .badge {
@@ -34,9 +90,52 @@
   max-width: 70ch;
 }
 
+.bodyLayout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 100px);
+  gap: 1.5rem;
+}
+
+.sidebar {
+  border-right: 1px solid #1f2a56;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 1rem;
+}
+
+.sidebarButton {
+  min-height: 48px;
+  border: 1px solid #1f2a56;
+  background: transparent;
+  color: #f7fafc;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
+}
+
+.sidebarButton:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  background-color: rgba(49, 130, 206, 0.12);
+}
+
+.sidebarButton:focus-visible {
+  outline: 3px solid #90cdf4;
+  outline-offset: 2px;
+}
+
+.contentArea {
+  padding: 1.5rem;
+}
+
 .actionsSection {
   max-width: 1100px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .sectionTitle {
@@ -101,4 +200,21 @@
 .actionButton:focus-visible {
   outline: 3px solid #90cdf4;
   outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .bodyLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid #1f2a56;
+    padding-right: 0;
+    padding-bottom: 1rem;
+  }
+
+  .contentArea {
+    padding: 1rem 0 0;
+  }
 }
