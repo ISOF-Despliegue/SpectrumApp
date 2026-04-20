@@ -4,14 +4,18 @@
   color: #fff;
   padding: 10px 20px;
   cursor: pointer;
-  font-family: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1rem;
   transition: all 0.3s;
   position: relative;
 }
 
 .navBtn:hover {
-  color: #6200ee;
+  color: #b770ea;
+}
+
+.navBtn:active {
+  color: #e8c8ff;
 }
 
 .cripta {

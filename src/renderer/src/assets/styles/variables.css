@@ -1,0 +1,14 @@
+/* src/renderer/src/assets/styles/variables.css */
+:root {
+  /* Typhografy */
+  --font-global: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Colors */
+  --color-white: #ffffff;
+  --color-brand-accent: #ad5c96;
+  --color-background: #1b1b1f;
+
+  /* Variables de tu repo original para compatibilidad */
+  --ev-c-black: #1b1b1f;
+  --ev-c-text-1: rgba(255, 255, 245, 0.86);
+}
