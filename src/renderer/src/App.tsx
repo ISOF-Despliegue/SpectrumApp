@@ -12,29 +12,6 @@ import { AdminManageReviews } from './pages/Admin/Admin_ManageReviews';
 import { AdminManageEvents } from './pages/Admin/Admin_ManageEvents';
 import { AdminManageAdmins } from './pages/Admin/Admin_ManageAdmins';
 
-const LoginPage = (): React.JSX.Element => {
-  const navigate = useNavigate();
-
-  return (
-    <Login
-      onSwitchToRegister={() => navigate('/register')}
-      onLoginSuccess={() => navigate('/home')}
-      onGoToAdmin={() => navigate('/admin')}
-    />
-  );
-};
-
-const RegisterPage = (): React.JSX.Element => {
-  const navigate = useNavigate();
-
-  return (
-    <Register
-      onSwitchToLogin={() => navigate('/login')}
-      onRegisterSuccess={() => navigate('/home')}
-    />
-  );
-};
-
 const HomePage = (): React.JSX.Element => {
   const navigate = useNavigate();
 
@@ -68,8 +45,10 @@ function App(): React.JSX.Element {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         <Route path="/home" element={<HomePage />} />
 
         <Route path="/admin" element={<Admin />}>

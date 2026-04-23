@@ -6,11 +6,13 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import esCommon from './languages/es/common.json';
 import esHome from './languages/es/home.json';
 import esNavbar from './languages/es/navbar.json';
+import esAuth from './languages/es/auth.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
 import enHome from './languages/en/home.json';
 import enNavbar from './languages/en/navbar.json';
+import enAuth from './languages/en/auth.json';
 
 i18n
   .use(LanguageDetector)
@@ -21,11 +23,13 @@ i18n
         common: esCommon,
         home: esHome,
         navbar: esNavbar,
+        auth: esAuth,
       },
       en: {
         common: enCommon,
         home: enHome,
         navbar: enNavbar,
+        auth: enAuth,
       }
     },
     fallbackLng: 'es',
