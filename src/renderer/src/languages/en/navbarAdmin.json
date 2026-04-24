@@ -1,0 +1,13 @@
+{
+
+  "navbar": {
+    "myProfile": "My profile",
+    "globalMetrics": "Global metrics",
+    "adminUsers": "Admin users",
+    "adminReviews": "Admin reviews",
+    "adminEvents": "Admin events",
+    "adminReports": "Admin reports",
+    "adminsManagement": "Admins management"
+  }
+
+}
