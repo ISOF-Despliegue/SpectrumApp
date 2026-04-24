@@ -1,6 +1,6 @@
 import styles from './Home.module.css';
 import { useTranslation } from 'react-i18next';
-import { NavAdminButton } from '../../components/NavAdminButton';
+import { NavAdminButton } from '../../components/ui/NavAdminButton';
 
 export const Home = () => {
 const { t } = useTranslation('navbar');
