@@ -1,9 +1,7 @@
-.profileCircle {
-  width: 55px;
-  height: 55px;
+.gameCard {
+  width: 92px;
+  height: 120px;
   background-color: #222;
-  border-radius: 50%;
-  border: 1px solid #800493;
   cursor: pointer;
   padding: 0;
   overflow: hidden;
@@ -13,12 +11,11 @@
   transition: transform 0.2s ease;
 }
 
-.profileCircle:hover {
+.gameCard:hover {
   transform: scale(1.05);
-  border-color: #ad5c96;
 }
 
-.avatarImage {
+.gameCardImage {
   width: 100%;
   height: 100%;
   object-fit: cover;

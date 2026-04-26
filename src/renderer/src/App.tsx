@@ -16,7 +16,7 @@ const HomePage = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   return (
-    <MainLayout>
+    <MainLayout isScrollable={true}>
       <button
         style={{
           position: 'absolute',
