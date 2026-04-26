@@ -46,7 +46,7 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
             <NavButton label={t('nav.games')} />
             <NavButton label={t('nav.trending')} />
             <NavButton label={t('nav.clips')} />
-            <NavButton label={t('nav.cripta')} isCripta={true} />
+            <NavButton label={t('nav.cripta')}/>
           </nav>
         )}
       </div>

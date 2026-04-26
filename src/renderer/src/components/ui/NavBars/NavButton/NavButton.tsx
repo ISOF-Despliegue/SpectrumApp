@@ -1,19 +1,23 @@
+import React from 'react';
 import styles from './NavButton.module.css';
 
 interface NavButtonProps {
   label: string;
-  isCripta?: boolean;
+  isActive?: boolean;
   onClick?: () => void;
 }
 
-export const NavButton = ({ label, isCripta, onClick }: NavButtonProps) => {
+export const NavButton: React.FC<NavButtonProps> = ({ label, isActive, onClick }) => {
   return (
     <button
-      className={`${styles.navBtn} ${isCripta ? styles.cripta : ''}`}
+      className={`${styles.navButton} ${isActive ? styles.active : ''}`}
       onClick={onClick}
     >
-      {label}
-      {isCripta && <span className={styles.web}>🕸️</span>}
+      <div className={styles.purpleFilm} />
+
+      <span className={styles.label}>{label}</span>
+
+      <div className={styles.neonLine} />
     </button>
   );
 };

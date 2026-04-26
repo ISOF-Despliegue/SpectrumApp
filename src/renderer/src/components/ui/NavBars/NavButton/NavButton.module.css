@@ -1,31 +1,95 @@
-.navBtn {
-  background: none;
-  border: none;
-  color: #fff;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1rem;
-  transition: all 0.3s;
+.navButton {
   position: relative;
+  background: rgba(10, 10, 10, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 28px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  backdrop-filter: blur(8px);
+  border-radius: 4px;
 }
 
-.navBtn:hover {
-  color: #b770ea;
-}
-
-.navBtn:active {
-  color: #e8c8ff;
-}
-
-.cripta {
-  color: #a3a3a3; /* Color más tétrico */
-}
-
-.web {
+.purpleFilm {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  font-size: 1.2rem;
-  opacity: 0.7;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(138, 43, 226, 0.35) 0%,
+    rgba(75, 0, 130, 0.1) 40%,
+    rgba(138, 43, 226, 0.15) 100%
+  );
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.navButton::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%
+  );
+  transform: rotate(35deg);
+  transition: transform 0.6s ease;
+}
+
+.label {
+  position: relative;
+  color: #d1c7ff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  z-index: 1;
+  text-shadow: 0 0 8px rgba(138, 43, 226, 0.4);
+}
+
+.neonLine {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8a2be2, #00ff7f);
+  box-shadow: 0 0 12px rgba(0, 255, 127, 0.6);
+  transition: width 0.4s ease, left 0.4s ease;
+}
+
+.navButton:hover {
+  background: rgba(20, 20, 20, 0.85);
+  border-color: rgba(181, 102, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.navButton:hover::after {
+  transform: rotate(35deg) translate(10%, 10%);
+}
+
+.navButton:hover .purpleFilm {
+  opacity: 5;
+}
+
+.navButton:hover .neonLine,
+.navButton.active .neonLine {
+  width: 100%;
+  left: 0;
+}
+
+.navButton.active {
+  background: rgba(30, 0, 60, 0.3); /* Un tono morado muy sutil al estar activo */
+  border-color: #00ff7f;
 }

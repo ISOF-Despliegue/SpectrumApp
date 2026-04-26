@@ -7,6 +7,7 @@ import { ProfileImageMedium } from '@renderer/components/ui/ProfileImageMedium';
 import { GameCard } from '@renderer/components/ui/GameCard';
 import { GameCardMedium } from '@renderer/components/ui/GameCardMedium';
 import { GameCardBig } from '@renderer/components/ui/GameCardBig';
+import { GlassContainer } from '@renderer/components/ui/GlassContainer';
 
 export const Home = (onProfileClick) => {
 const { t } = useTranslation('navbar');
@@ -47,6 +48,10 @@ const { t } = useTranslation('navbar');
                         imageUrl={undefined}
                         onClick={onProfileClick}
           />
+
+          <GlassContainer>
+            <p>Contenido dentro del contenedor de cristal</p>
+          </GlassContainer>
 
 
         </main>
