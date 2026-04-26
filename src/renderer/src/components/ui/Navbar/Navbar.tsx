@@ -33,7 +33,6 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Fila 2: Botones de navegación */}
         <nav className={styles.bottomRow}>
           <NavButton label={t('nav.home')} />
           <NavButton label={t('nav.games')} />
