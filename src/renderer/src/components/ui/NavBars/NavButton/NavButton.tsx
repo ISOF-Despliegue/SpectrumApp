@@ -2,7 +2,7 @@ import styles from './NavButton.module.css';
 
 interface NavButtonProps {
   label: string;
-  isCripta?: boolean; // Para saber si le ponemos las telarañas
+  isCripta?: boolean;
   onClick?: () => void;
 }
 

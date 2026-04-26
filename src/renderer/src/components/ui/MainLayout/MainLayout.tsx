@@ -1,4 +1,4 @@
-import { Navbar } from '../Navbar';
+import { Navbar } from '../NavBars/Navbar';
 import styles from './MainLayout.module.css';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 export const MainLayout = ({ children }: Props) => {
   return (
     <div className={styles.layoutContainer}>
-      <Navbar />
+      <Navbar onProfileClick={() => {}} />
 
       <main className={styles.mainContent}>
         {children}
