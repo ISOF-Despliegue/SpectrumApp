@@ -1,11 +1,11 @@
-import styles from './ProfileImage.module.css';
+import styles from './ProfileImageMedium.module.css';
 
-interface ProfileImageProps {
+interface ProfileImageMediumProps {
   imageUrl?: string;
   onClick: () => void;
 }
 
-export const ProfileImage = ({ imageUrl, onClick }: ProfileImageProps) => {
+export const ProfileImageMedium = ({ imageUrl, onClick }: ProfileImageMediumProps) => {
   const defaultImage = "https://via.placeholder.com/150";
 
   return (

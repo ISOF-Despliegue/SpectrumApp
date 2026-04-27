@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { NavAdminButton } from '../NavAdminButton';
 import styles from './NavbarAdmin.module.css';
 
-export const Navbar = () => {
+export const NavbarAdmin = () => {
   const { t } = useTranslation('navbar');
 
   return (

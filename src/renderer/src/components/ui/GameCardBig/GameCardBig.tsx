@@ -1,11 +1,11 @@
-import styles from './GameCard.module.css';
+import styles from './GameCardBig.module.css';
 
-interface GameCardProps {
+interface GameCardBigProps {
   imageUrl?: string;
   onClick: () => void;
 }
 
-export const GameCard = ({ imageUrl, onClick }: GameCardProps) => {
+export const GameCardBig = ({ imageUrl, onClick }: GameCardBigProps) => {
   const defaultImage = "https://via.placeholder.com/150";
 
   return (
