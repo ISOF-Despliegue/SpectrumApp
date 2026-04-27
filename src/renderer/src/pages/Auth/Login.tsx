@@ -97,6 +97,14 @@ export const Login: React.FC = () => {
             />
           </div>
 
+          <button
+            type="button"
+            className={styles.adminAccessButton}
+            onClick={() => navigate('/admin/my-profile')}
+          >
+          Ir al perfil de administrador
+          </button>
+
           <p className={styles.switchLink}>
             {t('noAccount')}
             <span className={styles.accentText} onClick={() => navigate('/register')}>

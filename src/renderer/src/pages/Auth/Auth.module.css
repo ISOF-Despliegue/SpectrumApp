@@ -21,6 +21,26 @@
   overflow: hidden;
 }
 
+.adminAccessButton {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--bg-button-gradient);
+  color: var(--color-white);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  box-shadow: 0 8px 20px var(--color-button-glow);
+  transition: all 0.2s ease;
+}
+
+.adminAccessButton:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
 .formSide {
   flex: 1;
   padding: 4rem 5rem;
