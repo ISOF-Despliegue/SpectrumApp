@@ -1,8 +1,9 @@
 import React from 'react';
-import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { useLocation, Routes, Route, Navigate, HashRouter } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Login } from './pages/Auth/Login';
 import { Register } from './pages/Auth/Register';
+import { Games } from './pages/Games';
 import { MainLayout } from './components/ui/MainLayout';
 import { Admin } from './pages/Admin';
 import { AdminMyProfile } from './pages/Admin/Admin_MyProfile';
@@ -12,44 +13,23 @@ import { AdminManageReviews } from './pages/Admin/Admin_ManageReviews';
 import { AdminManageEvents } from './pages/Admin/Admin_ManageEvents';
 import { AdminManageAdmins } from './pages/Admin/Admin_ManageAdmins';
 
-const HomePage = (): React.JSX.Element => {
-  const navigate = useNavigate();
+function AppContent(): React.JSX.Element {
+  const location = useLocation();
+  const isAuthRoute = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
-    <MainLayout isScrollable={true}>
-      <button
-        style={{
-          position: 'absolute',
-          top: '260px',
-          right: '20px',
-          padding: '0.5rem',
-          background: '#e53e3e',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          zIndex: 10
-        }}
-        onClick={() => navigate('/login')}
-      >
-        Cerrar Sesión (Demo)
-      </button>
-
-      <Home />
-    </MainLayout>
-  );
-};
-
-function App(): React.JSX.Element {
-  return (
-    <HashRouter>
+    <MainLayout
+      isScrollable={true}
+      showNavbar={!isAuthRoute}
+      hideNavigation={isAdminRoute}
+    >
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/games" element={<Games />} />
 
         <Route path="/admin" element={<Admin />}>
           <Route index element={<Navigate to="my-profile" replace />} />
@@ -63,6 +43,14 @@ function App(): React.JSX.Element {
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+    </MainLayout>
+  );
+}
+
+function App(): React.JSX.Element {
+  return (
+    <HashRouter>
+      <AppContent />
     </HashRouter>
   );
 }

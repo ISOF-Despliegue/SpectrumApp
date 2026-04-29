@@ -90,6 +90,17 @@
 }
 
 .navButton.active {
-  background: rgba(30, 0, 60, 0.3); /* Un tono morado muy sutil al estar activo */
+  background: rgba(30, 0, 60, 0.3);
   border-color: #00ff7f;
+}
+
+@media (max-width: 768px) {
+  .navButton {
+    padding: 8px 16px;
+  }
+
+  .label {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
 }

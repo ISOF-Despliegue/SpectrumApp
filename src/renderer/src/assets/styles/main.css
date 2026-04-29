@@ -3,21 +3,16 @@
 @import './reset.css';
 @import './typography.css';
 
+body, #root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: var(--color-background);
   background-image: url('../wavy-lines.svg');
   background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  height: auto;
-}
-
-#root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: auto;
+  overflow-y: auto;
 }
