@@ -1,6 +1,6 @@
 .sidebar {
   width: 200px;
-  height: calc(100vh - 60px); /* Ocupa todo el alto menos el Navbar */
+  height: calc(100vh - 60px);
   background-color: #121212;
   border-right: 1px solid #333;
   padding: 20px 0;
@@ -8,7 +8,7 @@
 }
 
 .menuList {
-  list-style: none; /* Quita los puntos de la lista */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
@@ -21,6 +21,6 @@
 }
 
 .menuItem:hover {
-  background-color: #1e1e1e; /* Color al pasar el mouse */
-  color: #6200ee; /* Morado Spectrum */
+  background-color: #1e1e1e;
+  color: #6200ee;
 }
