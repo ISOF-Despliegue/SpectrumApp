@@ -15,8 +15,8 @@ import enCommon from './languages/en/common.json';
 import enHome from './languages/en/home.json';
 import enNavbar from './languages/en/navbar.json';
 import enAuth from './languages/en/auth.json';
-import enGames from './languages/es/games.json';
-import enFooter from './languages/es/footer.json';
+import enGames from './languages/en/games.json';
+import enFooter from './languages/en/footer.json';
 
 i18n
   .use(LanguageDetector)
