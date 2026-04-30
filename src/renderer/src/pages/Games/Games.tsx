@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { useState,  useEffect} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../../components/ui/Input';
 import { GameCardBig } from '../../components/ui/GameCardBig'; //
+import { getGames, Game } from '../../services/games.service';
 import styles from './Games.module.css';
 
 export const Games = () => {
   const { t: tGames } = useTranslation('games'); //
   const { t: tCommon } = useTranslation('common'); //
 
-  const gamesData = [
-    { id: 1, title: 'Halo Infinite', image: 'https://via.placeholder.com/600x350' },
-    { id: 2, title: 'Elden Ring', image: 'https://via.placeholder.com/600x350' },
-    { id: 3, title: 'Cyberpunk 2077', image: 'https://via.placeholder.com/600x350' },
-    { id: 4, title: 'Fortnite', image: 'https://via.placeholder.com/600x350' },
-    { id: 5, title: 'Minecraft', image: 'https://via.placeholder.com/600x350' },
-    { id: 6, title: 'Brawl Stars', image: 'https://via.placeholder.com/600x350' },
-  ];
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+
+ const fetchGames = async (searchTerm?: string) => {
+    try {
+      setLoading(true);
+      const data = await getGames(searchTerm);
+      setGames(data);
+    } catch (error) {
+      console.error("No se pudieron cargar los juegos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGames();
+  }, []);
 
   return (
     <div className={styles.gamesPage}>
@@ -24,12 +35,11 @@ export const Games = () => {
 
         <h1>{tGames('general.videogames')}</h1>
 
-        <div className={styles.searchBlock}>
-
-          <h2>{tCommon('searchers.searchByName')}:</h2>
+          <div className={styles.searchBlock}>
+          <p>{tCommon('searchers.searchByName')}:</p>
           <div className={styles.inputWrapper}>
             <Input
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => fetchGames(e.target.value)}
             />
           </div>
 
@@ -38,17 +48,19 @@ export const Games = () => {
       </header>
 
       <div className={styles.gamesGrid}>
-
-        {gamesData.map((game) => (
-          <div key={game.id} className={styles.gameWrapper}>
-            <GameCardBig
-              imageUrl={game.image}
-              onClick={() => console.log(`Clic en ${game.title}`)}
-            />
-            <p className={styles.gameLabel}>{game.title}</p>
-          </div>
-        ))}
-
+        {loading ? (
+          <p style={{ color: 'white' }}>Cargando catálogo...</p>
+        ) : (
+          games.map((game) => (
+            <div key={game.id} className={styles.gameWrapper}>
+              <GameCardBig
+                imageUrl={game.imageUrl}
+                onClick={() => console.log(`Detalles de ${game.title}`)}
+              />
+              <p className={styles.gameLabel}>{game.title}</p>
+            </div>
+          ))
+        )}
       </div>
 
     </div>
