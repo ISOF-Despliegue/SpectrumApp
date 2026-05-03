@@ -1,0 +1,40 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0;
+  margin-top: 20px;
+}
+
+.pageBtn {
+  background: rgba(138, 43, 226, 0.1);
+  border: 1px solid #8a2be2;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background: #8a2be2;
+  box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.pageBtn.active {
+  background: #8a2be2;
+  font-weight: bold;
+}
+
+.pageBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.totalInfo {
+  color: #d1c7ff;
+  font-size: 0.85rem;
+  margin-left: 15px;
+}

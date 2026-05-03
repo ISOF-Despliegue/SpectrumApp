@@ -1,24 +1,23 @@
 .gamesPage {
   width: 100%;
-  padding: 20px 40px; /* Reducido para que no esté tan despegado */
+  padding: 20px 40px;
   display: flex;
   flex-direction: column;
-  gap: 30px; /* Espacio reducido entre header y grid */
+  gap: 30px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Alineación vertical perfecta */
+  align-items: center;
   width: 100%;
   gap: 20px;
 }
 
-/* Buscador: Texto e Input en la misma fila */
 .searchBlock {
   display: flex;
   align-items: center;
-  gap: 15px; /* Espacio entre el texto y la barra */
+  gap: 15px;
   flex: 1;
   max-width: 500px;
 }
@@ -27,7 +26,7 @@
   color: #d1c7ff;
   font-size: 0.9rem;
   font-weight: 600;
-  white-space: nowrap; /* Evita que el texto se parta en dos líneas */
+  white-space: nowrap;
   margin: 0;
 }
 
@@ -38,16 +37,15 @@
 /* Cuadrícula compacta */
 .gamesGrid {
   display: grid;
-  /* Ajustado a 280px para que quepan más carátulas por fila */
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px; /* Espacio reducido entre juegos */
+  gap: 20px;
   width: 100%;
 }
 
 .gameWrapper {
   display: flex;
   flex-direction: column;
-  align-items: center; /* CENTRA TODO EL CONTENIDO (Card + Texto) */
+  align-items: center;
   gap: 10px;
 }
 
@@ -56,13 +54,12 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: 600;
-  text-align: center; /* Texto centrado */
+  text-align: center;
   margin: 0;
   width: 100%;
   opacity: 0.85;
 }
 
-/* Responsividad */
 @media (max-width: 900px) {
   .header {
     flex-direction: column;

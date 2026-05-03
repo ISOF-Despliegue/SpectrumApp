@@ -1,32 +1,38 @@
-// src/renderer/src/services/games.service.ts
 import { api } from './api';
 
 export interface Game {
   id: number;
   title: string;
   imageUrl: string;
-  description?: string;
-  releaseDate?: string;
 }
 
-export const getGames = async (search?: string): Promise<Game[]> => {
+export interface PagedResponse<T> {
+  items: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export const getGames = async (search?: string, page: number = 1): Promise<PagedResponse<Game>> => {
   try {
-    const response = await api.get<any[]>('/Games/search', {
+    const response = await api.get<PagedResponse<any>>('/Games/search', {
       params: {
         Search: search,
+        Page: page,
         PageSize: 40
       }
     });
 
-    console.log("Primer juego:", response.data[0]);
-
-    return response.data.map((game: any) => ({
-      id: game.id,
-      title: game.name,
-      imageUrl: game.background_image ?? null,
-      description: game.description,
-      releaseDate: game.released
-    }));
+    const data = response.data;
+    return {
+      ...data,
+      items: data.items.map((game: any) => ({
+        id: game.id,
+        title: game.name,
+        imageUrl: game.backgroundImage || game.background_image || null
+      }))
+    };
   } catch (error) {
     console.error("Error al obtener los juegos:", error);
     throw error;

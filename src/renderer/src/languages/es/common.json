@@ -1,6 +1,12 @@
 {
   "searchers": {
     "searchByName": "Buscar por nombre"
+  },
+
+    "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageInfo": "Página {{current}} de {{total}}"
   }
 }
 

@@ -1,6 +1,11 @@
 {
   "general": {
     "videogames": "Videojuegos"
+  },
+
+  "status": {
+    "loading": "Cargando catálogo...",
+    "noResults": "No se encontraron juegos para \"{{term}}\""
   }
 }
 
