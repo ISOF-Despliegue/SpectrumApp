@@ -12,6 +12,7 @@ import { AdminManageUsers } from './pages/Admin/Admin_ManageUsers';
 import { AdminManageReviews } from './pages/Admin/Admin_ManageReviews';
 import { AdminManageEvents } from './pages/Admin/Admin_ManageEvents';
 import { AdminManageAdmins } from './pages/Admin/Admin_ManageAdmins';
+import { GameReviews } from './pages/Games/GameReviews';
 
 function AppContent(): React.JSX.Element {
   const location = useLocation();
@@ -30,6 +31,7 @@ function AppContent(): React.JSX.Element {
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
         <Route path="/games" element={<Games />} />
+        <Route path="/games/:gameId/reviews" element={<GameReviews />} />
 
         <Route path="/admin" element={<Admin />}>
           <Route index element={<Navigate to="my-profile" replace />} />

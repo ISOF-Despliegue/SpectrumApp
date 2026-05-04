@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../../components/ui/Input';
 import { GameCardBig } from '../../components/ui/GameCardBig';
@@ -7,6 +8,8 @@ import styles from './Games.module.css';
 import { Pagination } from '@renderer/components/ui/Pagination/Pagination';
 
 export const Games = () => {
+  const navigate = useNavigate();
+
   const { t: tGames } = useTranslation('games');
   const { t: tCommon } = useTranslation('common');
 
@@ -48,6 +51,10 @@ export const Games = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleOpenReviews = (gameId: number) => {
+    navigate(`/games/${gameId}/reviews`);
+  };
+
   return (
     <div className={styles.gamesPage}>
       <header className={styles.header}>
@@ -75,7 +82,7 @@ export const Games = () => {
                 <div key={game.id} className={styles.gameWrapper}>
                   <GameCardBig
                     imageUrl={game.imageUrl}
-                    onClick={() => console.log("Click en:", game.title)}
+                    onClick={() => handleOpenReviews(game.id)}
                   />
                   <p className={styles.gameLabel}>{game.title}</p>
                 </div>
