@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './LikeCard.module.css';
-
 import manoLike from '../../../assets/images/common/manoLike.png';
 import manoLikeActive from '../../../assets/images/common/manoLikeActive.png';
 
@@ -8,14 +7,15 @@ interface LikeCardProps {
   initialLikes?: number;
   likedByUser?: boolean;
   onToggle?: (active: boolean) => void;
+  size?: 'small' | 'medium';
 }
 
 export const LikeCard: React.FC<LikeCardProps> = ({
   initialLikes = 0,
   likedByUser = false,
-  onToggle
+  onToggle,
+  size = 'medium'
 }) => {
-  // Estado local temporal para simular la lógica
   const [active, setActive] = useState(likedByUser);
   const [count, setCount] = useState(initialLikes);
 
@@ -24,16 +24,14 @@ export const LikeCard: React.FC<LikeCardProps> = ({
     setActive(newState);
     setCount(prev => newState ? prev + 1 : prev - 1);
 
-    // Llamada a la futura función de backend
     if (onToggle) onToggle(newState);
   };
 
   return (
     <button
-      className={`${styles.container} ${active ? styles.activeState : ''}`}
+      className={`${styles.container} ${active ? styles.activeState : ''} ${styles[size]}`}
       onClick={handleLike}
     >
-      {/* Columna 1: Icono */}
       <div className={styles.iconWrapper}>
         <img
           src={active ? manoLikeActive : manoLike}
@@ -42,7 +40,6 @@ export const LikeCard: React.FC<LikeCardProps> = ({
         />
       </div>
 
-      {/* Columna 2: Contador */}
       <div className={styles.counterWrapper}>
         <span className={styles.counter}>{count}</span>
       </div>

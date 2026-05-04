@@ -1,0 +1,125 @@
+.containerPre {
+  position: relative;
+  background: rgba(30, 15, 35, 0.9);
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  display: flex;
+  padding: 12px 16px;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  min-height: 120px;
+  cursor: pointer;
+    transition:
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+}
+
+.filmOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.gameCol {
+  flex-shrink: 0;
+  transform: scale(0.9);
+}
+
+.infoCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.reviewTitle {
+  color: #efe0ff;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reviewSummary {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.imageCol {
+  flex-shrink: 0;
+}
+
+.actionsCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-self: stretch;
+  min-width: 160px;
+}
+
+.topActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.date {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+}
+
+.interactions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.containerPre:hover {
+  border-color: rgba(138, 43, 226, 0.8);
+  box-shadow: 0 0 25px rgba(138, 43, 226, 0.15);
+  transform: translateY(-2px);
+}
+
+.containerPre:active {
+  transform: translateY(0) scale(0.98);
+  background: rgba(40, 20, 45, 0.95);
+}
+
+.gameCol, .infoCol, .scoreCol {
+  pointer-events: none;
+}
+
+.actionsCol, .interactions, .topActions {
+  pointer-events: auto;
+}

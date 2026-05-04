@@ -15,7 +15,6 @@ export const DislikeCard: React.FC<DislikeCardProps> = ({
   dislikedByUser = false,
   onToggle
 }) => {
-  // Estado local temporal para simular la lógica
   const [active, setActive] = useState(dislikedByUser);
   const [count, setCount] = useState(initialDislikes);
 
@@ -24,7 +23,6 @@ export const DislikeCard: React.FC<DislikeCardProps> = ({
     setActive(newState);
     setCount(prev => newState ? prev + 1 : prev - 1);
 
-    // Llamada a la futura función de backend
     if (onToggle) onToggle(newState);
   };
 
@@ -33,7 +31,6 @@ export const DislikeCard: React.FC<DislikeCardProps> = ({
       className={`${styles.container} ${active ? styles.activeState : ''}`}
       onClick={handleDislike}
     >
-      {/* Columna 1: Icono */}
       <div className={styles.iconWrapper}>
         <img
           src={active ? manoDislikeActive : manoDislike}
@@ -42,7 +39,6 @@ export const DislikeCard: React.FC<DislikeCardProps> = ({
         />
       </div>
 
-      {/* Columna 2: Contador */}
       <div className={styles.counterWrapper}>
         <span className={styles.counter}>{count}</span>
       </div>

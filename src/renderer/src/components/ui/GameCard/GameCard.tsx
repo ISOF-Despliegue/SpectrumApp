@@ -2,7 +2,7 @@ import styles from './GameCard.module.css';
 
 interface GameCardProps {
   imageUrl?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const GameCard = ({ imageUrl, onClick }: GameCardProps) => {

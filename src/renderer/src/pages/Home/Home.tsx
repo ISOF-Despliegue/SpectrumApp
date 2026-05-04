@@ -11,7 +11,8 @@ import { GlassContainer } from '@renderer/components/ui/GlassContainer';
 import { LikeCard } from '@renderer/components/ui/LikeCard';
 import { DislikeCard } from '@renderer/components/ui/DislikeCard';
 import { ImageContainer } from '@renderer/components/ui/ImageContainer';
-
+import { ReviewCardComplete } from '@renderer/components/ui/ReviewCards/ReviewCardComplete';
+import { ReviewCardPre } from '@renderer/components/ui/ReviewCards/RevieCardPre';
 
 export const Home = (onProfileClick) => {
 const { t } = useTranslation('navbar');
@@ -52,8 +53,6 @@ const { t } = useTranslation('navbar');
                         imageUrl={undefined}
                         onClick={onProfileClick}
           />
-          <LikeCard initialLikes={10} likedByUser={false} />
-          <DislikeCard initialDislikes={5} dislikedByUser={false} />
 
           <GlassContainer>
             <p>Contenido dentro del contenedor de cristal</p>
@@ -62,6 +61,36 @@ const { t } = useTranslation('navbar');
           <ImageContainer>
 
           </ImageContainer>
+
+          <ReviewCardComplete
+            gameCover={undefined}           // Columna 1: Placeholder automático si es undefined
+            userImage={undefined}           // Columna 2: Fila 1 (Izquierda)
+            username="Juana 098"            // Columna 2: Fila 1 (Junto a la foto)
+            reviewDate="25/03/2026"         // Columna 2: Fila 1 (Hasta la derecha)
+            reviewTitle="El mejor juego de halo" // Columna 2: Fila 2
+            reviewContent="El juego es bueno y aquí murió halo, aunque siento que con los años ya ha perdido calidad." // Columna 2: Fila 2
+            likes={1289}                    // Columna 2: Fila 3 (Alineados a la derecha)
+            dislikes={120}                  // Columna 2: Fila 3 (Alineados a la derecha)
+            score={87}                      // Columna 3: Puntuación destacada
+            reviewImage={undefined}         // Columna 4: Si es undefined, la columna no se renderiza
+            isOwnReview={false}
+            onReport={() => console.log("Report")}
+          />
+
+          <ReviewCardPre
+            gameCover={undefined}
+            username="Jimena91"
+            reviewTitle="Basura de juego"
+            reviewContent="Es malo porque no tiene sentido..."
+            reviewDate="25/03/2026"
+            score={20} // <-- Se verá rojo y con "vibración" pero en pequeño
+            likes={10872}
+            dislikes={120}
+            reviewImage={undefined}
+            isOwnReview={false}
+            onClick={() => console.log("Navegando a la reseña completa...")}
+            onReport={() => console.log("Reportado")}
+          />
 
         </main>
       </div>

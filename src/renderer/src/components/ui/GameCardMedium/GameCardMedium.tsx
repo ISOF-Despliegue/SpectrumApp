@@ -2,7 +2,7 @@ import styles from './GameCardMedium.module.css';
 
 interface GameCardMediumProps {
   imageUrl?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const GameCardMedium = ({ imageUrl, onClick }: GameCardMediumProps) => {

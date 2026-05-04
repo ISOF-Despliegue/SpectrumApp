@@ -1,0 +1,23 @@
+.reportBtn {
+  background: rgba(255, 69, 58, 0.1);
+  border: 1px solid rgba(255, 69, 58, 0.3);
+  color: #ff453a;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reportBtn:hover {
+  background: rgba(255, 69, 58, 0.2);
+  border-color: #ff453a;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 69, 58, 0.2);
+}
+
+.icon {
+  font-size: 1.2rem;
+}

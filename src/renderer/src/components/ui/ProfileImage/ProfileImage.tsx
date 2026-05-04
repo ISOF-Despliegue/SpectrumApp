@@ -2,7 +2,7 @@ import styles from './ProfileImage.module.css';
 
 interface ProfileImageProps {
   imageUrl?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const ProfileImage = ({ imageUrl, onClick }: ProfileImageProps) => {

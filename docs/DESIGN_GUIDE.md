@@ -49,5 +49,13 @@ Tamaño: 30px
 Color: White
 Tamaño: 12
 
+# 3. Diseño y distrbución
 
+## 3.1 Contenedor de elementos
+Usar el componente GlassContainer
+
+## 3.2 Contenedor de reseñas
+Para reseñas completas usar componente ReviewCardComplete (cuando se selecciona una reseña en específico)
+
+Para la previsualización de reseñas usar componente ReviewCardPre (para mostrar un conjunto de reseñas)
 
