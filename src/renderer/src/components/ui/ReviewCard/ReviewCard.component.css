@@ -1,0 +1,81 @@
+.review-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Centra verticalmente todos los elementos */
+  gap: 2rem;
+  padding: 1.5rem;
+  background-color: var(--color-background, #ffffff);
+  border: 2px solid #1a365d; /* El borde azul oscuro de tu diseño */
+  border-radius: 4px; /* Ajusta según el radio que uses en Spectrum App */
+  width: 100%;
+}
+
+/* --- PERFIL --- */
+.review-profile {
+  flex-shrink: 0; /* Evita que la foto se aplaste */
+  align-self: flex-start; /* Mantiene la foto arriba si el texto es muy largo */
+}
+
+/* --- CONTENIDO CENTRAL --- */
+.review-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Esto hace que tome todo el espacio disponible en el centro */
+  gap: 0.5rem;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between; /* Título a la izq, Fecha a la der (del centro) */
+  align-items: baseline;
+}
+
+.review-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #000;
+}
+
+.review-date {
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.review-username {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #000;
+}
+
+.review-text {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #333;
+  line-height: 1.4;
+}
+
+.review-actions {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* --- SCORE E IMAGEN --- */
+.review-score-section {
+  flex-shrink: 0;
+  padding: 0 1rem;
+}
+
+.review-score {
+  font-size: 4rem; /* El 93 se ve enorme en tu diseño */
+  font-weight: 800;
+  color: #000;
+  line-height: 1;
+}
+
+.review-image-section {
+  flex-shrink: 0; /* Evita que el contenedor de la imagen se haga pequeño */
+}

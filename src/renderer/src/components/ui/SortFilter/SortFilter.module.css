@@ -1,0 +1,38 @@
+/* Container for the sort tool, usually placed below search bars */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.filterLabel {
+  color: #d1c7ff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.select {
+  background: #1a1625;
+  color: #fff;
+  border: 1px solid #3d345a;
+  padding: 6px 12px;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.select:focus {
+  border-color: #7000ff;
+}
+
+.select option {
+  background: #1a1625;
+  color: #fff;
+}

@@ -1,23 +1,24 @@
+import React from 'react';
 import styles from './ProfileImageNavbar.module.css';
+import defaultPhoto from '../../../../assets/images/common/defaultPhotoProfile.png';
 
 interface ProfileImageNavbarProps {
   imageUrl?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
-export const ProfileImageNavbar = ({ imageUrl, onClick }: ProfileImageNavbarProps) => {
-  const defaultImage = "https://via.placeholder.com/150";
+export const ProfileImageNavbar: React.FC<ProfileImageNavbarProps> = ({ imageUrl, onClick }) => {
+  const profileImg = imageUrl || defaultPhoto;
 
   return (
-    <button
-      className={styles.profileCircle}
-      onClick={onClick}
-    >
-      <img
-        src={imageUrl || defaultImage}
-        alt="Profile"
-        className={styles.avatarImage}
-      />
-    </button>
+    <div className={styles.profileCircle} onClick={onClick} style={{ cursor: 'pointer' }}>
+      <div className={styles.imageWrapper}>
+        <img
+          src={profileImg}
+          alt="User Profile"
+          className={styles.avatarImage}
+        />
+      </div>
+    </div>
   );
 };

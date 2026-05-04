@@ -1,9 +1,13 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NavButton } from '../NavButton';
 import { ProfileImageNavbar } from '../ProfileImageNavbar';
 import SpectrumLogo from '../../../../assets/images/common/SpectrumLogo.png';
 import styles from './Navbar.module.css';
+import { ProfileService, UserProfile } from '../../../../services/profile.service';
+import defaultPhoto from '../../../../assets/images/common/defaultPhotoProfile.png';
+
 
 interface NavbarProps {
   hideNavigation?: boolean;
@@ -12,9 +16,26 @@ interface NavbarProps {
 
 export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) => {
   const { t } = useTranslation('navbar');
-  const username = "AbrahamC13";
   const navigate = useNavigate();
   const location = useLocation();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const data = await ProfileService.getMe();
+        setProfile(data);
+      } catch (error) {
+        console.error("Error al obtener datos del perfil en la Navbar:", error);
+      }
+    };
+    if (localStorage.getItem('token')) {
+      fetchProfileData();
+    }
+  }, []);
+
+  const username = profile?.username || "Cargando...";
+  const userProfileImage = profile?.profilePicture || defaultPhoto;
 
   return (
     <header className={`${styles.navbarContainer} ${hideNavigation ? styles.minified : ''}`}>
@@ -37,7 +58,7 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
               {t('greeting', { name: username })}
             </span>
             <ProfileImageNavbar
-              imageUrl={undefined}
+              imageUrl={userProfileImage}
               onClick={onProfileClick}
             />
           </div>

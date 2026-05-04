@@ -1,0 +1,21 @@
+.container {
+  overflow: hidden;
+  border-radius: 4px; /* Ajusta según el diseño de Spectrum App */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-background-soft, #f0f0f0);
+}
+
+/* Estilo para cuando es solo el contenedor vacío (como en tu mockup) */
+.emptyPlaceholder {
+  background-color: #4a86e8; /* Color azul del wireframe */
+  border: 2px solid #1a365d; /* Borde oscuro del wireframe */
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen llene el rectángulo sin deformarse */
+  display: block;
+}

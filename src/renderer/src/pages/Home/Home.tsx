@@ -10,6 +10,7 @@ import { GameCardBig } from '@renderer/components/ui/GameCardBig';
 import { GlassContainer } from '@renderer/components/ui/GlassContainer';
 import { LikeCard } from '@renderer/components/ui/LikeCard';
 import { DislikeCard } from '@renderer/components/ui/DislikeCard';
+import { ImageContainer } from '@renderer/components/ui/ImageContainer';
 
 
 export const Home = (onProfileClick) => {
@@ -58,6 +59,9 @@ const { t } = useTranslation('navbar');
             <p>Contenido dentro del contenedor de cristal</p>
           </GlassContainer>
 
+          <ImageContainer>
+
+          </ImageContainer>
 
         </main>
       </div>

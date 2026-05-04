@@ -7,7 +7,19 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "pageInfo": "Página {{current}} de {{total}}"
+  },
+
+  "filters": {
+    "sortBy": "Ordenar por",
+    "options": {
+      "default": "Por defecto",
+      "nameAsc": "Nombre (A-Z)",
+      "nameDesc": "Nombre (Z-A)",
+      "dateNew": "Más recientes",
+      "dateOld": "Más antiguos"
+    }
   }
+
 }
 
 

@@ -7,6 +7,17 @@
     "previous": "Previous",
     "next": "Next",
     "pageInfo": "Page {{current}} of {{total}}"
+  },
+
+  "filters": {
+    "sortBy": "Sort by",
+    "options": {
+      "default": "Default",
+      "nameAsc": "Name (A-Z)",
+      "nameDesc": "Name (Z-A)",
+      "dateNew": "Newest",
+      "dateOld": "Oldest"
+    }
   }
 }
 

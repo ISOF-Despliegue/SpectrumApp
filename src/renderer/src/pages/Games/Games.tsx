@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../../components/ui/Input';
 import { GameCardBig } from '../../components/ui/GameCardBig';
 import { getGames, Game } from '../../services/games.service';
 import styles from './Games.module.css';
 import { Pagination } from '@renderer/components/ui/Pagination/Pagination';
+import { SortFilter } from '../../components/ui/SortFilter/SortFilter';
 
 export const Games = () => {
   const { t: tGames } = useTranslation('games');
@@ -15,12 +16,20 @@ export const Games = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("none");
 
-  const fetchGames = async (page: number, search?: string) => {
+  const sortOptions = [
+    { value: 'none', label: tCommon('filters.options.default') },
+    { value: 'name_asc', label: tCommon('filters.options.nameAsc') },
+    { value: 'name_desc', label: tCommon('filters.options.nameDesc') },
+    { value: 'date_new', label: tCommon('filters.options.dateNew') },
+    { value: 'date_old', label: tCommon('filters.options.dateOld') },
+  ];
+
+  const fetchGames = async (page: number, search?: string, sort?: string) => {
     try {
       setLoading(true);
-      const response = await getGames(search ?? searchTerm, page);
-
+      const response = await getGames(search, page, sort);
       setGames(response.items);
       setTotalCount(response.totalCount);
       setCurrentPage(page);
@@ -33,18 +42,22 @@ export const Games = () => {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      fetchGames(1, searchTerm);
+      fetchGames(1, searchTerm, sortOption);
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
+
+  useEffect(() => {
+    fetchGames(1, searchTerm, sortOption);
+  }, [sortOption]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   const handlePageChange = (newPage: number) => {
-    fetchGames(newPage);
+    fetchGames(newPage, searchTerm, sortOption);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -64,6 +77,13 @@ export const Games = () => {
           </div>
         </div>
       </header>
+
+      <SortFilter
+        label={tCommon('filters.sortBy')}
+        currentValue={sortOption}
+        options={sortOptions}
+        onSortChange={setSortOption}
+      />
 
       {loading && games.length === 0 ? (
         <p className={styles.loading}>{tGames('status.loading')}</p>
@@ -88,7 +108,7 @@ export const Games = () => {
           <Pagination
             currentPage={currentPage}
             totalCount={totalCount}
-            pageSize={20}
+            pageSize={42}
             onPageChange={handlePageChange}
           />
         </>
