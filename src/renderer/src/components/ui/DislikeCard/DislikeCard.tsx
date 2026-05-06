@@ -1,47 +1,75 @@
-import React, { useState } from 'react';
-import styles from './DislikeCard.module.css';
+import React, { useState } from 'react'
+import styles from './DislikeCard.module.css'
 
-import manoDislike from '../../../assets/images/common/manoDislike.png';
-import manoDislikeActive from '../../../assets/images/common/manoDislikeActive.png';
+import manoDislike from '../../../assets/images/common/manoDislike.png'
+import manoDislikeActive from '../../../assets/images/common/manoDislikeActive.png'
 
 interface DislikeCardProps {
-  initialDislikes?: number;
-  dislikedByUser?: boolean;
-  onToggle?: (active: boolean) => void;
+  initialDislikes?: number
+  dislikedByUser?: boolean
+  onToggle?: (active: boolean) => void
+  size?: 'small' | 'medium'
+  dislikes?: number
+  active?: boolean
+  disabled?: boolean
+  onClick?: () => void
 }
 
 export const DislikeCard: React.FC<DislikeCardProps> = ({
   initialDislikes = 0,
   dislikedByUser = false,
-  onToggle
+  onToggle,
+  size = 'medium',
+  dislikes,
+  active,
+  disabled = false,
+  onClick
 }) => {
-  const [active, setActive] = useState(dislikedByUser);
-  const [count, setCount] = useState(initialDislikes);
+  const [internalActive, setInternalActive] = useState(dislikedByUser)
+  const [count, setCount] = useState(initialDislikes)
+  const isControlled = dislikes !== undefined || active !== undefined || onClick !== undefined
+  const displayedActive = active ?? internalActive
+  const displayedCount = dislikes ?? count
 
-  const handleDislike = () => {
-    const newState = !active;
-    setActive(newState);
-    setCount(prev => newState ? prev + 1 : prev - 1);
+  const handleDislike = (): void => {
+    if (disabled) {
+      return
+    }
 
-    if (onToggle) onToggle(newState);
-  };
+    if (onClick) {
+      onClick()
+      return
+    }
+
+    const newState = !displayedActive
+
+    if (!isControlled) {
+      setInternalActive(newState)
+      setCount((prev) => (newState ? prev + 1 : prev - 1))
+    }
+
+    if (onToggle) onToggle(newState)
+  }
 
   return (
     <button
-      className={`${styles.container} ${active ? styles.activeState : ''}`}
+      className={`${styles.container} ${displayedActive ? styles.activeState : ''} ${styles[size]}`}
       onClick={handleDislike}
+      disabled={disabled}
+      type="button"
+      aria-label="Dislike"
     >
       <div className={styles.iconWrapper}>
         <img
-          src={active ? manoDislikeActive : manoDislike}
+          src={displayedActive ? manoDislikeActive : manoDislike}
           alt="Dislike icon"
           className={styles.icon}
         />
       </div>
 
       <div className={styles.counterWrapper}>
-        <span className={styles.counter}>{count}</span>
+        <span className={styles.counter}>{displayedCount}</span>
       </div>
     </button>
-  );
-};
+  )
+}

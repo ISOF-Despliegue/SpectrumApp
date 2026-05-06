@@ -46,6 +46,20 @@
   animation: pulseRed 1.5s infinite;
 }
 
+.container:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  animation: none;
+}
+
+.container:disabled:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  transform: none;
+  animation: none;
+}
+
 .activeState {
   background: rgba(255, 0, 0, 0.15);
   border-color: #ff0000;
@@ -81,7 +95,8 @@
 }
 
 @keyframes pulseRed {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 10px rgba(255, 0, 17, 0.3);
   }
   50% {

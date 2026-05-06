@@ -1,19 +1,24 @@
-import React from 'react';
-import styles from './SortFilter.module.css';
+import React from 'react'
+import styles from './SortFilter.module.css'
 
 export interface SortOption {
-  value: string;
-  label: string;
+  value: string
+  label: string
 }
 
 interface SortFilterProps {
-  label: string;
-  currentValue: string;
-  options: SortOption[];
-  onSortChange: (value: string) => void;
+  label: string
+  currentValue: string
+  options: SortOption[]
+  onSortChange: (value: string) => void
 }
 
-export const SortFilter = ({ label, currentValue, options, onSortChange }: SortFilterProps) => {
+export const SortFilter = ({
+  label,
+  currentValue,
+  options,
+  onSortChange
+}: SortFilterProps): React.JSX.Element => {
   return (
     <div className={styles.filterBar}>
       <label className={styles.filterLabel}>{label}:</label>
@@ -30,5 +35,5 @@ export const SortFilter = ({ label, currentValue, options, onSortChange }: SortF
         ))}
       </select>
     </div>
-  );
-};
+  )
+}

@@ -1,238 +1,547 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import styles from './GameReviews.module.css';
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { ReviewCardComplete } from '@renderer/components/ui/ReviewCards/ReviewCardComplete'
+import styles from './GameReviews.module.css'
+import { ReviewForm, type ReviewFormState } from './ReviewForm'
 import {
   ReviewService,
+  type CreateReviewCommentRequest,
   type CreateReviewRequest,
-  type Review
-} from '../../../services/reviews.service';
+  type Review,
+  type UpdateReviewRequest
+} from '../../../services/reviews.service'
 
-const DEFAULT_GAME_ID = '1';
+const DEFAULT_GAME_ID = '1'
+const MAX_TITLE_LENGTH = 120
+const MAX_CONTENT_LENGTH = 1200
+const MAX_COMMENT_LENGTH = 600
+const DEFAULT_RATING = 5
 
 interface GameReviewsRouteState {
-  gameTitle?: string;
-  gameImageUrl?: string | null;
+  gameTitle?: string
+  gameImageUrl?: string | null
 }
 
-const getErrorMessage = (error: unknown): string => {
-  const axiosError = error as {
-    response?: {
-      status?: number;
-      data?: {
-        detail?: string;
-        message?: string;
-        title?: string;
-      };
-    };
-    message?: string;
-  };
+interface StoredUser {
+  id?: string | number
+  userId?: string | number
+  sub?: string | number
+  username?: string
+  email?: string
+}
 
-  const status = axiosError.response?.status;
+interface HttpErrorLike {
+  response?: {
+    status?: number
+    data?: {
+      detail?: string
+      message?: string
+      title?: string
+    }
+  }
+  message?: string
+}
+
+type VoteKind = 'like' | 'dislike'
+
+const createEmptyReviewForm = (): ReviewFormState => ({
+  title: '',
+  content: '',
+  rating: DEFAULT_RATING
+})
+
+const getErrorMessage = (error: unknown): string => {
+  const axiosError = error as HttpErrorLike
+  const status = axiosError.response?.status
   const detail =
     axiosError.response?.data?.detail ||
     axiosError.response?.data?.message ||
-    axiosError.response?.data?.title;
+    axiosError.response?.data?.title
 
   if (status === 400) {
-    return `Datos inválidos. ${detail ?? 'Verifica la información enviada.'}`;
+    return `Datos invalidos. ${detail ?? 'Verifica la informacion enviada.'}`
   }
 
   if (status === 401) {
-    return 'Tu sesión no es válida o expiró. Inicia sesión nuevamente.';
+    return 'Tu sesion no es valida o expiro. Inicia sesion nuevamente.'
   }
 
   if (status === 403) {
-    return 'No tienes permisos para realizar esta acción.';
+    return 'No tienes permisos para realizar esta accion.'
   }
 
   if (status === 404) {
-    return 'No se encontró el recurso solicitado.';
+    return 'No se encontro el recurso solicitado.'
   }
 
   if (status === 500) {
-    return 'Error interno del servidor. Revisa la consola del backend.';
+    return 'Error interno del servidor. Intenta nuevamente mas tarde.'
   }
 
-  return detail || axiosError.message || 'Ocurrió un error inesperado.';
-};
+  return detail || axiosError.message || 'Ocurrio un error inesperado.'
+}
 
-export const GameReviews = (): React.JSX.Element => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { gameId: routeGameId } = useParams<{ gameId: string }>();
+const getStoredUser = (): StoredUser | null => {
+  const rawUser = localStorage.getItem('user')
 
-  const routeState = location.state as GameReviewsRouteState | null;
-
-  const initialGameId = routeGameId ?? DEFAULT_GAME_ID;
-  const gameTitle = routeState?.gameTitle ?? `Videojuego #${initialGameId}`;
-  const gameImageUrl = routeState?.gameImageUrl ?? null;
-
-  const [gameId, setGameId] = useState<string>(initialGameId);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [rating, setRating] = useState<number>(5);
-  const [message, setMessage] = useState<string>('Carga reseñas o crea una nueva.');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const hasToken = (): boolean => {
-    return Boolean(localStorage.getItem('token'));
-  };
-
-  const loadReviews = async (): Promise<void> => {
-  if (!gameId.trim()) {
-    setMessage('Debes ingresar el ID del videojuego.');
-    return;
+  if (!rawUser) {
+    return null
   }
 
   try {
-    setIsLoading(true);
-    setMessage('Cargando reseñas...');
+    const parsedUser: unknown = JSON.parse(rawUser)
 
-    const data = await ReviewService.getByGame(gameId);
-
-    setReviews(data);
-    setMessage(
-      data.length === 0
-        ? 'Este videojuego todavía no tiene reseñas. Puedes crear la primera.'
-        : `Reseñas encontradas: ${data.length}`
-    );
-  } catch (error: any) {
-    console.error('Error al cargar reseñas:', error);
-
-    if (error?.response?.status === 404) {
-      setReviews([]);
-      setMessage('Este videojuego todavía no tiene reseñas. Puedes crear la primera.');
-      return;
+    if (!parsedUser || typeof parsedUser !== 'object') {
+      return null
     }
 
-    setReviews([]);
-    setMessage(`No se pudieron cargar las reseñas. ${getErrorMessage(error)}`);
-  } finally {
-    setIsLoading(false);
+    return parsedUser as StoredUser
+  } catch {
+    return null
   }
-};
+}
 
-  const createReview = async (
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    event.preventDefault();
+const getCurrentUserId = (): string | undefined => {
+  const storedUser = getStoredUser()
+  const userId = storedUser?.id ?? storedUser?.userId ?? storedUser?.sub
+  return userId === undefined ? undefined : String(userId)
+}
 
-    if (!hasToken()) {
-      setMessage('Debes iniciar sesión para crear una reseña.');
-      return;
-    }
+const hasToken = (): boolean => Boolean(localStorage.getItem('token'))
 
-    if (!title.trim()) {
-      setMessage('El título de la reseña es obligatorio.');
-      return;
-    }
+const getReviewId = (review: Review): string => review.reviewId ?? review.id
 
-    if (!content.trim()) {
-      setMessage('El contenido de la reseña es obligatorio.');
-      return;
-    }
+const getUsername = (review: Review): string => {
+  const username = review.username?.trim()
+  return username || 'Usuario de Spectrum'
+}
 
-    if (rating < 1 || rating > 5) {
-      setMessage('La calificación debe estar entre 1 y 5.');
-      return;
+const getReviewTitle = (review: Review): string => {
+  const title = review.title?.trim()
+  return title || `Resena de ${getUsername(review)}`
+}
+
+const getReviewScore = (review: Review): number => {
+  const rawScore = review.score ?? review.rating * 20
+  return Math.max(0, Math.min(100, Math.round(rawScore)))
+}
+
+const formatReviewDate = (value?: string): string => {
+  if (!value) {
+    return 'Fecha no disponible'
+  }
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  return new Intl.DateTimeFormat('es-MX', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(date)
+}
+
+const isOwnReview = (review: Review, currentUserId?: string): boolean => {
+  if (review.isOwnReview !== undefined) {
+    return review.isOwnReview
+  }
+
+  return Boolean(currentUserId && review.userId && String(review.userId) === currentUserId)
+}
+
+const getInitialVote = (review: Review): VoteKind | undefined => {
+  if (review.likedByUser) {
+    return 'like'
+  }
+
+  if (review.dislikedByUser) {
+    return 'dislike'
+  }
+
+  return undefined
+}
+
+const validateReviewForm = (form: ReviewFormState): string | null => {
+  if (!form.title.trim()) {
+    return 'El titulo de la resena es obligatorio.'
+  }
+
+  if (form.title.trim().length > MAX_TITLE_LENGTH) {
+    return `El titulo no puede superar ${MAX_TITLE_LENGTH} caracteres.`
+  }
+
+  if (!form.content.trim()) {
+    return 'El contenido de la resena es obligatorio.'
+  }
+
+  if (form.content.trim().length > MAX_CONTENT_LENGTH) {
+    return `El contenido no puede superar ${MAX_CONTENT_LENGTH} caracteres.`
+  }
+
+  if (form.rating < 1 || form.rating > 5) {
+    return 'La calificacion debe estar entre 1 y 5.'
+  }
+
+  return null
+}
+
+export const GameReviews = (): React.JSX.Element => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { gameId: routeGameId } = useParams<{ gameId: string }>()
+
+  const routeState = location.state as GameReviewsRouteState | null
+  const initialGameId = routeGameId ?? DEFAULT_GAME_ID
+  const gameTitle = routeState?.gameTitle ?? `Videojuego #${initialGameId}`
+  const gameImageUrl = routeState?.gameImageUrl ?? null
+  const currentUserId = getCurrentUserId()
+
+  const [gameId, setGameId] = useState<string>(initialGameId)
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [createForm, setCreateForm] = useState<ReviewFormState>(createEmptyReviewForm)
+  const [editForm, setEditForm] = useState<ReviewFormState>(createEmptyReviewForm)
+  const [message, setMessage] = useState<string>('Carga resenas o crea una nueva.')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
+  const [replyingReviewId, setReplyingReviewId] = useState<string | null>(null)
+  const [replyContent, setReplyContent] = useState<string>('')
+  const [votingReviewId, setVotingReviewId] = useState<string | null>(null)
+  const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null)
+  const [commentingReviewId, setCommentingReviewId] = useState<string | null>(null)
+  const [localVotes, setLocalVotes] = useState<Record<string, VoteKind | undefined>>({})
+
+  const loadReviews = async (targetGameId = gameId): Promise<void> => {
+    const trimmedGameId = targetGameId.trim()
+
+    if (!trimmedGameId) {
+      setMessage('Debes ingresar el ID del videojuego.')
+      return
     }
 
     try {
-      setIsLoading(true);
-      setMessage('Creando reseña...');
+      setIsLoading(true)
+      setMessage('Cargando resenas...')
+
+      const data = await ReviewService.getByGame(trimmedGameId)
+
+      setReviews(data)
+      setLocalVotes((previousVotes) => {
+        const nextVotes = { ...previousVotes }
+        data.forEach((review) => {
+          const reviewId = getReviewId(review)
+          nextVotes[reviewId] = previousVotes[reviewId] ?? getInitialVote(review)
+        })
+        return nextVotes
+      })
+      setMessage(
+        data.length === 0
+          ? 'Este videojuego todavia no tiene resenas. Puedes crear la primera.'
+          : `Resenas encontradas: ${data.length}`
+      )
+    } catch (error) {
+      const status = (error as HttpErrorLike).response?.status
+
+      setReviews([])
+      if (status === 404) {
+        setMessage('Este videojuego todavia no tiene resenas. Puedes crear la primera.')
+        return
+      }
+
+      setMessage(`No se pudieron cargar las resenas. ${getErrorMessage(error)}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const updateCreateForm = (field: keyof ReviewFormState, value: string | number): void => {
+    setCreateForm((currentForm) => ({
+      ...currentForm,
+      [field]: value
+    }))
+  }
+
+  const updateEditForm = (field: keyof ReviewFormState, value: string | number): void => {
+    setEditForm((currentForm) => ({
+      ...currentForm,
+      [field]: value
+    }))
+  }
+
+  const createReview = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+
+    if (!hasToken()) {
+      setMessage('Debes iniciar sesion para crear una resena.')
+      return
+    }
+
+    const validationMessage = validateReviewForm(createForm)
+
+    if (validationMessage) {
+      setMessage(validationMessage)
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      setMessage('Creando resena...')
 
       const payload: CreateReviewRequest = {
         gameId,
-        title: title.trim(),
-        content: content.trim(),
-        rating
-      };
+        title: createForm.title.trim(),
+        content: createForm.content.trim(),
+        rating: createForm.rating
+      }
 
-      await ReviewService.create(payload);
-
-      setTitle('');
-      setContent('');
-      setRating(5);
-
-      await loadReviews();
-      setMessage('Reseña creada correctamente.');
+      const createdReview = await ReviewService.create(payload)
+      setReviews((currentReviews) => [createdReview, ...currentReviews])
+      setCreateForm(createEmptyReviewForm())
+      setMessage('Resena creada correctamente.')
     } catch (error) {
-      console.error('Error al crear reseña:', error);
-      setMessage(`No se pudo crear la reseña. ${getErrorMessage(error)}`);
+      setMessage(`No se pudo crear la resena. ${getErrorMessage(error)}`)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
-  const deleteReview = async (reviewId: string): Promise<void> => {
+  const startEditing = (review: Review): void => {
+    const reviewId = getReviewId(review)
+
+    if (!isOwnReview(review, currentUserId)) {
+      setMessage('Solo puedes editar tus propias resenas.')
+      return
+    }
+
+    setEditingReviewId(reviewId)
+    setReplyingReviewId(null)
+    setEditForm({
+      title: getReviewTitle(review),
+      content: review.content,
+      rating: review.rating
+    })
+  }
+
+  const cancelEditing = (): void => {
+    setEditingReviewId(null)
+    setEditForm(createEmptyReviewForm())
+  }
+
+  const updateReview = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+
+    if (!editingReviewId) {
+      return
+    }
+
     if (!hasToken()) {
-      setMessage('Debes iniciar sesión para eliminar una reseña.');
-      return;
+      setMessage('Debes iniciar sesion para editar una resena.')
+      return
     }
 
-    const confirmDelete = window.confirm('¿Seguro que deseas eliminar esta reseña?');
+    const validationMessage = validateReviewForm(editForm)
+
+    if (validationMessage) {
+      setMessage(validationMessage)
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      setMessage('Actualizando resena...')
+
+      const payload: UpdateReviewRequest = {
+        title: editForm.title.trim(),
+        content: editForm.content.trim(),
+        rating: editForm.rating
+      }
+
+      const updatedReview = await ReviewService.update(editingReviewId, payload)
+
+      setReviews((currentReviews) =>
+        currentReviews.map((review) =>
+          getReviewId(review) === editingReviewId
+            ? { ...review, ...(updatedReview ?? {}), ...payload }
+            : review
+        )
+      )
+      cancelEditing()
+      setMessage('Resena actualizada correctamente.')
+    } catch (error) {
+      setMessage(`No se pudo actualizar la resena. ${getErrorMessage(error)}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const deleteReview = async (review: Review): Promise<void> => {
+    const reviewId = getReviewId(review)
+
+    if (!isOwnReview(review, currentUserId)) {
+      setMessage('Solo puedes eliminar tus propias resenas.')
+      return
+    }
+
+    if (!hasToken()) {
+      setMessage('Debes iniciar sesion para eliminar una resena.')
+      return
+    }
+
+    const confirmDelete = window.confirm('Seguro que deseas eliminar esta resena?')
 
     if (!confirmDelete) {
-      return;
+      return
     }
 
     try {
-      setIsLoading(true);
-      setMessage('Eliminando reseña...');
+      setDeletingReviewId(reviewId)
+      setMessage('Eliminando resena...')
 
-      await ReviewService.delete(reviewId);
+      await ReviewService.delete(reviewId)
 
-      await loadReviews();
-      setMessage('Reseña eliminada correctamente.');
+      setReviews((currentReviews) =>
+        currentReviews.filter((currentReview) => getReviewId(currentReview) !== reviewId)
+      )
+      setMessage('Resena eliminada correctamente.')
     } catch (error) {
-      console.error('Error al eliminar reseña:', error);
-      setMessage(`No se pudo eliminar la reseña. ${getErrorMessage(error)}`);
+      setMessage(`No se pudo eliminar la resena. ${getErrorMessage(error)}`)
     } finally {
-      setIsLoading(false);
+      setDeletingReviewId(null)
     }
-  };
+  }
 
-  const voteReview = async (
-    reviewId: string,
-    isPositive: boolean
-  ): Promise<void> => {
+  const voteReview = async (review: Review, voteKind: VoteKind): Promise<void> => {
+    const reviewId = getReviewId(review)
+
+    if (isOwnReview(review, currentUserId)) {
+      setMessage('No puedes votar tu propia resena.')
+      return
+    }
+
     if (!hasToken()) {
-      setMessage('Debes iniciar sesión para votar una reseña.');
-      return;
+      setMessage('Debes iniciar sesion para votar una resena.')
+      return
+    }
+
+    if (votingReviewId) {
+      return
     }
 
     try {
-      setIsLoading(true);
+      setVotingReviewId(reviewId)
 
-      await ReviewService.vote(reviewId, { isPositive });
+      const result = await ReviewService.vote(reviewId, {
+        isPositive: voteKind === 'like'
+      })
 
-      await loadReviews();
-      setMessage(isPositive ? 'Like registrado.' : 'Dislike registrado.');
+      if (!result.success) {
+        setMessage('El backend no confirmo el voto. Intenta nuevamente.')
+        return
+      }
+
+      setReviews((currentReviews) =>
+        currentReviews.map((currentReview) =>
+          getReviewId(currentReview) === reviewId
+            ? {
+                ...currentReview,
+                likesCount: result.updatedLikes,
+                dislikesCount: result.updatedDislikes
+              }
+            : currentReview
+        )
+      )
+      setLocalVotes((currentVotes) => ({
+        ...currentVotes,
+        [reviewId]: currentVotes[reviewId] === voteKind ? undefined : voteKind
+      }))
+      setMessage(voteKind === 'like' ? 'Like registrado.' : 'Dislike registrado.')
     } catch (error) {
-      console.error('Error al votar reseña:', error);
-      setMessage(`No se pudo registrar el voto. ${getErrorMessage(error)}`);
+      setMessage(`No se pudo registrar el voto. ${getErrorMessage(error)}`)
     } finally {
-      setIsLoading(false);
+      setVotingReviewId(null)
     }
-  };
+  }
+
+  const startReplying = (review: Review): void => {
+    if (isOwnReview(review, currentUserId)) {
+      setMessage('No puedes responder tu propia resena desde esta vista.')
+      return
+    }
+
+    setEditingReviewId(null)
+    setReplyingReviewId(getReviewId(review))
+    setReplyContent('')
+  }
+
+  const cancelReplying = (): void => {
+    setReplyingReviewId(null)
+    setReplyContent('')
+  }
+
+  const createComment = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+
+    if (!replyingReviewId) {
+      return
+    }
+
+    if (!hasToken()) {
+      setMessage('Debes iniciar sesion para responder una resena.')
+      return
+    }
+
+    const trimmedComment = replyContent.trim()
+
+    if (!trimmedComment) {
+      setMessage('El comentario no puede estar vacio.')
+      return
+    }
+
+    if (trimmedComment.length > MAX_COMMENT_LENGTH) {
+      setMessage(`El comentario no puede superar ${MAX_COMMENT_LENGTH} caracteres.`)
+      return
+    }
+
+    try {
+      setCommentingReviewId(replyingReviewId)
+      setMessage('Enviando comentario...')
+
+      const payload: CreateReviewCommentRequest = {
+        content: trimmedComment
+      }
+
+      await ReviewService.createComment(replyingReviewId, payload)
+      cancelReplying()
+      setMessage('Comentario agregado correctamente.')
+    } catch (error) {
+      const status = (error as HttpErrorLike).response?.status
+      const fallbackMessage =
+        status === 404
+          ? 'El backend no expone comentarios para resenas en este momento.'
+          : getErrorMessage(error)
+
+      setMessage(`No se pudo agregar el comentario. ${fallbackMessage}`)
+    } finally {
+      setCommentingReviewId(null)
+    }
+  }
+
+  const reportReview = (): void => {
+    setMessage('La funcionalidad de reportes esta pendiente de conectar con el backend.')
+  }
 
   useEffect(() => {
-    loadReviews();
+    void loadReviews(initialGameId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   return (
     <article className={styles.page}>
       <header className={styles.header}>
         <div className={styles.gameInfo}>
-          {gameImageUrl && (
-            <img
-              className={styles.gameImage}
-              src={gameImageUrl}
-              alt={gameTitle}
-            />
-          )}
+          {gameImageUrl && <img className={styles.gameImage} src={gameImageUrl} alt={gameTitle} />}
 
           <div>
             <p className={styles.badge}>Spectrum Reviews</p>
@@ -240,26 +549,26 @@ export const GameReviews = (): React.JSX.Element => {
             <h1 className={styles.title}>{gameTitle}</h1>
 
             <p className={styles.description}>
-              ID del juego: <strong>{gameId}</strong>. Crea, consulta y administra reseñas
-              asociadas a este videojuego.
+              ID del juego: <strong>{gameId}</strong>. Crea, consulta y administra resenas asociadas
+              a este videojuego.
             </p>
           </div>
         </div>
 
-        <button
-          className={styles.secondaryButton}
-          type="button"
-          onClick={() => navigate('/games')}
-        >
+        <button className={styles.secondaryButton} type="button" onClick={() => navigate('/games')}>
           Volver a videojuegos
         </button>
       </header>
 
       <section className={styles.card}>
-        <h2 className={styles.sectionTitle}>Buscar reseñas por juego</h2>
+        <h2 className={styles.sectionTitle}>Buscar resenas por juego</h2>
 
         <div className={styles.searchRow}>
+          <label className={styles.fieldLabel} htmlFor="game-review-search">
+            ID del videojuego
+          </label>
           <input
+            id="game-review-search"
             className={styles.input}
             type="text"
             value={gameId}
@@ -270,104 +579,138 @@ export const GameReviews = (): React.JSX.Element => {
           <button
             className={styles.button}
             type="button"
-            onClick={loadReviews}
+            onClick={() => void loadReviews()}
             disabled={isLoading}
           >
             Buscar
           </button>
         </div>
 
-        <p className={styles.message}>{message}</p>
+        <p className={styles.message} role="status">
+          {message}
+        </p>
       </section>
 
       <section className={styles.card}>
-        <h2 className={styles.sectionTitle}>Crear reseña</h2>
+        <h2 className={styles.sectionTitle}>Crear resena</h2>
 
-        <form className={styles.form} onSubmit={createReview}>
-          <input
-            className={styles.input}
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Título de la reseña"
-            maxLength={120}
-          />
-
-          <textarea
-            className={styles.textarea}
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            placeholder="Escribe tu opinión del videojuego"
-            rows={5}
-            maxLength={1200}
-          />
-
-          <input
-            className={styles.input}
-            type="number"
-            min={1}
-            max={5}
-            value={rating}
-            onChange={(event) => setRating(Number(event.target.value))}
-            placeholder="Calificación"
-          />
-
-          <button className={styles.button} type="submit" disabled={isLoading}>
-            {isLoading ? 'Procesando...' : 'Crear reseña'}
-          </button>
-        </form>
+        <ReviewForm
+          idPrefix="review"
+          form={createForm}
+          titleLabel="Titulo de la resena"
+          submitLabel={isLoading ? 'Procesando...' : 'Crear resena'}
+          isDisabled={isLoading}
+          maxTitleLength={MAX_TITLE_LENGTH}
+          maxContentLength={MAX_CONTENT_LENGTH}
+          onChange={updateCreateForm}
+          onSubmit={(event) => void createReview(event)}
+        />
       </section>
 
-      <section className={styles.reviewsGrid}>
+      <section className={styles.reviewsGrid} aria-label="Resenas del videojuego">
         {reviews.length === 0 ? (
           <div className={styles.emptyState}>
-            <h2>No hay reseñas todavía</h2>
-            <p>Crea la primera reseña para este videojuego.</p>
+            <h2>No hay resenas todavia</h2>
+            <p>Crea la primera resena para este videojuego.</p>
           </div>
         ) : (
-          reviews.map((review) => (
-            <article className={styles.reviewCard} key={review.id}>
-              <div className={styles.reviewHeader}>
-                <div>
-                  <h2>{review.title}</h2>
-                  <p>Calificación: {review.rating}/5</p>
-                </div>
+          reviews.map((review) => {
+            const reviewId = getReviewId(review)
+            const ownReview = isOwnReview(review, currentUserId)
+            const currentVote = localVotes[reviewId] ?? getInitialVote(review)
 
-                <button
-                  className={styles.dangerButton}
-                  type="button"
-                  onClick={() => deleteReview(review.id)}
-                  disabled={isLoading}
-                >
-                  Eliminar
-                </button>
+            return (
+              <div className={styles.reviewItem} key={reviewId}>
+                <ReviewCardComplete
+                  gameCover={review.gameCoverUrl ?? gameImageUrl ?? undefined}
+                  userImage={review.userProfileImageUrl ?? review.profilePicture ?? undefined}
+                  username={getUsername(review)}
+                  reviewDate={formatReviewDate(review.createdAt)}
+                  reviewTitle={getReviewTitle(review)}
+                  reviewContent={review.content}
+                  likes={review.likesCount ?? 0}
+                  dislikes={review.dislikesCount ?? 0}
+                  score={getReviewScore(review)}
+                  reviewImage={review.imageUrl ?? undefined}
+                  isOwnReview={ownReview}
+                  likedByUser={currentVote === 'like'}
+                  dislikedByUser={currentVote === 'dislike'}
+                  canVote={!ownReview}
+                  canEdit={ownReview}
+                  canDelete={ownReview}
+                  canReply={!ownReview}
+                  canReport={!ownReview}
+                  isVoting={votingReviewId === reviewId}
+                  isDeleting={deletingReviewId === reviewId}
+                  onLike={() => void voteReview(review, 'like')}
+                  onDislike={() => void voteReview(review, 'dislike')}
+                  onEdit={() => startEditing(review)}
+                  onDelete={() => void deleteReview(review)}
+                  onReply={() => startReplying(review)}
+                  onReport={reportReview}
+                />
+
+                {editingReviewId === reviewId && (
+                  <div className={styles.inlineForm}>
+                    <h3 className={styles.inlineTitle}>Editar resena</h3>
+                    <ReviewForm
+                      idPrefix={`edit-${reviewId}`}
+                      form={editForm}
+                      titleLabel="Titulo de la resena"
+                      submitLabel="Guardar cambios"
+                      isDisabled={isLoading}
+                      maxTitleLength={MAX_TITLE_LENGTH}
+                      maxContentLength={MAX_CONTENT_LENGTH}
+                      onChange={updateEditForm}
+                      onSubmit={(event) => void updateReview(event)}
+                      onCancel={cancelEditing}
+                    />
+                  </div>
+                )}
+
+                {replyingReviewId === reviewId && (
+                  <form
+                    className={styles.inlineForm}
+                    onSubmit={(event) => void createComment(event)}
+                  >
+                    <h3 className={styles.inlineTitle}>Responder resena</h3>
+                    <label className={styles.fieldLabel} htmlFor={`reply-${reviewId}`}>
+                      Comentario
+                    </label>
+                    <textarea
+                      id={`reply-${reviewId}`}
+                      className={styles.textarea}
+                      value={replyContent}
+                      onChange={(event) => setReplyContent(event.target.value)}
+                      rows={3}
+                      maxLength={MAX_COMMENT_LENGTH}
+                      placeholder="Escribe tu comentario"
+                    />
+
+                    <div className={styles.inlineActions}>
+                      <button
+                        className={styles.button}
+                        type="submit"
+                        disabled={commentingReviewId === reviewId}
+                      >
+                        {commentingReviewId === reviewId ? 'Enviando...' : 'Enviar comentario'}
+                      </button>
+                      <button
+                        className={styles.secondaryButton}
+                        type="button"
+                        onClick={cancelReplying}
+                        disabled={commentingReviewId === reviewId}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
-
-              <p className={styles.reviewContent}>{review.content}</p>
-
-              <div className={styles.voteActions}>
-                <button
-                  className={styles.secondaryButton}
-                  type="button"
-                  onClick={() => voteReview(review.id, true)}
-                  disabled={isLoading}
-                >
-                  Like {review.likesCount ?? 0}
-                </button>
-
-                <button
-                  className={styles.secondaryButton}
-                  type="button"
-                  onClick={() => voteReview(review.id, false)}
-                  disabled={isLoading}
-                >
-                  Dislike {review.dislikesCount ?? 0}
-                </button>
-              </div>
-            </article>
-          ))
+            )
+          })
         )}
       </section>
     </article>
-  );
-};
+  )
+}
