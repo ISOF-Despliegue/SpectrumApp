@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Input } from "../../components/ui/Input/Input";
-import { AuthService } from "../../services/auth.service";
+import { AuthService, ROLES } from "../../services/auth.service";
 import spectrumLogo from "../../assets/images/common/SpectrumLogo.png";
 import styles from "./Auth.module.css";
 import { GoogleLogin } from '@react-oauth/google';
@@ -16,6 +16,14 @@ export const Login: React.FC = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const routerUserByRole = (role: string) => {
+    if (role === ROLES.ADMIN) {
+      navigate('/admin/my-profile');
+    } else {
+      navigate('/home');
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -26,9 +34,8 @@ export const Login: React.FC = () => {
     try {
       setIsLoading(true);
       setError("");
-      await AuthService.login({ email, password });
-
-      navigate('/home');
+      const response = await AuthService.login({ email, password });
+      routerUserByRole(response.role);
     } catch (err: any) {
       const apiError = err.response?.data?.title || "loginError";
       setError(t(apiError));
@@ -47,7 +54,7 @@ export const Login: React.FC = () => {
       });
 
       console.log('Google login successful:', response);
-      navigate('/home');
+      routerUserByRole(response.role);
     } catch (err: any) {
       setError(t('googleLoginError') || t('loginError'));
     } finally {
@@ -96,14 +103,6 @@ export const Login: React.FC = () => {
               text="continue_with"
             />
           </div>
-
-          <button
-            type="button"
-            className={styles.adminAccessButton}
-            onClick={() => navigate('/admin/my-profile')}
-          >
-          Ir al perfil de administrador
-          </button>
 
           <p className={styles.switchLink}>
             {t('noAccount')}

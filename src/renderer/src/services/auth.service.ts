@@ -1,9 +1,16 @@
 import { api } from './api';
 
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  REVIEWER: 'REVIEWER',
+  READER: 'READER'
+};
+
 export interface AuthResponse {
   token: string;
   username: string;
   email: string;
+  role: string;
 }
 
 export const AuthService = {
@@ -11,10 +18,14 @@ export const AuthService = {
     const response = await api.post<AuthResponse>('/auth/login', credentials);
 
     localStorage.setItem('token', response.data.token);
-    localStorage.setItem('user', JSON.stringify({
-      username: response.data.username,
-      email: response.data.email
-    }));
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username: response.data.username,
+        email: response.data.email,
+        role: response.data.role
+      })
+    );
     return response.data;
   },
 
@@ -22,10 +33,14 @@ export const AuthService = {
     const response = await api.post<AuthResponse>('/auth/register', userData);
 
     localStorage.setItem('token', response.data.token);
-    localStorage.setItem('user', JSON.stringify({
-      username: response.data.username,
-      email: response.data.email
-    }));
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username: response.data.username,
+        email: response.data.email,
+        role: response.data.role
+      })
+    );
     return response.data;
   },
 
@@ -40,6 +55,14 @@ export const AuthService = {
     });
 
     localStorage.setItem('token', response.data.token);
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username: response.data.username,
+        email: response.data.email,
+        role: response.data.role
+      })
+    );
     return response.data;
   }
 };
