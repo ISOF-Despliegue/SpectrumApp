@@ -1,0 +1,49 @@
+{
+  "title": "Profile",
+  "loading": "Loading Spectrum...",
+  "notFound": "User not found.",
+  "adminPath": "Users",
+  "labels": {
+    "platforms": "Platforms:",
+    "description": "Description",
+    "noDescription": "No description available.",
+    "orderBy": "Order by",
+    "security": "Security",
+    "passwordCurrent": "Current password",
+    "passwordNew": "New password",
+    "passwordConfirm": "Confirm password"
+  },
+  "sections": {
+    "games": "Interested games",
+    "reviews": "My reviews",
+    "clips": "Clips"
+  },
+  "placeholders": {
+    "bio": "Tell us a bit about yourself...",
+    "emptyReviews": "Your reviews will be loaded here...",
+    "emptyClips": "Your clips will be loaded here..."
+  },
+  "actions": {
+    "edit": "Edit profile",
+    "save": "Save",
+    "cancel": "Cancel",
+    "block": "Block profile",
+    "suspend": "Suspend profile",
+    "delete": "Delete",
+    "deleteProfile": "Delete profile",
+    "change": "Change",
+    "seeMore": "See more",
+    "changePassword": "Change password"
+  },
+  "orderOptions": {
+    "recent": "Recent",
+    "oldest": "Oldest",
+    "alphabetical": "A-Z"
+  },
+  "messages": {
+    "passwordMismatch": "Passwords do not match",
+    "passwordUpdated": "Password updated successfully",
+    "updateError": "Error changing password. Check your current password.",
+    "fillFields": "Please fill all fields"
+  }
+}

@@ -1,0 +1,80 @@
+.clipContainer {
+  position: relative;
+  width: 240px;
+  height: 135px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #121212;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.clipContainer:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+.clipThumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.clipContainer:hover .clipThumbnail {
+  opacity: 1;
+}
+
+.infoLayer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 10px 8px 10px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  color: #ffffff;
+}
+
+.clipTitle {
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
+.clipDuration {
+  font-size: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.playIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.clipContainer:hover .playIcon {
+  color: #ffffff;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.deleteBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+}

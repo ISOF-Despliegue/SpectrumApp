@@ -1,0 +1,49 @@
+{
+  "title": "Perfil",
+  "loading": "Cargando Spectrum...",
+  "notFound": "Usuario no encontrado.",
+  "adminPath": "Usuarios",
+  "labels": {
+    "platforms": "Plataformas:",
+    "description": "Descripción",
+    "noDescription": "No hay descripción disponible.",
+    "orderBy": "Ordenar por",
+    "security": "Seguridad",
+  "passwordCurrent": "Contraseña actual",
+  "passwordNew": "Nueva contraseña",
+  "passwordConfirm": "Confirmar contraseña"
+  },
+  "sections": {
+    "games": "Juegos de interés",
+    "reviews": "Mis reseñas",
+    "clips": "Clips"
+  },
+  "placeholders": {
+    "bio": "Cuéntanos un poco sobre ti...",
+    "emptyReviews": "Aquí se cargarán tus reseñas...",
+    "emptyClips": "Aquí se cargarán tus clips..."
+  },
+  "actions": {
+    "edit": "Editar perfil",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "block": "Bloquear perfil",
+    "suspend": "Suspender perfil",
+    "delete": "Borrar",
+    "deleteProfile": "Eliminar perfil",
+    "change": "Cambiar",
+    "seeMore": "Ver más",
+    "changePassword": "Cambiar contraseña"
+  },
+  "orderOptions": {
+    "recent": "Recientes",
+    "oldest": "Antiguos",
+    "alphabetical": "A-Z"
+  },
+  "messages": {
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordUpdated": "Contraseña actualizada con éxito",
+    "updateError": "Error al cambiar la contraseña. Verifica tu contraseña actual.",
+    "fillFields": "Por favor, completa todos los campos"
+  }
+}

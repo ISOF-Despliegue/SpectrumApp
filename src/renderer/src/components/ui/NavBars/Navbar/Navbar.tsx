@@ -26,13 +26,20 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
         const data = await ProfileService.getMe();
         setProfile(data);
       } catch (error) {
-        console.error("Error al obtener datos del perfil en la Navbar:", error);
+        console.error("Error obtaining profile data:", error);
       }
     };
     if (localStorage.getItem('token')) {
       fetchProfileData();
     }
   }, []);
+
+  const handleInternalProfileClick = () => {
+    if (onProfileClick) {
+      onProfileClick();
+    }
+    navigate('/profile');
+  };
 
   const username = profile?.username || "Cargando...";
   const userProfileImage = profile?.profilePicture || defaultPhoto;
@@ -59,7 +66,7 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
             </span>
             <ProfileImageNavbar
               imageUrl={userProfileImage}
-              onClick={onProfileClick}
+              onClick={handleInternalProfileClick}
             />
           </div>
         </div>

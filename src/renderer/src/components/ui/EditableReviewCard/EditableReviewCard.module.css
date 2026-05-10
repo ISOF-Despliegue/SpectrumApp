@@ -1,0 +1,18 @@
+.editableReviewWrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+  transition: transform 0.2s ease;
+}
+
+.editableReviewWrapper:hover {
+  filter: brightness(1.05);
+}
+
+.reviewDeleteBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}

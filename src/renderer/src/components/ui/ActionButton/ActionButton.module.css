@@ -1,0 +1,104 @@
+/* Base button styles */
+.actionButton {
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  outline: none;
+  color: #ffffff;
+}
+
+/* Size Variants */
+.sizeLarge {
+  padding: 12px 24px;
+  font-size: 1rem;
+  min-width: 120px;
+}
+
+.sizeSmall {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  min-width: 80px;
+}
+
+/* --- Color Variants (camelCase) --- */
+
+/* Greens: Positive actions */
+.btnSave {
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.btnSave:hover:not(:disabled) {
+  background: #2ecc71;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+/* Reds: Destructive or cancel actions */
+.btnCancel,
+.btnDeleteProfile,
+.btnBlock {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.btnCancel:hover:not(:disabled),
+.btnDeleteProfile:hover:not(:disabled),
+.btnBlock:hover:not(:disabled) {
+  background: #e74c3c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+/* Yellow: Moderation actions */
+.btnSuspend {
+  background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+  color: #1a1a1a;
+  box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
+}
+
+.btnSuspend:hover:not(:disabled) {
+  background: #f1c40f;
+  transform: translateY(-2px);
+}
+
+/* Glass-style: Neutral actions */
+.btnNeutral,
+.btnChange {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.btnNeutral:hover:not(:disabled),
+.btnChange:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Minimalist: Small tag deletes */
+.btnDelete {
+  background: #e74c3c;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* Interaction States */
+.actionButton:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(0.9);
+}
+
+.actionButton:disabled {
+  background: #444444;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.6;
+}

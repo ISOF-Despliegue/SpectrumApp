@@ -7,12 +7,14 @@ import manoDislikeActive from '../../../assets/images/common/manoDislikeActive.p
 interface DislikeCardProps {
   initialDislikes?: number;
   dislikedByUser?: boolean;
+  size?: 'small' | 'medium';
   onToggle?: (active: boolean) => void;
 }
 
 export const DislikeCard: React.FC<DislikeCardProps> = ({
   initialDislikes = 0,
   dislikedByUser = false,
+  size = 'medium',
   onToggle
 }) => {
   const [active, setActive] = useState(dislikedByUser);
@@ -28,7 +30,7 @@ export const DislikeCard: React.FC<DislikeCardProps> = ({
 
   return (
     <button
-      className={`${styles.container} ${active ? styles.activeState : ''}`}
+      className={`${styles.container} ${active ? styles.activeState : ''} ${styles[size]}`}
       onClick={handleDislike}
     >
       <div className={styles.iconWrapper}>

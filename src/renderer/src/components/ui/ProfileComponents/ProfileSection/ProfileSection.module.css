@@ -1,0 +1,39 @@
+.profileSection {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 5px;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sectionContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  min-height: 100px;
+}
+
+.seeMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}

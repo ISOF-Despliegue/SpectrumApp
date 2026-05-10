@@ -9,6 +9,7 @@ import esNavbar from './languages/es/navbar.json';
 import esAuth from './languages/es/auth.json';
 import esGames from './languages/es/games.json';
 import esFooter from './languages/es/footer.json';
+import esProfile from './languages/es/profile.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
@@ -17,6 +18,7 @@ import enNavbar from './languages/en/navbar.json';
 import enAuth from './languages/en/auth.json';
 import enGames from './languages/en/games.json';
 import enFooter from './languages/en/footer.json';
+import enProfile from './languages/es/profile.json';
 
 i18n
   .use(LanguageDetector)
@@ -29,7 +31,8 @@ i18n
         navbar: esNavbar,
         auth: esAuth,
         games: esGames,
-        footer: esFooter
+        footer: esFooter,
+        profile: esProfile
       },
       en: {
         common: enCommon,
@@ -37,7 +40,8 @@ i18n
         navbar: enNavbar,
         auth: enAuth,
         games: enGames,
-        footer: enFooter
+        footer: enFooter,
+        profile: enProfile
       }
     },
     fallbackLng: 'es',

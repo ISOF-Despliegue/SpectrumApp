@@ -1,0 +1,208 @@
+.profileContainer {
+  --color-accent: #3498db;
+  --color-bg-subtle: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.1);
+
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.adminPath {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 30px;
+}
+
+.profileLayout {
+  display: grid;
+  grid-template-columns: 1fr 2.3fr 1.7fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.platformLogos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.logoWrapper {
+  width: 45px;
+  height: 45px;
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.logoWrapper:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+.platformIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+.addPlatformBtn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px dashed var(--color-accent);
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.addPlatformBtn:hover {
+  background: rgba(52, 152, 219, 0.1);
+  transform: scale(1.1);
+}
+
+.middleColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.identityHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.usernameText {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.usernameInput {
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 800;
+  width: 100%;
+  border-radius: 8px;
+  outline: none;
+}
+
+.emailText {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.passwordTrigger {
+  margin-top: 15px;
+  display: flex;
+}
+
+.bioSection {
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bioText {
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bioEditor {
+  width: 100%;
+  min-height: 120px;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  color: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.actionGroup {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.editActions, .adminButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.gamesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+.statusScreen {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.emptyPlaceholder {
+  width: 100%;
+  padding: 40px;
+  text-align: center;
+  border: 2px dashed var(--color-border);
+  border-radius: 15px;
+  color: rgba(255, 255, 255, 0.2);
+  font-style: italic;
+}
+
+@media (max-width: 1100px) {
+  .profileLayout {
+    grid-template-columns: 1fr 2fr;
+  }
+  .rightColumn {
+    grid-column: span 2;
+  }
+}
