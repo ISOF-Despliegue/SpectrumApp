@@ -6,6 +6,7 @@ import { api } from './api';
 export interface ProfileGame {
   id: string;
   name: string;
+  imageUrl: string;
 }
 
 /// <summary>

@@ -2,7 +2,7 @@ import styles from './GameCardBig.module.css';
 
 interface GameCardBigProps {
   imageUrl?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const GameCardBig = ({ imageUrl, onClick }: GameCardBigProps) => {

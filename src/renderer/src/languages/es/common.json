@@ -18,6 +18,10 @@
       "dateNew": "Más recientes",
       "dateOld": "Más antiguos"
     }
+  },
+
+  "status": {
+    "loading": "Loading..."
   }
 
 }

@@ -21,7 +21,8 @@
   "placeholders": {
     "bio": "Tell us a bit about yourself...",
     "emptyReviews": "Your reviews will be loaded here...",
-    "emptyClips": "Your clips will be loaded here..."
+    "emptyClips": "Your clips will be loaded here...",
+    "emptyGames": "You haven't added any interested games yet."
   },
   "actions": {
     "edit": "Edit profile",
@@ -33,7 +34,8 @@
     "deleteProfile": "Delete profile",
     "change": "Change",
     "seeMore": "See more",
-    "changePassword": "Change password"
+    "changePassword": "Change password",
+    "close": "Close"
   },
   "orderOptions": {
     "recent": "Recent",
@@ -44,6 +46,14 @@
     "passwordMismatch": "Passwords do not match",
     "passwordUpdated": "Password updated successfully",
     "updateError": "Error changing password. Check your current password.",
+    "profileUpdated": "Profile updated successfully",
+    "profileUpdateError":"Error updating profile",
     "fillFields": "Please fill all fields"
+  },
+    "selector": {
+    "title": "Select Interested Games",
+    "add": "Add",
+    "added": "Already in list",
+    "manageTitle": "Manage My Games"
   }
 }

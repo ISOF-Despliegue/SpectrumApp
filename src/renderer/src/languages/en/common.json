@@ -17,6 +17,10 @@
       "nameDesc": "Name (Z-A)",
       "dateNew": "Newest",
       "dateOld": "Oldest"
+    },
+
+    "status": {
+    "loading": "Cargando..."
     }
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import './InterestedGameCard.module.css';
+import styles from './InterestedGameCard.module.css';
 import { ActionButton } from '../../../../components/ui/ActionButton';
 
 /// <summary>
@@ -28,17 +28,17 @@ export const InterestedGameCard: React.FC<InterestedGameCardProps> = ({
   onDelete
 }) => {
   return (
-    <div className="gameCardContainer">
+    <div className={styles.gameCardContainer}>
       <img
         src={imageUrl || 'https://via.placeholder.com/120x160'}
         alt={title}
-        className="gameImage"
+        className={styles.gameImage}
       />
 
-      <div className="gameTitleTooltip">{title}</div>
+      <div className={styles.gameTitleTooltip}>{title}</div>
 
       {isEditable && (
-        <div className="deleteBadge">
+        <div className={styles.deleteBadge}>
           <ActionButton
             variant="delete"
             size="small"

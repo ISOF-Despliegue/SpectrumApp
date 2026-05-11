@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './profile.module.css';
-import { ProfileService, UserProfile } from '../../services/profile.service';
+import { ProfileService, UserProfile, ProfileGame } from '../../services/profile.service';
 
 import { ActionButton } from '../../components/ui/ActionButton';
 import { EditableProfileImage } from '../../components/ui/ProfileComponents/EditableProfileImage';
 import { ProfileSection } from '../../components/ui/ProfileComponents/ProfileSection';
 import { InterestedGameCard } from '../../components/ui/ProfileComponents/InterestedGameCard';
+import { GameSelectorModal } from '../../components/ui/ProfileComponents/GameSelectorModal';
+import { InterestedGamesModal } from '../../components/ui/ProfileComponents/InterestedGamesModal';
 import { PlatformSelectionModal } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
 import { PasswordChangeModal } from '../../components/ui/ProfileComponents/PasswordChangeModal';
+
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
 import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
 import phoneLogo from '../../assets/images/platforms/phoneLogo.png';
@@ -42,6 +45,8 @@ export const Profile: React.FC = () => {
 
   const [isPlatformModalOpen, setIsPlatformModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isInterestedModalOpen, setIsInterestedModalOpen] = useState(false);
+  const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
 
   const loggedInUserId = "id-actual-del-usuario";
   const userRole: "user" | "admin" = "user";
@@ -59,7 +64,7 @@ export const Profile: React.FC = () => {
     setLoading(true);
     setStatus({ type: null, message: null });
     try {
-      const data = isOwner ? await ProfileService.getMe() : await ProfileService.getMe();
+      const data = await ProfileService.getMe();
       setProfile(data);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -70,21 +75,60 @@ export const Profile: React.FC = () => {
   };
 
   /// <summary>
-  /// Saves the profile changes to the backend and provides visual feedback.
+  /// Saves the profile changes to the backend.
+  /// Maps the local state to the DTO expected by the server to avoid 400 Bad Request.
   /// </summary>
   const handleSaveProfile = async () => {
     if (!profile) return;
     setStatus({ type: null, message: null });
 
     try {
-      await ProfileService.updateMyProfile(profile);
+      const updateData = {
+        username: profile.username,
+        email: profile.email,
+        profilePicture: profile.profilePicture,
+        biography: profile.biography,
+        interestedGames: profile.interestedGames,
+        platforms: profile.platforms
+      };
+
+      await ProfileService.updateMyProfile(updateData as any);
+
       setStatus({ type: 'success', message: t('messages.profileUpdated') });
       setIsEditing(false);
 
       setTimeout(() => setStatus({ type: null, message: null }), 3000);
     } catch (error) {
-      setStatus({ type: 'error', message: t('messages.updateError') });
+      console.error("Update error:", error);
+      setStatus({
+        type: 'error',
+        message: t('messages.profileUpdateError') || "Error al actualizar el perfil."
+      });
     }
+  };
+
+  /// <summary>
+  /// Removes a game from the local profile state.
+  /// </summary>
+  const handleDeleteGame = (gameId: string) => {
+    if (!profile) return;
+    setProfile({
+      ...profile,
+      interestedGames: profile.interestedGames.filter(g => g.id !== gameId)
+    });
+  };
+
+  /// <summary>
+  /// Adds a new game to the local profile state including its image.
+  /// </summary>
+  const handleSelectGame = (game: ProfileGame) => {
+    if (!profile) return;
+    if (profile.interestedGames.some(g => g.id === game.id)) return;
+
+    setProfile({
+      ...profile,
+      interestedGames: [...profile.interestedGames, game]
+    });
   };
 
   if (loading) return <div className={styles.statusScreen}>{t('loading')}</div>;
@@ -98,6 +142,7 @@ export const Profile: React.FC = () => {
         </div>
       )}
 
+      {/* Mensaje de estado mejorado (flotante según el nuevo CSS) */}
       {status.message && (
         <div className={`${styles.globalStatus} ${styles[status.type!]}`}>
           {status.message}
@@ -212,8 +257,25 @@ export const Profile: React.FC = () => {
           <ProfileSection title={t('sections.games')}>
             <div className={styles.gamesGrid}>
               {profile.interestedGames.map(game => (
-                <InterestedGameCard key={game.id} id={game.id} title={game.name} isEditable={isEditing || (isAdmin && !isOwner)}/>
+                <InterestedGameCard
+                  key={game.id}
+                  id={game.id}
+                  title={game.name}
+                  imageUrl={game.imageUrl}
+                  isEditable={isEditing || (isAdmin && !isOwner)}
+                  onDelete={handleDeleteGame}
+                />
               ))}
+
+              {isEditing && (
+                <button
+                  className={styles.addGameBtn}
+                  onClick={() => setIsInterestedModalOpen(true)}
+                  title={t('selector.manageTitle')}
+                >
+                  +
+                </button>
+              )}
             </div>
           </ProfileSection>
 
@@ -236,6 +298,21 @@ export const Profile: React.FC = () => {
       <PasswordChangeModal
         isOpen={isPasswordModalOpen}
         onClose={() => setIsPasswordModalOpen(false)}
+      />
+
+      <InterestedGamesModal
+        isOpen={isInterestedModalOpen}
+        onClose={() => setIsInterestedModalOpen(false)}
+        games={profile.interestedGames}
+        onDelete={handleDeleteGame}
+        onOpenSelector={() => setIsGameSelectorOpen(true)}
+      />
+
+      <GameSelectorModal
+        isOpen={isGameSelectorOpen}
+        onClose={() => setIsGameSelectorOpen(false)}
+        onSelect={handleSelectGame}
+        alreadySelectedIds={profile.interestedGames.map(g => g.id)}
       />
     </div>
   );
