@@ -23,6 +23,7 @@ export const Games = () => {
 
   const sortOptions = [
     { value: 'none', label: tCommon('filters.options.default') },
+    { value: 'rating_desc', label: tCommon('filters.options.ratingDesc') },
     { value: 'name_asc', label: tCommon('filters.options.nameAsc') },
     { value: 'name_desc', label: tCommon('filters.options.nameDesc') },
     { value: 'date_new', label: tCommon('filters.options.dateNew') },

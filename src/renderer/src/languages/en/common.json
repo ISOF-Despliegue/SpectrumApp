@@ -16,7 +16,8 @@
       "nameAsc": "Name (A-Z)",
       "nameDesc": "Name (Z-A)",
       "dateNew": "Newest",
-      "dateOld": "Oldest"
+      "dateOld": "Oldest",
+      "ratingDesc": "Highest Rated"
     },
 
     "status": {
