@@ -38,13 +38,14 @@ export const getGames = async (search?: string, page: number = 1, sort: string =
     });
 
     const data = response.data;
-return {
+
+    return {
       items: (data.items || data.Items || []).map((game: any) => ({
         id: game.rawgId || game.id,
-        title: game.title || game.name,
-        imageUrl: game.background_image || game.coverImageUrl || game.backgroundImage || null,
+        title: game.title,
+        imageUrl: game.coverImageUrl || game.CoverImageUrl || " ",
         released: game.releaseDate || "",
-        spectrumRating: game.internalRating || game.spectrumRating || 0
+        spectrumRating: game.internalRating || 0
       })),
       totalCount: data.totalCount ?? data.TotalCount ?? 0,
       page: data.page ?? data.Page ?? 1,

@@ -218,6 +218,40 @@
   max-width: 180px;
 }
 
+.seeMoreContainer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-bottom: 0.5rem;
+}
+
+.seeMoreContainer button {
+  background: rgba(0, 212, 255, 0.1); /* Fondo sutil del color de acento */
+  border: 1px solid var(--accent-color, #00d4ff);
+  color: var(--accent-color, #00d4ff);
+  padding: 0.6rem 2rem;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+  cursor: pointer;
+}
+
+.seeMoreContainer button:hover {
+  background: var(--accent-color, #00d4ff);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.seeMoreContainer button:active {
+  transform: scale(0.95);
+}
+
 .addGameBtn:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--accent-color, #00d4ff);

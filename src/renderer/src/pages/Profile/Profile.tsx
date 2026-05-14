@@ -254,15 +254,19 @@ export const Profile: React.FC = () => {
             )}
           </div>
 
-          <ProfileSection title={t('sections.games')}>
+          <ProfileSection
+            title={t('sections.games')}
+            showSeeMore={profile.interestedGames.length > 6}
+            onSeeMore={() => setIsInterestedModalOpen(true)}
+          >
             <div className={styles.gamesGrid}>
-              {profile.interestedGames.map(game => (
+              {profile.interestedGames.slice(0, 6).map(game => (
                 <InterestedGameCard
                   key={game.id}
                   id={game.id}
                   title={game.name}
                   imageUrl={game.imageUrl}
-                  isEditable={isEditing || (isAdmin && !isOwner)}
+                  isEditable={isEditing}
                   onDelete={handleDeleteGame}
                 />
               ))}
