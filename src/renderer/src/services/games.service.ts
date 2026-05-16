@@ -1,7 +1,7 @@
 import { api } from './api';
 
 export interface Game {
-  id: number;
+  id: string;
   title: string;
   imageUrl: string;
   released: string;
@@ -41,7 +41,7 @@ export const getGames = async (search?: string, page: number = 1, sort: string =
 
     return {
       items: (data.items || data.Items || []).map((game: any) => ({
-        id: game.rawgId || game.id,
+        id: game.id,
         title: game.title,
         imageUrl: game.coverImageUrl || game.CoverImageUrl || " ",
         released: game.releaseDate || "",
