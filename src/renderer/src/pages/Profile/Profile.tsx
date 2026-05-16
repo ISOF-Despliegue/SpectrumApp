@@ -12,6 +12,7 @@ import { GameSelectorModal } from '../../components/ui/ProfileComponents/GameSel
 import { InterestedGamesModal } from '../../components/ui/ProfileComponents/InterestedGamesModal';
 import { PlatformSelectionModal } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
 import { PasswordChangeModal } from '../../components/ui/ProfileComponents/PasswordChangeModal';
+import { ClipUploadFlowModal } from '../../components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
 
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
 import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
@@ -27,10 +28,10 @@ const PLATFORM_LOGOS: Record<string, string> = {
   'Xbox': xboxLogo
 };
 
-/// <summary>
-/// Main profile page component.
-/// Manages user information, platform interests, and security settings.
-/// </summary>
+/**
+ * Main profile page component.
+ * Manages user information, platform interests, gaming clips, and security settings.
+ */
 export const Profile: React.FC = () => {
   const { t } = useTranslation('profile');
   const { userId } = useParams<{ userId: string }>();
@@ -47,6 +48,7 @@ export const Profile: React.FC = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isInterestedModalOpen, setIsInterestedModalOpen] = useState(false);
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
+  const [isClipModalOpen, setIsClipModalOpen] = useState(false);
 
   const loggedInUserId = "id-actual-del-usuario";
   const userRole: "user" | "admin" = "user";
@@ -57,9 +59,9 @@ export const Profile: React.FC = () => {
     fetchData();
   }, [userId]);
 
-  /// <summary>
-  /// Fetches profile data from the server.
-  /// </summary>
+  /**
+   * Fetches profile data from the server.
+   */
   const fetchData = async () => {
     setLoading(true);
     setStatus({ type: null, message: null });
@@ -74,10 +76,10 @@ export const Profile: React.FC = () => {
     }
   };
 
-  /// <summary>
-  /// Saves the profile changes to the backend.
-  /// Maps the local state to the DTO expected by the server to avoid 400 Bad Request.
-  /// </summary>
+  /**
+   * Saves the profile changes to the backend.
+   * Maps the local state to the DTO expected by the server to avoid 400 Bad Request.
+   */
   const handleSaveProfile = async () => {
     if (!profile) return;
     setStatus({ type: null, message: null });
@@ -107,9 +109,10 @@ export const Profile: React.FC = () => {
     }
   };
 
-  /// <summary>
-  /// Removes a game from the local profile state.
-  /// </summary>
+  /**
+   * Removes a game from the local profile state.
+   * @param gameId The unique identifier of the game to remove.
+   */
   const handleDeleteGame = (gameId: string) => {
     if (!profile) return;
     setProfile({
@@ -118,9 +121,10 @@ export const Profile: React.FC = () => {
     });
   };
 
-  /// <summary>
-  /// Adds a new game to the local profile state including its image.
-  /// </summary>
+  /**
+   * Adds a new game to the local profile state including its image.
+   * @param game The profile game object selected from the lookup modal.
+   */
   const handleSelectGame = (game: ProfileGame) => {
     if (!profile) return;
     if (profile.interestedGames.some(g => g.id === game.id)) return;
@@ -128,6 +132,18 @@ export const Profile: React.FC = () => {
     setProfile({
       ...profile,
       interestedGames: [...profile.interestedGames, game]
+    });
+  };
+
+  /**
+   * Updates the local profile state with the newly uploaded AWS S3 avatar URL.
+   * @param newUrl The secure public URL returned by the storage service.
+   */
+  const handleAvatarUpdated = (newUrl: string): void => {
+    if (!profile) return;
+    setProfile({
+      ...profile,
+      profilePicture: newUrl
     });
   };
 
@@ -142,7 +158,6 @@ export const Profile: React.FC = () => {
         </div>
       )}
 
-      {/* Mensaje de estado mejorado (flotante según el nuevo CSS) */}
       {status.message && (
         <div className={`${styles.globalStatus} ${styles[status.type!]}`}>
           {status.message}
@@ -155,7 +170,7 @@ export const Profile: React.FC = () => {
           <EditableProfileImage
             imageUrl={profile.profilePicture}
             isEditing={isEditing}
-            onEditClick={() => console.log("Lógica AWS")}
+            onAvatarUpdated={handleAvatarUpdated}
           />
 
           <div className={styles.platformGroup}>
@@ -284,6 +299,13 @@ export const Profile: React.FC = () => {
           </ProfileSection>
 
           <ProfileSection title={t('sections.clips')} showSeeMore={true}>
+            {isEditing && (
+              <div style={{ marginBottom: '12px' }}>
+                <ActionButton variant="neutral" size="small" onClick={() => setIsClipModalOpen(true)}>
+                  Subir nuevo clip
+                </ActionButton>
+              </div>
+            )}
             <p className={styles.emptyPlaceholder}>{t('placeholders.emptyClips')}</p>
           </ProfileSection>
         </aside>
@@ -318,6 +340,13 @@ export const Profile: React.FC = () => {
         onSelect={handleSelectGame}
         alreadySelectedIds={profile.interestedGames.map(g => g.id)}
       />
+
+      {isClipModalOpen && (
+        <ClipUploadFlowModal
+          onClose={() => setIsClipModalOpen(false)}
+          onRefreshClips={fetchData}
+        />
+      )}
     </div>
   );
 };

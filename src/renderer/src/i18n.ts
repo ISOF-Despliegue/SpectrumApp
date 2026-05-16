@@ -10,6 +10,8 @@ import esAuth from './languages/es/auth.json';
 import esGames from './languages/es/games.json';
 import esFooter from './languages/es/footer.json';
 import esProfile from './languages/es/profile.json';
+import esImageUpload from './languages/es/imageUpload.json';
+import esVideoUpload from './languages/es/videoUpload.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
@@ -19,6 +21,8 @@ import enAuth from './languages/en/auth.json';
 import enGames from './languages/en/games.json';
 import enFooter from './languages/en/footer.json';
 import enProfile from './languages/es/profile.json';
+import enImageUpload from './languages/en/imageUpload.json';
+import enVideoUpload from './languages/en/videoUpload.json';
 
 i18n
   .use(LanguageDetector)
@@ -32,7 +36,9 @@ i18n
         auth: esAuth,
         games: esGames,
         footer: esFooter,
-        profile: esProfile
+        profile: esProfile,
+        imageUpload: esImageUpload,
+        videoUpload: esVideoUpload
       },
       en: {
         common: enCommon,
@@ -41,7 +47,9 @@ i18n
         auth: enAuth,
         games: enGames,
         footer: enFooter,
-        profile: enProfile
+        profile: enProfile,
+        imageUpload: enImageUpload,
+        videoUpload: enVideoUpload
       }
     },
     fallbackLng: 'es',

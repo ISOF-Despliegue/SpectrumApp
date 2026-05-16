@@ -1,0 +1,20 @@
+{
+  "title": "Subiendo Imagen",
+  "status": {
+    "validating": "Validando el formato y el tamaño de la imagen...",
+    "uploading": "Subiendo la imagen. Por favor, espere..."
+  },
+  "requirements": {
+    "title": "Requisitos del archivo de imagen:",
+    "formats": "Formatos permitidos: .png, .jpeg y .jpg",
+    "size": "Tamaño máximo permitido: 5 MB"
+  },
+  "actions": {
+    "close": "Cerrar",
+    "change": "Cambiar Imagen"
+  },
+  "messages": {
+    "success": "¡Tu imagen se ha actualizado con éxito!",
+    "error": "Ocurrió un error al subir la imagen."
+  }
+}

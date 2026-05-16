@@ -1,0 +1,20 @@
+{
+  "title": "Uploading Image",
+  "status": {
+    "validating": "Validating image format and size...",
+    "uploading": "Uploading the image. Please wait..."
+  },
+  "requirements": {
+    "title": "Image file requirements:",
+    "formats": "Allowed formats: .png, .jpeg and .jpg",
+    "size": "Maximum size allowed: 5 MB"
+  },
+  "actions": {
+    "close": "Close",
+    "change": "Change Image"
+  },
+  "messages": {
+    "success": "Your image has been updated successfully!",
+    "error": "An error occurred while uploading the image."
+  }
+}

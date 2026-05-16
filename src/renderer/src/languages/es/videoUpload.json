@@ -1,0 +1,36 @@
+{
+  "title": "Subiendo Clip de Video",
+  "status": {
+    "validating": "Validando la duración y el tamaño del video...",
+    "uploading": "Subiendo el video. Por favor, espere..."
+  },
+  "requirements": {
+    "title": "Requisitos del archivo de video:",
+    "formats": "Formatos permitidos: .mp4 y .mov",
+    "size": "Tamaño máximo permitido: 60 MB",
+    "duration": "Duración máxima permitida: 15 segundos"
+  },
+  "actions": {
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "submit": "Publicar Clip"
+  },
+  "messages": {
+    "success": "¡Tu video se ha publicado con éxito!",
+    "error": "Ocurrió un error al subir el archivo."
+  },
+  "form": {
+    "stepGame": "Paso 1: Selecciona el Videojuego",
+    "stepDetails": "Paso 2: Detalles del Clip",
+    "searchPlaceholder": "Buscar juego por nombre...",
+    "titleLabel": "Título del Clip",
+    "titlePlaceholder": "Dale un título llamativo a tu jugada...",
+    "descriptionLabel": "Descripción (Opcional)",
+    "descriptionPlaceholder": "Cuéntanos qué pasó en este clip...",
+    "fileLabel": "Seleccionar Archivo de Video",
+    "validationGame": "Debes seleccionar un videojuego de la lista.",
+    "validationTitle": "El título del clip es obligatorio.",
+    "validationFile": "Debes cargar un archivo de video válido."
+  }
+}

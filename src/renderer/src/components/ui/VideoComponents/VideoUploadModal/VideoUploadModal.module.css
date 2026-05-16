@@ -1,0 +1,332 @@
+/* ==========================================================================
+   Base Layout & Backdrop
+   ========================================================================== */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modalContainer {
+  background-color: #1e1e24;
+  padding: 30px;
+  border-radius: 12px;
+  width: 460px;
+  max-width: 90%;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 2px solid #3a3a42;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.modalCloseX {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #aaaaaa;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.modalCloseX:hover {
+  color: #e74c3c;
+}
+
+.modalTitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   Sequential Step Management
+   ========================================================================== */
+
+.stepWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepIndicator {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #00ccff;
+  font-weight: 700;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.selectedGameBadge {
+  background-color: rgba(0, 204, 255, 0.1);
+  border: 1px solid rgba(0, 204, 255, 0.3);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Form Fields & Inputs
+   ========================================================================== */
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.formLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #cccccc;
+}
+
+.formInput,
+.formTextarea {
+  background-color: #2d2d35;
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formTextarea {
+  min-height: 80px;
+  max-height: 140px;
+  resize: vertical;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  border-color: #00ccff;
+  box-shadow: 0 0 8px rgba(0, 204, 255, 0.2);
+}
+
+.formFileInput {
+  color: #aaaaaa;
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+/* Input file customization placeholder for native renderers */
+.formFileInput::file-selector-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background 0.2s ease;
+}
+
+.formFileInput::file-selector-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Inline Validations & Errors
+   ========================================================================== */
+
+.inlineErrorLabel {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 5px;
+  display: block;
+}
+
+.requirementsBox {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.requirementsBox p {
+  margin: 4px 0;
+  font-size: 0.8rem;
+  color: #888888;
+}
+
+/* ==========================================================================
+   Inline Game Search Dropdown
+   ========================================================================== */
+
+.searchResultsList {
+  list-style: none;
+  padding: 0;
+  margin: -10px 0 20px 0;
+  background-color: #2d2d35;
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.searchResultItem {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: #dddddd;
+}
+
+.searchResultItem:hover {
+  background-color: rgba(0, 204, 255, 0.15);
+  color: #ffffff;
+}
+
+.itemSelected {
+  background-color: rgba(0, 204, 255, 0.25);
+  color: #00ccff;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Action Progress Components
+   ========================================================================== */
+
+.progressBar {
+  width: 100%;
+  background-color: #2d2d35;
+  border-radius: 8px;
+  height: 14px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border: 1px solid #3a3a42;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ccff 0%, #0088cc 100%);
+  width: 0;
+  transition: width 0.3s ease-in-out;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+}
+
+.statusText {
+  font-size: 0.95rem;
+  color: #cccccc;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.successText {
+  color: #2ecc71;
+  font-weight: 700;
+  display: block;
+}
+
+.errorText {
+  color: #e74c3c;
+  font-weight: 700;
+  display: block;
+}
+
+.errorDetail {
+  display: block;
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  margin-top: 8px;
+  font-weight: 400;
+  background-color: rgba(231, 76, 60, 0.05);
+  padding: 8px;
+  border-radius: 6px;
+  border-left: 3px solid #e74c3c;
+  text-align: left;
+}
+
+/* ==========================================================================
+   Action Control Row (Aligned with ActionButton Baseline)
+   ========================================================================== */
+
+.actionRowButton {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.primaryActionButton,
+.secondaryActionButton,
+.closeButton {
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  padding: 10px 20px;
+  outline: none;
+}
+
+.primaryActionButton {
+  background: linear-gradient(135deg, #00ccff 0%, #0088cc 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 204, 255, 0.25);
+}
+
+.primaryActionButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 204, 255, 0.35);
+}
+
+.secondaryActionButton {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.secondaryActionButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.closeButton {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: #ffffff;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.25);
+}
+
+.closeButton:hover {
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.35);
+}
+
+.primaryActionButton:active,
+.secondaryActionButton:active,
+.closeButton:active {
+  transform: translateY(0);
+  filter: brightness(0.9);
+}

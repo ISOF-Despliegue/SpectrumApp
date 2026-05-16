@@ -1,0 +1,36 @@
+{
+  "title": "Uploading Video Clip",
+  "status": {
+    "validating": "Validating video duration and size...",
+    "uploading": "Uploading the video. Please wait..."
+  },
+  "requirements": {
+    "title": "Video file requirements:",
+    "formats": "Allowed formats: .mp4 and .mov",
+    "size": "Maximum size allowed: 60 MB",
+    "duration": "Maximum duration allowed: 15 seconds"
+  },
+  "actions": {
+    "close": "Close",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Publish Clip"
+  },
+  "messages": {
+    "success": "Your video has been published successfully!",
+    "error": "An error occurred while uploading the file."
+  },
+    "form": {
+    "stepGame": "Step 1: Select the Video Game",
+    "stepDetails": "Step 2: Clip Details",
+    "searchPlaceholder": "Search game by name...",
+    "titleLabel": "Clip Title",
+    "titlePlaceholder": "Give your play a catchy title...",
+    "descriptionLabel": "Description (Optional)",
+    "descriptionPlaceholder": "Tell us what happened in this clip...",
+    "fileLabel": "Select Video File",
+    "validationGame": "You must select a video game from the list.",
+    "validationTitle": "The clip title is required.",
+    "validationFile": "You must upload a valid video file."
+  }
+}
