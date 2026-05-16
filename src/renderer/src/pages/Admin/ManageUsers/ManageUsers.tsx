@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './Admin_ManageUsers.module.css';
+import styles from './ManageUsers.module.css';
 
 type UserRow = {
   id: string;
