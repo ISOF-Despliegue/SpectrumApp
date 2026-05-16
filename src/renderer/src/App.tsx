@@ -6,12 +6,12 @@ import { Register } from './pages/Auth/Register';
 import { Games } from './pages/Games';
 import { MainLayout } from './components/ui/MainLayout';
 import { Admin } from './pages/Admin';
-import { AdminMyProfile } from './pages/Admin/Admin_MyProfile';
-import { AdminGlobalMetrics } from './pages/Admin/Admin_GlobalMetrics';
-import { AdminManageUsers } from './pages/Admin/Admin_ManageUsers';
-import { AdminManageReviews } from './pages/Admin/Admin_ManageReviews';
-import { AdminManageEvents } from './pages/Admin/Admin_ManageEvents';
-import { AdminManageAdmins } from './pages/Admin/Admin_ManageAdmins';
+import { AdminMyProfile } from './pages/Admin/MyProfile';
+import { AdminGlobalMetrics } from './pages/Admin/GlobalMetrics';
+import { AdminManageUsers } from './pages/Admin/ManageUsers';
+import { AdminManageReviews } from './pages/Admin/ManageReviews';
+import { AdminManageEvents } from './pages/Admin/ManageEvents';
+import { AdminManageAdmins } from './pages/Admin/ManageAdmins';
 import { GameReviews } from './pages/Games/GameReviews';
 import { Profile } from './pages/Profile';
 

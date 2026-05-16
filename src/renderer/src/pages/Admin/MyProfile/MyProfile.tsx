@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import styles from './Admin_MyProfile.module.css';
+import styles from './MyProfile.module.css';
 
 type ProfileData = {
   role: string;
