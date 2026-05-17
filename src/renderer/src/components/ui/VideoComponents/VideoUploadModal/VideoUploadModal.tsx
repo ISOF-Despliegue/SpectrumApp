@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { validateVideoMetadata, validateVideoDuration } from '../../../../utilities/videoValidation';
 import { startVideoUpload, uploadVideoChunk, completeVideoUpload } from '../../../../services/clips.service';
 import { PartEtag } from '../../../../types/media.types';
+import { ActionButton } from '../../ActionButton'; // Standard design button alignment
 import styles from './VideoUploadModal.module.css';
 
 /**
@@ -24,7 +25,6 @@ type UploadPhase = 'validating' | 'uploading' | 'success' | 'error';
 
 /**
  * Atomic modal component that orchestrates the AWS S3 multipart video upload sequence.
- * Provides abstract progress feedback without exposing technical chunk logistics to the user.
  */
 export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
   file,
@@ -91,7 +91,7 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
 
         if (isCancelled) return;
 
-        const finalVideoUrl = await completeVideoUpload({
+        const finalVideoUrl = await completeVideoUrlUpload({
           uploadId: initData.uploadId,
           keyName: initData.keyName,
           title: title,
@@ -116,6 +116,8 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
         }
       }
     };
+
+    const completeVideoUrlUpload = completeVideoUpload;
 
     executeUploadProcess();
 
@@ -151,9 +153,9 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
         </p>
 
         {phase === 'error' && (
-          <button onClick={onClose} className={styles.closeButton}>
+          <ActionButton variant="cancel" size="large" onClick={onClose}>
             {t('actions.close')}
-          </button>
+          </ActionButton>
         )}
       </div>
     </div>

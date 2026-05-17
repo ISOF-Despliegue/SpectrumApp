@@ -18,7 +18,6 @@ export const ImageContainer: React.FC<ImageContainerProps> = ({
   aspectRatio = '16/9',
   className = ''
 }) => {
-  // El tamaño es dinámico según lo que le pases
   const containerStyle: React.CSSProperties = {
     width,
     height,

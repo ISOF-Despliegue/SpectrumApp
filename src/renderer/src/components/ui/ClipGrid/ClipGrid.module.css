@@ -1,0 +1,92 @@
+/**
+ * Responsive grid container configuration.
+ * Configuración del grid usando auto-fill para que las tarjetas de 240px se acomoden solas.
+ */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/**
+ * Centered empty state display panel properties.
+ */
+.emptyGridContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 150px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/**
+ * Localized warning message fonts inside empty container.
+ */
+.emptyGridText {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  font-style: italic;
+}
+
+/**
+ * Skeleton container replicating standard PreviewClip dimensions.
+ */
+.skeletonCard {
+  width: 240px;
+  height: 135px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  position: relative;
+}
+
+/**
+ * Shimmer simulation layers for placeholder nodes.
+ */
+.skeletonThumbnail,
+.skeletonMeta {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: loadingShimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeletonThumbnail {
+  width: 100%;
+  height: 70%;
+}
+
+.skeletonMeta {
+  width: 70%;
+  height: 16px;
+  margin-top: 8px;
+}
+
+/**
+ * Shimmer sweeping animation logic.
+ */
+@keyframes loadingShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

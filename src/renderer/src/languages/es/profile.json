@@ -47,13 +47,19 @@
     "passwordUpdated": "Contraseña actualizada con éxito",
     "updateError": "Error al cambiar la contraseña. Verifica tu contraseña actual.",
     "profileUpdated": "Se ha actualizado el perfil con éxito",
-    "profileUpdateError":"Error al actualizar el perfil",
-    "fillFields": "Por favor, completa todos los campos"
+    "profileUpdateError": "Error al actualizar el perfil",
+    "fillFields": "Por favor, completa todos los campos",
+    "deleteClipConfirmation": "¿Seguro que deseas eliminar este clip?"
   },
   "selector": {
     "title": "Seleccionar Juegos de Interés",
     "add": "Agregar",
     "added": "Ya en lista",
     "manageTitle": "Gestionar mis juegos"
+  },
+  "clips": {
+    "manageTitle": "Gestionar mis clips de video",
+    "manageSubtitle": "Historial y cargas del usuario",
+    "uploadBtn": "Subir nuevo clip"
   }
 }

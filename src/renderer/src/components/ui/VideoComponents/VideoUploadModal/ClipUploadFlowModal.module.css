@@ -1,0 +1,318 @@
+/* ==========================================================================
+   Base Layout & Backdrop (Dashboard Dimension Framework)
+   ========================================================================== */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(10, 10, 12, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+.modalContainer {
+  background-color: #1e1e24;
+  padding: 35px;
+  border-radius: 12px;
+  width: 850px;
+  max-width: 95%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  border: 2px solid #3a3a42;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.modalCloseX {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  background: none;
+  border: none;
+  color: #aaaaaa;
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+  z-index: 10;
+}
+
+.modalCloseX:hover {
+  color: #e74c3c;
+}
+
+.modalTitle {
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+/* ==========================================================================
+   Sequential Step Management
+   ========================================================================== */
+
+.stepWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepIndicator {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #00ccff;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.selectedGameBadge {
+  background-color: rgba(0, 204, 255, 0.08);
+  border: 1px solid rgba(0, 204, 255, 0.25);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  align-self: flex-start;
+}
+
+/* ==========================================================================
+   Form Column Balancing (Step 2 Details)
+   ========================================================================== */
+
+.formTwoColumnsLayout {
+  display: flex;
+  gap: 32px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.formLeftColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.formRightColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ==========================================================================
+   Form Fields & Inputs Assembly
+   ========================================================================== */
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.formLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #cccccc;
+}
+
+.formInput,
+.formTextarea {
+  background-color: #2d2d35;
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  padding: 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formTextarea {
+  min-height: 120px;
+  max-height: 180px;
+  resize: vertical;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  border-color: #00ccff;
+  box-shadow: 0 0 8px rgba(0, 204, 255, 0.2);
+}
+
+.formFileInput {
+  color: #aaaaaa;
+  font-size: 0.9rem;
+  padding: 12px;
+  background-color: #2d2d35;
+  border: 2px dashed #3a3a42;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.formFileInput:hover {
+  border-color: #00ccff;
+}
+
+.formFileInput::file-selector-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: background 0.2s ease;
+}
+
+.formFileInput::file-selector-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Inline Validations & Warnings
+   ========================================================================== */
+
+.inlineErrorLabel {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 6px;
+  display: block;
+}
+
+.requirementsBox {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 14px;
+}
+
+.requirementsBox p {
+  margin: 6px 0;
+  font-size: 0.8rem;
+  color: #888888;
+}
+
+/* ==========================================================================
+   Games Catalog Layout (Step 1 Catalog Window)
+   ========================================================================== */
+
+.catalogFiltersRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.catalogSearchBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalogSortBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 220px;
+}
+
+.catalogSortLabel {
+  font-size: 0.85rem;
+  color: #cccccc;
+  font-weight: 600;
+}
+
+.formSelect {
+  background-color: #2d2d35;
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.formSelect:focus {
+  border-color: #00ccff;
+}
+
+.gamesCatalogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  max-height: 280px;
+  overflow-y: auto;
+  background-color: #2d2d35;
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 25px;
+}
+
+.gameCatalogCard {
+  background-color: #1e1e24;
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-height: 70px;
+  box-sizing: border-box;
+}
+
+.gameCatalogCard:hover {
+  background-color: rgba(0, 204, 255, 0.08);
+  border-color: #00ccff;
+  transform: translateY(-2px);
+}
+
+.gameCardActiveSelected {
+  background-color: rgba(0, 204, 255, 0.15);
+  border-color: #00ccff;
+  box-shadow: 0 0 12px rgba(0, 204, 255, 0.3);
+}
+
+.gameCatalogTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.actionRowButton {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 20px;
+}

@@ -1,32 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { api } from '../../../../services/api'; // Tu instancia base de Axios
+import { api } from '../../../../services/api';
 import { validateVideoMetadata } from '../../../../utilities/videoValidation';
 import { VideoUploadModal } from './VideoUploadModal';
-import styles from './VideoUploadModal.module.css';
+import { ActionButton } from '../../ActionButton';
+import styles from './ClipUploadFlowModal.module.css';
 
 interface GameLookupDto {
   id: string;
   title: string;
 }
 
+interface PagedGamesResponse {
+  items?: GameLookupDto[];
+  results?: GameLookupDto[];
+}
+
 interface ClipUploadFlowModalProps {
   onClose: () => void;
   onRefreshClips: () => void;
+  gameId?: string;
+  gameTitle?: string;
 }
 
 type FlowStep = 'selectGame' | 'fillDetails' | 'uploading';
 
 export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
   onClose,
-  onRefreshClips
+  onRefreshClips,
+  gameId,
+  gameTitle
 }) => {
-  const { t } = useTranslation('videoUpload');
-  const [currentStep, setCurrentStep] = useState<FlowStep>('selectGame');
+  const { t } = useTranslation(['videoUpload', 'common']);
+
+  const [currentStep, setCurrentStep] = useState<FlowStep>(
+    gameId ? 'fillDetails' : 'selectGame'
+  );
 
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('default');
   const [gamesList, setGamesList] = useState<GameLookupDto[]>([]);
-  const [selectedGame, setSelectedGame] = useState<GameLookupDto | null>(null);
+
+  const [selectedGame, setSelectedGame] = useState<GameLookupDto | null>(
+    gameId && gameTitle ? { id: gameId, title: gameTitle } : null
+  );
 
   const [clipTitle, setClipTitle] = useState<string>('');
   const [clipDescription, setClipDescription] = useState<string>('');
@@ -37,42 +54,37 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
   const [fileError, setFileError] = useState<string>('');
 
   useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setGamesList([]);
-      return;
-    }
+    if (gameId) return;
 
     const delayDebounce = setTimeout(async () => {
       try {
-        const response = await api.get<GameLookupDto[]>('/games', {
-          params: { search: searchQuery }
+        const response = await api.get<PagedGamesResponse>('/games/search', {
+          params: {
+            search: searchQuery,
+            sortBy: sortBy
+          }
         });
-        setGamesList(response.data);
+        const gamesResultArray = response.data.items || response.data.results || [];
+        setGamesList(gamesResultArray);
       } catch (error) {
         setGamesList([]);
       }
     }, 350);
 
     return () => clearTimeout(delayDebounce);
-  }, [searchQuery]);
+  }, [searchQuery, sortBy, gameId]);
 
-  /**
-   * Validates Step 1 and advances to Step 2.
-   */
   const handleNextStep = (): void => {
     if (!selectedGame) {
-      setGameError(t('form.validationGame'));
+      setGameError(t('videoUpload:form.validationGame'));
       return;
     }
     setGameError('');
     setCurrentStep('fillDetails');
   };
 
-  /**
-   * Handles local file selection and triggers early inline validation.
-   */
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     try {
@@ -81,25 +93,22 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
       setSelectedFile(file);
     } catch (error: any) {
       setSelectedFile(null);
-      setFileError(error.message || t('form.validationFile'));
+      setFileError(error.message || t('videoUpload:form.validationFile'));
     }
   };
 
-  /**
-   * Validates Step 2 fields and triggers the final upload phase.
-   */
-  const handleSubmitFlow = (): void => {
+  const handleNextStepSubmit = (): void => {
     let hasErrors = false;
 
     if (clipTitle.trim() === '') {
-      setTitleError(t('form.validationTitle'));
+      setTitleError(t('videoUpload:form.validationTitle'));
       hasErrors = true;
     } else {
       setTitleError('');
     }
 
     if (!selectedFile) {
-      setFileError(t('form.validationFile'));
+      setFileError(t('videoUpload:form.validationFile'));
       hasErrors = true;
     }
 
@@ -126,103 +135,131 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
       <div className={styles.modalContainer}>
         <button className={styles.modalCloseX} onClick={onClose}>×</button>
 
-        <h2 className={styles.modalTitle}>{t('title')}</h2>
+        <h2 className={styles.modalTitle}>{t('videoUpload:title')}</h2>
 
-        {currentStep === 'selectGame' && (
+        {currentStep === 'selectGame' && !gameId && (
           <div className={styles.stepWrapper}>
-            <span className={styles.stepIndicator}>{t('form.stepGame')}</span>
+            <span className={styles.stepIndicator}>{t('videoUpload:form.stepGame')}</span>
 
-            <div className={styles.inputGroup}>
-              <input
-                type="text"
-                className={styles.formInput}
-                placeholder={t('form.searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {gameError && <span className={styles.inlineErrorLabel}>{gameError}</span>}
+            <div className={styles.catalogFiltersRow}>
+              <div className={styles.catalogSearchBox}>
+                <input
+                  type="text"
+                  className={styles.formInput}
+                  placeholder={t('common:searchers.searchByName')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              <div className={styles.catalogSortBox}>
+                <label className={styles.catalogSortLabel}>{t('common:filters.sortBy')}</label>
+                <select
+                  className={styles.formSelect}
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="default">{t('common:filters.options.default')}</option>
+                  <option value="nameAsc">{t('common:filters.options.nameAsc')}</option>
+                  <option value="nameDesc">{t('common:filters.options.nameDesc')}</option>
+                  <option value="dateNew">{t('common:filters.options.dateNew')}</option>
+                  <option value="dateOld">{t('common:filters.options.dateOld')}</option>
+                  <option value="ratingDesc">{t('common:filters.options.ratingDesc')}</option>
+                </select>
+              </div>
             </div>
 
-            {gamesList.length > 0 && (
-              <ul className={styles.searchResultsList}>
-                {gamesList.map((game) => (
-                  <li
-                    key={game.id}
-                    className={`${styles.searchResultItem} ${selectedGame?.id === game.id ? styles.itemSelected : ''}`}
-                    onClick={() => {
-                      setSelectedGame(game);
-                      setSearchQuery(game.title);
-                      setGamesList([]);
-                    }}
-                  >
-                    {game.title}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {gameError && <span className={styles.inlineErrorLabel} style={{ marginBottom: '10px' }}>{gameError}</span>}
+
+            <div className={styles.gamesCatalogGrid}>
+              {gamesList.map((game) => (
+                <div
+                  key={game.id}
+                  className={`${styles.gameCatalogCard} ${selectedGame?.id === game.id ? styles.gameCardActiveSelected : ''}`}
+                  onClick={() => setSelectedGame(game)}
+                >
+                  <span className={styles.gameCatalogTitle}>{game.title}</span>
+                </div>
+              ))}
+              {gamesList.length === 0 && (
+                <p className={styles.statusText} style={{ gridColumn: '1 / -1', margin: '20px 0' }}>
+                  {t('common:status.loading')}
+                </p>
+              )}
+            </div>
 
             <div className={styles.actionRowButton}>
-              <button className={styles.primaryActionButton} onClick={handleNextStep}>
-                {t('actions.next')}
-              </button>
+              <ActionButton variant="neutral" size="large" onClick={handleNextStep}>
+                {t('videoUpload:actions.next')}
+              </ActionButton>
             </div>
           </div>
         )}
 
         {currentStep === 'fillDetails' && (
           <div className={styles.stepWrapper}>
-            <span className={styles.stepIndicator}>{t('form.stepDetails')}</span>
+            <span className={styles.stepIndicator}>{t('videoUpload:form.stepDetails')}</span>
 
             <p className={styles.selectedGameBadge}>
               <strong>Juego:</strong> {selectedGame?.title}
             </p>
 
-            <div className={styles.inputGroup}>
-              <label className={styles.formLabel}>{t('form.titleLabel')}</label>
-              <input
-                type="text"
-                className={styles.formInput}
-                placeholder={t('form.titlePlaceholder')}
-                value={clipTitle}
-                onChange={(e) => setClipTitle(e.target.value)}
-              />
-              {titleError && <span className={styles.inlineErrorLabel}>{titleError}</span>}
-            </div>
+            <div className={styles.formTwoColumnsLayout}>
 
-            <div className={styles.inputGroup}>
-              <label className={styles.formLabel}>{t('form.descriptionLabel')}</label>
-              <textarea
-                className={styles.formTextarea}
-                placeholder={t('form.descriptionPlaceholder')}
-                value={clipDescription}
-                onChange={(e) => setClipDescription(e.target.value)}
-              />
-            </div>
+              <div className={styles.formLeftColumn}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>{t('videoUpload:form.titleLabel')}</label>
+                  <input
+                    type="text"
+                    className={styles.formInput}
+                    placeholder={t('videoUpload:form.titlePlaceholder')}
+                    value={clipTitle}
+                    onChange={(e) => setClipTitle(e.target.value)}
+                  />
+                  {titleError && <span className={styles.inlineErrorLabel}>{titleError}</span>}
+                </div>
 
-            <div className={styles.inputGroup}>
-              <label className={styles.formLabel}>{t('form.fileLabel')}</label>
-              <input
-                type="file"
-                accept=".mp4,.mov"
-                className={styles.formFileInput}
-                onChange={handleFileChange}
-              />
-              {fileError && <span className={styles.inlineErrorLabel}>{fileError}</span>}
-
-              <div className={styles.requirementsBox}>
-                <p>{t('requirements.formats')}</p>
-                <p>{t('requirements.size')}</p>
-                <p>{t('requirements.duration')}</p>
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>{t('videoUpload:form.descriptionLabel')}</label>
+                  <textarea
+                    className={styles.formTextarea}
+                    placeholder={t('videoUpload:form.descriptionPlaceholder')}
+                    value={clipDescription}
+                    onChange={(e) => setClipDescription(e.target.value)}
+                  />
+                </div>
               </div>
+
+              <div className={styles.formRightColumn}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.formLabel}>{t('videoUpload:form.fileLabel')}</label>
+                  <input
+                    type="file"
+                    accept=".mp4,.mov"
+                    className={styles.formFileInput}
+                    onChange={handleFileChange}
+                  />
+                  {fileError && <span className={styles.inlineErrorLabel}>{fileError}</span>}
+
+                  <div className={styles.requirementsBox}>
+                    <p>{t('videoUpload:requirements.formats')}</p>
+                    <p>{t('videoUpload:requirements.size')}</p>
+                    <p>{t('videoUpload:requirements.duration')}</p>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             <div className={styles.actionRowButton}>
-              <button className={styles.secondaryActionButton} onClick={() => setCurrentStep('selectGame')}>
-                {t('actions.back')}
-              </button>
-              <button className={styles.primaryActionButton} onClick={handleSubmitFlow}>
-                {t('actions.submit')}
-              </button>
+              {!gameId && (
+                <ActionButton variant="cancel" size="large" onClick={() => setCurrentStep('selectGame')}>
+                  {t('videoUpload:actions.back')}
+                </ActionButton>
+              )}
+              <ActionButton variant="save" size="large" onClick={handleNextStepSubmit}>
+                {t('videoUpload:actions.submit')}
+              </ActionButton>
             </div>
           </div>
         )}

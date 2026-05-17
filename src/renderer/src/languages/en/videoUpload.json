@@ -1,5 +1,5 @@
 {
-  "title": "Uploading Video Clip",
+  "title": "Upload New Clip",
   "status": {
     "validating": "Validating video duration and size...",
     "uploading": "Uploading the video. Please wait..."

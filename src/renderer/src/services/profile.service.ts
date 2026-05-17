@@ -21,6 +21,7 @@ export interface ProfilePlatform {
  * Represents the complete user profile data transfer object.
  */
 export interface UserProfile {
+  id: string;
   username: string;
   email: string;
   profilePicture?: string | null;

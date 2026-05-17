@@ -1,3 +1,7 @@
+/**
+ * Main container for the clip preview card.
+ * Estructura base de la tarjeta con transiciones de escala y sombras.
+ */
 .clipContainer {
   position: relative;
   width: 240px;
@@ -10,11 +14,17 @@
   cursor: pointer;
 }
 
+/**
+ * Scale and shadow effect when hovering the card.
+ */
 .clipContainer:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
 }
 
+/**
+ * Thumbnail image layout properties.
+ */
 .clipThumbnail {
   width: 100%;
   height: 100%;
@@ -23,39 +33,124 @@
   transition: opacity 0.2s ease;
 }
 
+/**
+ * Fully opaque thumbnail when hovering the parent container.
+ */
 .clipContainer:hover .clipThumbnail {
   opacity: 1;
 }
 
+/**
+ * Bottom metadata layer with a dark linear gradient background.
+ * Capa inferior que contiene los textos e interacciones de votos.
+ */
 .infoLayer {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   padding: 20px 10px 8px 10px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   color: #ffffff;
+  z-index: 2;
 }
 
+/**
+ * Vertical text metadata wrapper for titles and duration badges.
+ */
+.textMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 60%;
+}
+
+/**
+ * Clip title styling with ellipsis truncation for overflowing strings.
+ */
 .clipTitle {
   font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 70%;
+  width: 100%;
 }
 
+/**
+ * Small badge showing the duration of the media clip.
+ */
 .clipDuration {
   font-size: 0.75rem;
   background-color: rgba(0, 0, 0, 0.6);
   padding: 2px 6px;
   border-radius: 4px;
+  align-self: flex-start;
 }
 
+/**
+ * Votes container matching the glassmorphism layout from the UI mockup.
+ * Contenedor de manitas alineado a la derecha de la tarjeta.
+ */
+.votesWrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/**
+ * Visual feedback layout for owner self-voting restrictions.
+ * Opacidad reducida si el usuario está viendo su propio clip.
+ */
+.disabledVotes {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/**
+ * Interactive voting buttons horizontal alignment.
+ */
+.voteButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.1s ease;
+}
+
+/**
+ * Hover scale effect applied only when votes are active and allowed.
+ */
+.votesWrapper:not(.disabledVotes) .voteButton:hover {
+  transform: scale(1.1);
+}
+
+/**
+ * Image dimensions for voting thumb icons.
+ */
+.voteIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/**
+ * Text indicator style for the count numbers.
+ */
+.voteCounter {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/**
+ * Centered play button icon layer configuration.
+ */
 .playIcon {
   position: absolute;
   top: 50%;
@@ -65,16 +160,74 @@
   color: rgba(255, 255, 255, 0.7);
   pointer-events: none;
   transition: color 0.2s ease, transform 0.2s ease;
+  z-index: 1;
 }
 
+/**
+ * Dynamic adjustments for the play icon upon hovering card.
+ */
 .clipContainer:hover .playIcon {
   color: #ffffff;
   transform: translate(-50%, -50%) scale(1.1);
 }
 
+/**
+ * Top right badge container for profile management buttons.
+ */
 .deleteBadge {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 5;
+  z-index: 3;
+}
+
+/**
+ * Full-size inline confirmation overlay screen properties.
+ * Pantalla translúcida que bloquea la tarjeta al confirmar el borrado.
+ */
+.confirmOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(18, 18, 18, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  z-index: 10;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+/**
+ * Inline warning message text.
+ */
+.confirmText {
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+/**
+ * Layout styling for confirmation actions buttons wrapper.
+ */
+.confirmActions {
+  display: flex;
+  gap: 10px;
+}
+
+/**
+ * Smooth appearance animation for the deletion screening panel.
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

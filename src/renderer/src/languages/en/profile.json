@@ -47,13 +47,19 @@
     "passwordUpdated": "Password updated successfully",
     "updateError": "Error changing password. Check your current password.",
     "profileUpdated": "Profile updated successfully",
-    "profileUpdateError":"Error updating profile",
-    "fillFields": "Please fill all fields"
+    "profileUpdateError": "Error updating profile",
+    "fillFields": "Please fill all fields",
+    "deleteClipConfirmation": "Are you sure you want to delete this clip?"
   },
-    "selector": {
+  "selector": {
     "title": "Select Interested Games",
     "add": "Add",
     "added": "Already in list",
     "manageTitle": "Manage My Games"
+  },
+  "clips": {
+    "manageTitle": "Manage my video clips",
+    "manageSubtitle": "User history and uploads",
+    "uploadBtn": "Upload new clip"
   }
 }

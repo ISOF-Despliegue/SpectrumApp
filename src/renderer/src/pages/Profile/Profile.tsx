@@ -12,13 +12,13 @@ import { GameSelectorModal } from '../../components/ui/ProfileComponents/GameSel
 import { InterestedGamesModal } from '../../components/ui/ProfileComponents/InterestedGamesModal';
 import { PlatformSelectionModal } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
 import { PasswordChangeModal } from '../../components/ui/ProfileComponents/PasswordChangeModal';
-import { ClipUploadFlowModal } from '../../components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
 
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
 import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
 import phoneLogo from '../../assets/images/platforms/phoneLogo.png';
 import playstationLogo from '../../assets/images/platforms/playstationLogo.png';
 import xboxLogo from '../../assets/images/platforms/xboxLogo.png';
+import { ProfileClipsSection } from '@renderer/components/ui/ProfileComponents/ProfileClipsSection';
 
 const PLATFORM_LOGOS: Record<string, string> = {
   'Nintendo': nintendoLogo,
@@ -48,11 +48,9 @@ export const Profile: React.FC = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isInterestedModalOpen, setIsInterestedModalOpen] = useState(false);
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
-  const [isClipModalOpen, setIsClipModalOpen] = useState(false);
 
-  const loggedInUserId = "id-actual-del-usuario";
   const userRole: "user" | "admin" = "user";
-  const isOwner = !userId || userId === loggedInUserId;
+  const isOwner = !userId || (profile ? userId === profile.id : false);
   const isAdmin = (userRole as string) === 'admin';
 
   useEffect(() => {
@@ -298,16 +296,11 @@ export const Profile: React.FC = () => {
             </div>
           </ProfileSection>
 
-          <ProfileSection title={t('sections.clips')} showSeeMore={true}>
-            {isEditing && (
-              <div style={{ marginBottom: '12px' }}>
-                <ActionButton variant="neutral" size="small" onClick={() => setIsClipModalOpen(true)}>
-                  Subir nuevo clip
-                </ActionButton>
-              </div>
-            )}
-            <p className={styles.emptyPlaceholder}>{t('placeholders.emptyClips')}</p>
-          </ProfileSection>
+          <ProfileClipsSection
+            profileUserId={userId || profile.id}
+            isEditing={isEditing}
+            isOwner={isOwner}
+          />
         </aside>
       </div>
 
@@ -340,13 +333,6 @@ export const Profile: React.FC = () => {
         onSelect={handleSelectGame}
         alreadySelectedIds={profile.interestedGames.map(g => g.id)}
       />
-
-      {isClipModalOpen && (
-        <ClipUploadFlowModal
-          onClose={() => setIsClipModalOpen(false)}
-          onRefreshClips={fetchData}
-        />
-      )}
     </div>
   );
 };

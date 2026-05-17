@@ -1,0 +1,141 @@
+/**
+ * Fixed immersive full screen background wrapper with glassmorphism blur filters.
+ * Capa de fondo que cubre toda la pantalla difuminando el fondo de Electron.
+ */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+/**
+ * Centered layout content stage box for holding titles and player nodes.
+ */
+.modalContent {
+  background-color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: modalSlideUp 0.25s cubic-bezier(0.1, 0.8, 0.25, 1);
+}
+
+/**
+ * Upper structural header wrapping metadata definitions and closer layout.
+ */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/**
+ * Flex vertical wrapper for primary and secondary header textual info.
+ */
+.titleMetadata {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/**
+ * Main bold header title font definitions.
+ */
+.modalTitle {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/**
+ * Contextual game identification tag with neon ambient accenting.
+ */
+.gameTag {
+  color: #00ffcc;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: rgba(0, 255, 204, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+/**
+ * Clean textual overlay cross icon for closing actions triggers.
+ */
+.closeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s ease;
+  padding: 0;
+}
+
+.closeButton:hover {
+  color: #ffffff;
+}
+
+/**
+ * Aspect ratio controller wrapping native engine to enforce 16:9 box bounds.
+ */
+.videoPlayerWrapper {
+  position: relative;
+  width: 100%;
+  background-color: #000000;
+  aspect-ratio: 16 / 9;
+}
+
+/**
+ * Fluid native media tag fitting strict bounding parent width dimensions.
+ */
+.nativeVideoPlayer {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/**
+ * Overlay appearance transition animation frames.
+ */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/**
+ * Content panel viewport enter positioning transitions.
+ */
+@keyframes modalSlideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -23,6 +23,11 @@
     "status": {
     "loading": "Cargando..."
     }
+  },
+
+  "confirmations": {
+    "yes": "Yes",
+    "no": "No"
   }
 }
 
