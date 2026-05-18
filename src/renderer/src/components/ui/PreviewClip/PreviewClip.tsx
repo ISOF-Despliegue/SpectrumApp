@@ -13,6 +13,7 @@ import manoDislikeActive from '../../../assets/images/common/manoDislikeActive.p
  * @property {string} id - Unique identifier for the clip.
  * @property {string} title - The title of the clip.
  * @property {string} [thumbnailUrl] - Optional URL for the video thumbnail image.
+ * @property {string} [url] - Optional public URL of the video hosted on AWS S3 used for dynamic thumbnail fallback.
  * @property {string} [duration] - Optional formatted duration string (e.g., "0:30").
  * @property {boolean} isEditable - Flag indicating if the clip is in management/edit mode.
  * @property {number} likesCount - Total number of likes for the clip.
@@ -28,6 +29,7 @@ interface PreviewClipProps {
   id: string;
   title: string;
   thumbnailUrl?: string;
+  url?: string;
   duration?: string;
   isEditable: boolean;
   likesCount: number;
@@ -42,12 +44,13 @@ interface PreviewClipProps {
 
 /**
  * PreviewClip component renders a video card with full user interaction states,
- * including dynamic voting buttons and an inline deletion confirmation layer.
+ * including dynamic voting buttons, inline deletion confirmation layers, and lazy video summaries.
  */
 export const PreviewClip: React.FC<PreviewClipProps> = ({
   id,
   title,
   thumbnailUrl,
+  url,
   duration,
   isEditable,
   likesCount,
@@ -66,6 +69,7 @@ export const PreviewClip: React.FC<PreviewClipProps> = ({
 
   /**
    * Activates the inline confirmation view.
+   * No parameter required as wrapper div handles context stopPropagation.
    */
   const handleDeleteClick = () => {
     setShowConfirmDelete(true);
@@ -110,11 +114,19 @@ export const PreviewClip: React.FC<PreviewClipProps> = ({
 
   return (
     <div className="clipContainer" onClick={() => onPlay?.(id)}>
-      <img
-        src={thumbnailUrl || 'https://via.placeholder.com/240x135'}
-        alt={title}
-        className="clipThumbnail"
-      />
+      {thumbnailUrl ? (
+        <img src={thumbnailUrl} alt={title} className="clipThumbnail" />
+      ) : url ? (
+        <video
+          src={`${url}#t=0.5`}
+          className="clipThumbnail"
+          preload="metadata"
+          muted
+          playsInline
+        />
+      ) : (
+        <img src="https://via.placeholder.com/240x135" alt={title} className="clipThumbnail" />
+      )}
 
       <div className="infoLayer">
         <div className="textMeta">
@@ -145,7 +157,6 @@ export const PreviewClip: React.FC<PreviewClipProps> = ({
         )}
       </div>
 
-      {/* Management badge visible only when editing profile */}
       {isEditable && (
         <div className="deleteBadge" onClick={(event) => event.stopPropagation()}>
           <ActionButton
@@ -158,15 +169,11 @@ export const PreviewClip: React.FC<PreviewClipProps> = ({
         </div>
       )}
 
-      {/* Central play button icon, hidden if confirmation layer is active */}
       {!showConfirmDelete && <div className="playIcon">▶</div>}
-
-      {/* Inline confirmation panel that replaces card view upon delete request */}
       {showConfirmDelete && (
         <div className="confirmOverlay" onClick={(event) => event.stopPropagation()}>
           <p className="confirmText">{t('profile:messages.deleteClipConfirmation')}</p>
           <div className="confirmActions">
-            {/* Using standardized variants matching your ActionButton contract */}
             <ActionButton variant="neutral" size="small" onClick={handleConfirmDelete}>
               {t('common:confirmations.yes')}
             </ActionButton>
