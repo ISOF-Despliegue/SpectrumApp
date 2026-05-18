@@ -13,6 +13,7 @@ import styles from '../../../pages/Profile/Profile.module.css';
 interface ClipData {
   id: string;
   title: string;
+  description?: string;
   thumbnailUrl?: string;
   gameName?: string;
   url: string;
@@ -110,9 +111,9 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
     <>
       <ProfileSection
         title={t('profile:sections.clips')}
-        showSeeMore={clipsList.length > 4 && !isEditing}
+        showSeeMore={clipsList.length > 0 && !isEditing}
       >
-        <div className={styles.gamesGrid}>
+        <div className={styles.clipsGrid}>
           {previewClips.map((clip) => (
             <PreviewClip
               key={clip.id}
@@ -132,16 +133,9 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
 
           {isEditing && isOwner && (
             <button
-              className={styles.addGameBtn}
+              className={styles.addClipBtn}
               onClick={onOpenUploadWizard}
               title={t('profile:clips.uploadBtn')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '2rem',
-                minHeight: '135px'
-              }}
             >
               +
             </button>
@@ -153,6 +147,7 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
         isOpen={isPlayerOpen}
         videoUrl={selectedClip?.url}
         title={selectedClip?.title || ''}
+        description={selectedClip?.description}
         gameName={selectedClip?.gameName}
         onClose={() => {
           setIsPlayerOpen(false);

@@ -10,6 +10,7 @@ interface ClipPlayerModalProps {
   videoUrl: string | undefined;
   title: string;
   gameName?: string;
+  description?: string;
   onClose: () => void;
 }
 
@@ -22,6 +23,7 @@ export const ClipPlayerModal: React.FC<ClipPlayerModalProps> = ({
   videoUrl,
   title,
   gameName,
+  description,
   onClose
 }) => {
   const { t } = useTranslation(['profile']);
@@ -70,6 +72,13 @@ export const ClipPlayerModal: React.FC<ClipPlayerModalProps> = ({
             {t('profile:clips.player.notSupported')}
           </video>
         </div>
+
+        {description && (
+          <div className={styles.descriptionContainer}>
+            <p className={styles.clipDescription}>{description}</p>
+          </div>
+        )}
+
       </div>
     </div>
   );
