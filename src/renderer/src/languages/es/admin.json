@@ -1,0 +1,26 @@
+{
+  "manageUsers": {
+    "title": "Moderación de Usuarios",
+    "searchPlaceholder": "Buscar por nombre o correo...",
+    "searchButton": "Buscar",
+    "loading": "Cargando usuarios...",
+    "empty": "No se encontraron usuarios.",
+    "errorLoad": "Error al cargar los usuarios",
+    "errorToggle": "Error al cambiar el estado",
+    "table": {
+      "user": "Usuario",
+      "email": "Correo",
+      "role": "Rol",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "status": {
+      "active": "Activo",
+      "suspended": "Suspendido"
+    },
+    "actions": {
+      "reactivate": "Reactivar",
+      "suspend": "Suspender"
+    }
+  }
+}

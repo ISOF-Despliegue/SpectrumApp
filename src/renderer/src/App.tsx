@@ -8,7 +8,7 @@ import { MainLayout } from './components/ui/MainLayout';
 import { Admin } from './pages/Admin';
 import { AdminMyProfile } from './pages/Admin/MyProfile';
 import { AdminGlobalMetrics } from './pages/Admin/GlobalMetrics';
-import { AdminManageUsers } from './pages/Admin/ManageUsers';
+import { ManageUsers } from './pages/Admin/ManageUsers';
 import { AdminManageReviews } from './pages/Admin/ManageReviews';
 import { AdminManageEvents } from './pages/Admin/ManageEvents';
 import { AdminManageAdmins } from './pages/Admin/ManageAdmins';
@@ -39,7 +39,7 @@ function AppContent(): React.JSX.Element {
           <Route index element={<Navigate to="my-profile" replace />} />
           <Route path="my-profile" element={<AdminMyProfile />} />
           <Route path="global-metrics" element={<AdminGlobalMetrics />} />
-          <Route path="manage-users" element={<AdminManageUsers />} />
+          <Route path="manage-users" element={<ManageUsers />} />
           <Route path="manage-reviews" element={<AdminManageReviews />} />
           <Route path="manage-events" element={<AdminManageEvents />} />
           <Route path="manage-admins" element={<AdminManageAdmins />} />

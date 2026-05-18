@@ -1,0 +1,26 @@
+{
+  "manageUsers": {
+    "title": "User Moderation",
+    "searchPlaceholder": "Search by name or email...",
+    "searchButton": "Search",
+    "loading": "Loading users...",
+    "empty": "No users found.",
+    "errorLoad": "Error loading users",
+    "errorToggle": "Error toggling user status",
+    "table": {
+      "user": "User",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended"
+    },
+    "actions": {
+      "reactivate": "Reactivate",
+      "suspend": "Suspend"
+    }
+  }
+}
