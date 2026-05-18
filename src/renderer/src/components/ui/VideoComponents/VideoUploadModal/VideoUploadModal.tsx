@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { validateVideoMetadata, validateVideoDuration } from '../../../../utilities/videoValidation';
 import { startVideoUpload, uploadVideoChunk, completeVideoUpload } from '../../../../services/clips.service';
 import { PartEtag } from '../../../../types/media.types';
-import { ActionButton } from '../../ActionButton'; // Standard design button alignment
+import { ActionButton } from '../../ActionButton';
 import styles from './VideoUploadModal.module.css';
 
 /**
@@ -16,15 +16,14 @@ interface VideoUploadModalProps {
   gameId: string;
   onSuccess: (videoUrl: string) => void;
   onClose: () => void;
+  onBackToDetails: () => void;
 }
 
-/**
- * Types of operational phases during the upload sequence.
- */
 type UploadPhase = 'validating' | 'uploading' | 'success' | 'error';
 
 /**
  * Atomic modal component that orchestrates the AWS S3 multipart video upload sequence.
+ * Handles operational transitions through semantic CSS segregation blocks with full internationalization.
  */
 export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
   file,
@@ -32,7 +31,8 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
   description,
   gameId,
   onSuccess,
-  onClose
+  onClose,
+  onBackToDetails
 }) => {
   const { t } = useTranslation('videoUpload');
   const [phase, setPhase] = useState<UploadPhase>('validating');
@@ -44,9 +44,6 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
   useEffect(() => {
     let isCancelled = false;
 
-    /**
-     * Executes the sequential validation, chunking, and assembly process.
-     */
     const executeUploadProcess = async (): Promise<void> => {
       try {
         setPhase('validating');
@@ -140,22 +137,34 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
           </div>
         )}
 
-        <p className={styles.statusText}>
+        <div className={styles.statusText}>
           {phase === 'validating' && t('status.validating')}
-          {phase === 'uploading' && t('status.uploading')}
+          {phase === 'uploading' && `${t('status.uploading')} (${progressPercent}%)`}
           {phase === 'success' && <span className={styles.successText}>{t('messages.success')}</span>}
+
           {phase === 'error' && (
-            <span className={styles.errorText}>
-              {t('messages.error')}
-              <span className={styles.errorDetail}>{errorMessage}</span>
-            </span>
+            <div className={styles.errorContainer}>
+              <span className={styles.errorText}>
+                {t('messages.error')}
+              </span>
+              <span className={styles.errorDetail}>
+                {errorMessage.includes('metadata') || errorMessage.includes('duration')
+                  ? t('form.validationFile')
+                  : errorMessage}
+              </span>
+              <strong className={styles.errorRetry}>
+                {t('messages.retry')}
+              </strong>
+            </div>
           )}
-        </p>
+        </div>
 
         {phase === 'error' && (
-          <ActionButton variant="cancel" size="large" onClick={onClose}>
-            {t('actions.close')}
-          </ActionButton>
+          <div className={styles.actionRowLeft}>
+            <ActionButton variant="cancel" size="large" onClick={onBackToDetails}>
+              {t('actions.close')}
+            </ActionButton>
+          </div>
         )}
       </div>
     </div>

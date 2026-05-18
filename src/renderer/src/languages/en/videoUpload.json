@@ -18,7 +18,8 @@
   },
   "messages": {
     "success": "Your video has been published successfully!",
-    "error": "An error occurred while uploading the file."
+    "error": "An error occurred while uploading the file.",
+    "retry": "Please try uploading the file again."
   },
     "form": {
     "stepGame": "Step 1: Select the Video Game",

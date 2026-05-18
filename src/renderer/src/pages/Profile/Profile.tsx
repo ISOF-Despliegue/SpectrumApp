@@ -12,13 +12,14 @@ import { GameSelectorModal } from '../../components/ui/ProfileComponents/GameSel
 import { InterestedGamesModal } from '../../components/ui/ProfileComponents/InterestedGamesModal';
 import { PlatformSelectionModal } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
 import { PasswordChangeModal } from '../../components/ui/ProfileComponents/PasswordChangeModal';
+import { ProfileClipsSection } from '@renderer/components/ui/ProfileComponents/ProfileClipsSection';
+import { ClipUploadFlowModal } from '@renderer/components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
 
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
 import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
 import phoneLogo from '../../assets/images/platforms/phoneLogo.png';
 import playstationLogo from '../../assets/images/platforms/playstationLogo.png';
 import xboxLogo from '../../assets/images/platforms/xboxLogo.png';
-import { ProfileClipsSection } from '@renderer/components/ui/ProfileComponents/ProfileClipsSection';
 
 const PLATFORM_LOGOS: Record<string, string> = {
   'Nintendo': nintendoLogo,
@@ -48,6 +49,8 @@ export const Profile: React.FC = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isInterestedModalOpen, setIsInterestedModalOpen] = useState(false);
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
+  const [isClipWizardOpen, setIsClipWizardOpen] = useState(false);
+  const [clipsUpdateNonce, setClipsUpdateNonce] = useState(0);
 
   const userRole: "user" | "admin" = "user";
   const isOwner = !userId || (profile ? userId === profile.id : false);
@@ -76,7 +79,6 @@ export const Profile: React.FC = () => {
 
   /**
    * Saves the profile changes to the backend.
-   * Maps the local state to the DTO expected by the server to avoid 400 Bad Request.
    */
   const handleSaveProfile = async () => {
     if (!profile) return;
@@ -107,10 +109,6 @@ export const Profile: React.FC = () => {
     }
   };
 
-  /**
-   * Removes a game from the local profile state.
-   * @param gameId The unique identifier of the game to remove.
-   */
   const handleDeleteGame = (gameId: string) => {
     if (!profile) return;
     setProfile({
@@ -119,10 +117,6 @@ export const Profile: React.FC = () => {
     });
   };
 
-  /**
-   * Adds a new game to the local profile state including its image.
-   * @param game The profile game object selected from the lookup modal.
-   */
   const handleSelectGame = (game: ProfileGame) => {
     if (!profile) return;
     if (profile.interestedGames.some(g => g.id === game.id)) return;
@@ -133,10 +127,6 @@ export const Profile: React.FC = () => {
     });
   };
 
-  /**
-   * Updates the local profile state with the newly uploaded AWS S3 avatar URL.
-   * @param newUrl The secure public URL returned by the storage service.
-   */
   const handleAvatarUpdated = (newUrl: string): void => {
     if (!profile) return;
     setProfile({
@@ -163,7 +153,6 @@ export const Profile: React.FC = () => {
       )}
 
       <div className={styles.profileLayout}>
-
         <aside className={styles.leftColumn}>
           <EditableProfileImage
             imageUrl={profile.profilePicture}
@@ -296,10 +285,12 @@ export const Profile: React.FC = () => {
             </div>
           </ProfileSection>
 
+          {/* Unified Clips preview section passing root listeners and refresh tokens */}
           <ProfileClipsSection
             profileUserId={userId || profile.id}
             isEditing={isEditing}
             isOwner={isOwner}
+            onOpenUploadWizard={() => setIsClipWizardOpen(true)}
           />
         </aside>
       </div>
@@ -333,6 +324,13 @@ export const Profile: React.FC = () => {
         onSelect={handleSelectGame}
         alreadySelectedIds={profile.interestedGames.map(g => g.id)}
       />
+
+      {isClipWizardOpen && (
+        <ClipUploadFlowModal
+          onClose={() => setIsClipWizardOpen(false)}
+          onRefreshClips={fetchData}
+        />
+      )}
     </div>
   );
 };

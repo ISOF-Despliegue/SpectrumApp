@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { NavButton } from '../NavButton';
 import { ProfileImageNavbar } from '../ProfileImageNavbar';
 import SpectrumLogo from '../../../../assets/images/common/SpectrumLogo.png';
+import HappyGhostIncomplete from '../../../../assets/images/character/happyGhostIncomplete.png';
 import styles from './Navbar.module.css';
 import { ProfileService, UserProfile } from '../../../../services/profile.service';
 import defaultPhoto from '../../../../assets/images/common/defaultPhotoProfile.png';
@@ -49,8 +50,7 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
 
       <div className={styles.characterColumn}>
         <div className={styles.characterWrapper}>
-          <span className={styles.placeholder}>CHAR</span>
-
+          <img src={HappyGhostIncomplete} alt="Character Image" className={styles.characterImage} />
         </div>
       </div>
 

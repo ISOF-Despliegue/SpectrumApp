@@ -11,9 +11,10 @@ export const startVideoUpload = async (file: File): Promise<MultipartInitRespons
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await api.post<MultipartInitResponse>('/media/clips/start', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+  const response = await api.post<MultipartInitResponse>('/Media/clips/start', formData, {
+    transformRequest: (data, headers) => {
+      delete headers['Content-Type'];
+      return data;
     }
   });
 
@@ -37,14 +38,15 @@ export const uploadVideoChunk = async (
   const formData = new FormData();
   formData.append('file', chunk);
 
-  const response = await api.post<{ eTag: string }>('/media/clips/upload-chunk', formData, {
+  const response = await api.post<{ eTag: string }>('/Media/clips/upload-chunk', formData, {
     params: {
       uploadId,
       partNumber,
       keyName
     },
-    headers: {
-      'Content-Type': 'multipart/form-data'
+    transformRequest: (data, headers) => {
+      delete headers['Content-Type'];
+      return data;
     }
   });
 
@@ -58,6 +60,6 @@ export const uploadVideoChunk = async (
  * @returns A promise resolving to the final public access URL of the clip.
  */
 export const completeVideoUpload = async (request: CompleteUploadRequest): Promise<string> => {
-  const response = await api.post<{ url: string }>('/media/clips/complete', request);
+  const response = await api.post<{ url: string }>('/Media/clips/complete', request);
   return response.data.url;
 };

@@ -2,8 +2,8 @@
  * Utility functions for validating video files before uploading to AWS S3.
  */
 
-const MAX_VIDEO_SIZE = 60 * 1024 * 1024;
-const MAX_VIDEO_DURATION = 15;
+const MAX_VIDEO_SIZE = 61 * 1024 * 1024;
+const MAX_VIDEO_DURATION = 16;
 const ALLOWED_VIDEO_EXTENSIONS = ['.mp4', '.mov'];
 
 /**

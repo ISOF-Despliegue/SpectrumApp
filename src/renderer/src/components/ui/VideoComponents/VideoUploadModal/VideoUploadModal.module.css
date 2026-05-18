@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Base Layout Mirroring (Guarantees zero-flicker state transition)
+   Base Layout & Backdrop (Dashboard Dimension Framework)
    ========================================================================== */
 
 .modalOverlay {
@@ -26,7 +26,6 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   border: 2px solid #3a3a42;
   color: #ffffff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
 
@@ -86,12 +85,52 @@
 .statusText {
   font-size: 1rem;
   color: #cccccc;
-  text-align: center;
-  margin-bottom: 20px;
+  text-align: left;
+  margin: 20px 0;
   line-height: 1.4;
 }
 
+/* ==========================================================================
+   Semantic Status Feedback Elements
+   ========================================================================== */
+
+.successText {
+  color: #00ffcc;
+  font-weight: 600;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.errorText {
+  color: #e74c3c;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.errorDetail, .errorRetry {
+  color: #cccccc;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Action Alignment Rows
+   ========================================================================== */
+
 .actionRowButton {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 20px;
+}
+
+.actionRowLeft {
   display: flex;
   justify-content: flex-end;
   gap: 16px;

@@ -2,7 +2,7 @@
  * Utility functions for validating image files before uploading to AWS S3.
  */
 
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 6 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
 /**
@@ -15,7 +15,6 @@ export const validateImageFile = (file: File): boolean => {
     throw new Error('Image size exceeds the 5MB limit.');
   }
 
-  // Validar el tipo MIME oficial
   if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
     throw new Error('Invalid image format. Only PNG, JPEG, and JPG are allowed.');
   }

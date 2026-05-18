@@ -1,73 +1,50 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './ClipPlayerModal.module.css';
 
 /**
- * Interface defining the properties for the ClipPlayerModal component.
- * @property {string} videoUrl - The direct URL of the video resource to be played.
- * @property {string} title - The title text of the media clip.
- * @property {string} [gameName] - Optional associated video game title for context.
- * @property {boolean} isOpen - Conditional flag controlling the modal overlay display.
- * @property {function} onClose - Callback invoked to handle modal dismissal workflows.
+ * Interface defining properties for the ClipPlayerModal immersive component.
  */
 interface ClipPlayerModalProps {
-  videoUrl: string;
+  isOpen: boolean;
+  videoUrl: string | undefined;
   title: string;
   gameName?: string;
-  isOpen: boolean;
   onClose: () => void;
 }
 
 /**
- * ClipPlayerModal component renders an immersive overlay housing an HTML5 native video player.
- * Supports keyboard accessibility listeners and outer backdrop click dismissals using CSS Modules.
+ * ClipPlayerModal overlays a cinematic bounding box over the dashboard to
+ * stream native 16:9 MP4/MOV assets utilizing HTML5 engine specs.
  */
 export const ClipPlayerModal: React.FC<ClipPlayerModalProps> = ({
+  isOpen,
   videoUrl,
   title,
   gameName,
-  isOpen,
   onClose
 }) => {
-  const { t } = useTranslation(['profile', 'common']);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const { t } = useTranslation(['profile']);
 
+  // Listen for 'Escape' key to close the modal for better UX
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
     };
 
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
-      videoRef.current?.focus();
     }
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
-    return null;
-  }
-
-  /**
-   * Evaluates if the click occurred directly on the background backdrop layer to trigger closure.
-   * @param {React.MouseEvent<HTMLDivElement>} event - The mouse click gesture event.
-   */
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
+  if (!isOpen || !videoUrl) return null;
 
   return (
-    <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
-      <div className={styles.modalContent}>
-        {/* Header container displaying titles and closure trigger */}
-        <div className={styles.modalHeader}>
+    <div className={styles.modalBackdrop} onClick={onClose}>
+      {/* Click propagation stop prevents closing when clicking inside the player bounds */}
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <header className={styles.modalHeader}>
           <div className={styles.titleMetadata}>
             <h3 className={styles.modalTitle}>{title}</h3>
             {gameName && <span className={styles.gameTag}>{gameName}</span>}
@@ -75,25 +52,25 @@ export const ClipPlayerModal: React.FC<ClipPlayerModalProps> = ({
           <button
             className={styles.closeButton}
             onClick={onClose}
-            aria-label={t('profile:actions.close') || 'Close'}
+            title={t('profile:clips.player.closeBtnTooltip')}
           >
-            ×
+            &times;
           </button>
-        </div>
+        </header>
 
-        {/* Immersive video display container wrapping native HTML5 engine */}
         <div className={styles.videoPlayerWrapper}>
           <video
-            ref={videoRef}
-            src={videoUrl}
             className={styles.nativeVideoPlayer}
+            src={videoUrl}
             controls
             autoPlay
+            controlsList="nodownload"
+            onEnded={onClose}
           >
-            {t('common:status.loading')}
+            {t('profile:clips.player.notSupported')}
           </video>
-            </div>
-          </div>
         </div>
+      </div>
+    </div>
   );
 };

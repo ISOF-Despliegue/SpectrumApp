@@ -18,7 +18,8 @@
   },
   "messages": {
     "success": "¡Tu video se ha publicado con éxito!",
-    "error": "Ocurrió un error al subir el archivo."
+    "error": "Ocurrió un error al subir el archivo.",
+    "retry": "Por favor, intenta subir el archivo de nuevo."
   },
   "form": {
     "stepGame": "Paso 1: Selecciona el Videojuego",

@@ -65,7 +65,7 @@ export const Games = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleOpenReviews = (gameId: number) => {
+  const handleOpenReviews = (gameId: number | string) => {
     navigate(`/games/${gameId}/reviews`);
   };
 

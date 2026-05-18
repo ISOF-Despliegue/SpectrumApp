@@ -60,6 +60,10 @@
   "clips": {
     "manageTitle": "Manage my video clips",
     "manageSubtitle": "User history and uploads",
-    "uploadBtn": "Upload new clip"
+    "uploadBtn": "Upload new clip",
+    "player": {
+      "closeBtnTooltip": "Close player",
+      "notSupported": "Your browser does not support this video."
+    }
   }
 }

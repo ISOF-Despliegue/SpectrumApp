@@ -60,6 +60,10 @@
   "clips": {
     "manageTitle": "Gestionar mis clips de video",
     "manageSubtitle": "Historial y cargas del usuario",
-    "uploadBtn": "Subir nuevo clip"
+    "uploadBtn": "Subir nuevo clip",
+    "player": {
+      "closeBtnTooltip": "Cerrar reproductor",
+      "notSupported": "Tu navegador no soporta la reproducción de este video."
+    }
   }
 }

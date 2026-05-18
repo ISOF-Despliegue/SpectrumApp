@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { api } from '../../../../services/api';
+import { getGames, Game } from '../../../../services/games.service';
 import { validateVideoMetadata } from '../../../../utilities/videoValidation';
 import { VideoUploadModal } from './VideoUploadModal';
 import { ActionButton } from '../../ActionButton';
+import { GameCardMedium } from '../../GameCardMedium/GameCardMedium';
+import { Pagination } from '../../Pagination/Pagination';
 import styles from './ClipUploadFlowModal.module.css';
 
-interface GameLookupDto {
-  id: string;
-  title: string;
-}
-
-interface PagedGamesResponse {
-  items?: GameLookupDto[];
-  results?: GameLookupDto[];
-}
-
+/**
+ * Interface defining properties for the ClipUploadFlowModal component.
+ */
 interface ClipUploadFlowModalProps {
   onClose: () => void;
   onRefreshClips: () => void;
@@ -25,6 +20,10 @@ interface ClipUploadFlowModalProps {
 
 type FlowStep = 'selectGame' | 'fillDetails' | 'uploading';
 
+/**
+ * ClipUploadFlowModal orchestrates the step-by-step metadata assembly workflow before clip media transmission.
+ * Leverages the centralized getGames service layer to eliminate 401 authorization issues.
+ */
 export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
   onClose,
   onRefreshClips,
@@ -38,11 +37,15 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
   );
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('default');
-  const [gamesList, setGamesList] = useState<GameLookupDto[]>([]);
+  const [sortBy, setSortBy] = useState<string>('none');
+  const [gamesList, setGamesList] = useState<Game[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
-  const [selectedGame, setSelectedGame] = useState<GameLookupDto | null>(
-    gameId && gameTitle ? { id: gameId, title: gameTitle } : null
+  const pageSizeConstant = 42;
+
+  const [selectedGame, setSelectedGame] = useState<Game | null>(
+    gameId && gameTitle ? { id: gameId, title: gameTitle, imageUrl: '', released: '', spectrumRating: 0 } : null
   );
 
   const [clipTitle, setClipTitle] = useState<string>('');
@@ -54,25 +57,27 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
   const [fileError, setFileError] = useState<string>('');
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, sortBy]);
+
+  useEffect(() => {
     if (gameId) return;
 
     const delayDebounce = setTimeout(async () => {
       try {
-        const response = await api.get<PagedGamesResponse>('/games/search', {
-          params: {
-            search: searchQuery,
-            sortBy: sortBy
-          }
-        });
-        const gamesResultArray = response.data.items || response.data.results || [];
-        setGamesList(gamesResultArray);
+        // Delegate state parameters directly to the centralized data service layer
+        const response = await getGames(searchQuery, currentPage, sortBy);
+        setGamesList(response.items || []);
+        setTotalCount(response.totalCount || 0);
       } catch (error) {
+        console.error('Error executing centralized games lookup function:', error);
         setGamesList([]);
+        setTotalCount(0);
       }
     }, 350);
 
     return () => clearTimeout(delayDebounce);
-  }, [searchQuery, sortBy, gameId]);
+  }, [searchQuery, sortBy, currentPage, gameId]);
 
   const handleNextStep = (): void => {
     if (!selectedGame) {
@@ -126,6 +131,7 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
         gameId={selectedGame.id}
         onSuccess={onRefreshClips}
         onClose={onClose}
+        onBackToDetails={() => setCurrentStep('fillDetails')}
       />
     );
   }
@@ -159,12 +165,12 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
-                  <option value="default">{t('common:filters.options.default')}</option>
-                  <option value="nameAsc">{t('common:filters.options.nameAsc')}</option>
-                  <option value="nameDesc">{t('common:filters.options.nameDesc')}</option>
-                  <option value="dateNew">{t('common:filters.options.dateNew')}</option>
-                  <option value="dateOld">{t('common:filters.options.dateOld')}</option>
-                  <option value="ratingDesc">{t('common:filters.options.ratingDesc')}</option>
+                  <option value="none">{t('common:filters.options.default')}</option>
+                  <option value="name_asc">{t('common:filters.options.nameAsc')}</option>
+                  <option value="name_desc">{t('common:filters.options.nameDesc')}</option>
+                  <option value="date_new">{t('common:filters.options.dateNew')}</option>
+                  <option value="date_old">{t('common:filters.options.dateOld')}</option>
+                  <option value="rating_desc">{t('common:filters.options.ratingDesc')}</option>
                 </select>
               </div>
             </div>
@@ -175,9 +181,12 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
               {gamesList.map((game) => (
                 <div
                   key={game.id}
-                  className={`${styles.gameCatalogCard} ${selectedGame?.id === game.id ? styles.gameCardActiveSelected : ''}`}
-                  onClick={() => setSelectedGame(game)}
+                  className={`${styles.gameCardWrapper} ${selectedGame?.id === game.id ? styles.gameCardActiveSelected : ''}`}
                 >
+                  <GameCardMedium
+                    imageUrl={game.imageUrl}
+                    onClick={() => setSelectedGame(game)}
+                  />
                   <span className={styles.gameCatalogTitle}>{game.title}</span>
                 </div>
               ))}
@@ -187,6 +196,17 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                 </p>
               )}
             </div>
+
+            {totalCount > pageSizeConstant && (
+              <div className={styles.paginationRow}>
+                <Pagination
+                  currentPage={currentPage}
+                  totalCount={totalCount}
+                  pageSize={pageSizeConstant}
+                  onPageChange={(page) => setCurrentPage(page)}
+                />
+              </div>
+            )}
 
             <div className={styles.actionRowButton}>
               <ActionButton variant="neutral" size="large" onClick={handleNextStep}>
@@ -201,11 +221,10 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
             <span className={styles.stepIndicator}>{t('videoUpload:form.stepDetails')}</span>
 
             <p className={styles.selectedGameBadge}>
-              <strong>Juego:</strong> {selectedGame?.title}
+              <strong>{t('videoUpload:form.stepGame')}:</strong> {selectedGame?.title}
             </p>
 
             <div className={styles.formTwoColumnsLayout}>
-
               <div className={styles.formLeftColumn}>
                 <div className={styles.inputGroup}>
                   <label className={styles.formLabel}>{t('videoUpload:form.titleLabel')}</label>
@@ -242,13 +261,15 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                   {fileError && <span className={styles.inlineErrorLabel}>{fileError}</span>}
 
                   <div className={styles.requirementsBox}>
+                    <h3 style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#00ffcc', fontWeight: 600 }}>
+                      {t('videoUpload:requirements.title')}
+                    </h3>
                     <p>{t('videoUpload:requirements.formats')}</p>
                     <p>{t('videoUpload:requirements.size')}</p>
                     <p>{t('videoUpload:requirements.duration')}</p>
                   </div>
                 </div>
               </div>
-
             </div>
 
             <div className={styles.actionRowButton}>
