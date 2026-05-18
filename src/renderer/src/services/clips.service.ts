@@ -63,3 +63,13 @@ export const completeVideoUpload = async (request: CompleteUploadRequest): Promi
   const response = await api.post<{ url: string }>('/Media/clips/complete', request);
   return response.data.url;
 };
+
+/**
+ * Deletes a specific game clip from the database and removes its source media file from AWS S3.
+ * Permitted only for the clip owner or administrative users.
+ * @param clipId The unique identifier (GUID) of the clip to be deleted.
+ * @returns A promise resolving to void upon successful deletion.
+ */
+export const deleteClip = async (clipId: string): Promise<void> => {
+  await api.delete(`/Media/clips/${clipId}`);
+};
