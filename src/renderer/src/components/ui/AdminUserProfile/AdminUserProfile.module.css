@@ -1,0 +1,118 @@
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.backButton {
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  color: var(--primary-color, #90cdf4);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.backButton:hover {
+  text-decoration: underline;
+}
+
+.headerCard {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.userInfo {
+  flex-grow: 1;
+}
+
+.userInfo h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.userInfo p {
+  margin: 0;
+  color: #cbd5e0;
+}
+
+.badges {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.badgeRole {
+  background: #3182ce;
+  color: white;
+}
+
+.badgeActive {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+  border: 1px solid #4CAF50;
+}
+
+.badgeSuspended {
+  background: rgba(244, 67, 54, 0.2);
+  color: #F44336;
+  border: 1px solid #F44336;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.metricCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.metricValue {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--primary-color, #90cdf4);
+  margin: 0;
+}
+
+.metricLabel {
+  color: #a0aec0;
+  margin: 8px 0 0 0;
+  font-size: 0.95rem;
+}
+
+.actionsSection {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

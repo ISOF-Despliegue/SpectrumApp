@@ -6,6 +6,7 @@ import { UserModerationDto } from '../../../types/admin.types';
 import { Input } from '../../../components/ui/Input';
 import { ActionButton } from '../../../components/ui/ActionButton';
 import { Pagination } from '../../../components/ui/Pagination';
+import { AdminUserProfile } from '../../../components/ui/AdminUserProfile';
 
 export const ManageUsers = () => {
   const { t } = useTranslation('admin');
@@ -16,6 +17,7 @@ export const ManageUsers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const PAGE_SIZE = 10;
 
@@ -53,9 +55,23 @@ export const ManageUsers = () => {
     }
   };
 
+  if (selectedUserId) {
+    return (
+      <div className={styles.container}>
+         <AdminUserProfile
+            userId={selectedUserId}
+            onBack={() => {
+              setSelectedUserId(null);
+              fetchUsers();
+            }}
+         />
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>{t('manageUsers.title')}</h1>
+      <h1>{t('manageUsers.title')}</h1>
 
       <div className={styles.searchBar}>
         <Input
@@ -98,13 +114,23 @@ export const ManageUsers = () => {
                   </td>
                   <td>
                     {user.role !== 'ADMIN' && (
-                      <ActionButton
-                        variant={user.isSuspended ? 'change' : 'suspend'}
-                        size="small"
-                        onClick={() => handleToggleSuspension(user.id, user.isSuspended)}
-                      >
-                        {user.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
-                      </ActionButton>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <ActionButton
+                          variant="neutral"
+                          size="small"
+                          onClick={() => setSelectedUserId(user.id)}
+                        >
+                          {t('manageUsers.actions.viewProfile')}
+                        </ActionButton>
+
+                        <ActionButton
+                          variant={user.isSuspended ? 'change' : 'suspend'}
+                          size="small"
+                          onClick={() => handleToggleSuspension(user.id, user.isSuspended)}
+                        >
+                          {user.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
+                        </ActionButton>
+                      </div>
                     )}
                   </td>
                 </tr>

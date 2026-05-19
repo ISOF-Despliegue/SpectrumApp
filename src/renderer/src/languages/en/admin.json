@@ -20,7 +20,29 @@
     },
     "actions": {
       "reactivate": "Reactivate",
-      "suspend": "Suspend"
+      "suspend": "Suspend",
+      "viewProfile": "View Profile"
+    },
+    "profile": {
+      "back": "← Back to list",
+      "memberSince": "Member since",
+      "metrics": {
+        "reviews": "Reviews posted",
+        "clips": "Clips uploaded"
+      },
+      "actions": {
+        "delete": "Delete Account",
+        "confirmDelete": "Are you sure you want to permanently delete this user? This action cannot be undone."
+      }
     }
+  },
+  "navigation": {
+    "myProfile": "My Profile",
+    "globalMetrics": "Global Metrics",
+    "manageUsers": "Manage Users",
+    "manageReviews": "Manage Reviews",
+    "manageEvents": "Manage Events",
+    "manageAdmins": "Manage Admins",
+    "logout": "Logout"
   }
 }

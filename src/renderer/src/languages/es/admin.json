@@ -20,7 +20,29 @@
     },
     "actions": {
       "reactivate": "Reactivar",
-      "suspend": "Suspender"
+      "suspend": "Suspender",
+      "viewProfile": "Ver Perfil"
+    },
+    "profile": {
+      "back": "← Volver a la lista",
+      "memberSince": "Miembro desde",
+      "metrics": {
+        "reviews": "Reseñas publicadas",
+        "clips": "Clips subidos"
+      },
+      "actions": {
+        "delete": "Eliminar Cuenta",
+        "confirmDelete": "¿Estás seguro de que deseas eliminar permanentemente a este usuario? Esta acción no se puede deshacer."
+      }
     }
+  },
+  "navigation": {
+    "myProfile": "Mi Perfil",
+    "globalMetrics": "Métricas Globales",
+    "manageUsers": "Gestionar Usuarios",
+    "manageReviews": "Gestionar Reseñas",
+    "manageEvents": "Gestionar Eventos",
+    "manageAdmins": "Gestionar Administradores",
+    "logout": "Cerrar Sesión"
   }
 }

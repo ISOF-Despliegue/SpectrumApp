@@ -13,3 +13,16 @@ export interface PagedResult<T> {
   page: number;
   pageSize: number;
 }
+
+export interface AdminUserDetailDto {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  isSuspended: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  avatarUrl?: string | null;
+  totalReviews: number;
+  totalClips: number;
+}

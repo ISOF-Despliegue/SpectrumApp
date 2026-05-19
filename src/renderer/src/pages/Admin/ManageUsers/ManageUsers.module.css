@@ -6,12 +6,6 @@
   flex-grow: 1;
 }
 
-.title {
-  color: var(--text-color);
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
 .searchBar {
   display: flex;
   gap: 15px;

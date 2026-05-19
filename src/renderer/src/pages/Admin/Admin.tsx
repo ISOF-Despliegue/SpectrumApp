@@ -1,22 +1,24 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styles from './Admin.module.css';
+import { useTranslation } from 'react-i18next';
 
 type AdminNavigationItem = {
-  label: string;
+  labelKey: string;
   to: string;
 };
 
 const ADMIN_NAVIGATION: AdminNavigationItem[] = [
-  { label: 'Mi perfil', to: 'my-profile' },
-  { label: 'Métricas globales', to: 'global-metrics' },
-  { label: 'Administrar usuarios', to: 'manage-users' },
-  { label: 'Administrar reseñas', to: 'manage-reviews' },
-  { label: 'Administrar eventos', to: 'manage-events' },
-  { label: 'Gestión administradores', to: 'manage-admins' },
+  { labelKey: 'navigation.myProfile', to: 'my-profile' },
+  { labelKey: 'navigation.globalMetrics', to: 'global-metrics' },
+  { labelKey: 'navigation.manageUsers', to: 'manage-users' },
+  { labelKey: 'navigation.manageReviews', to: 'manage-reviews' },
+  { labelKey: 'navigation.manageEvents', to: 'manage-events' },
+  { labelKey: 'navigation.manageAdmins', to: 'manage-admins' },
 ];
 
 export const Admin = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('admin');
 
   return (
     <main className={styles.adminPage}>
@@ -25,25 +27,8 @@ export const Admin = () => {
         onClick={() => navigate('/login')}
         className={styles.logoutButton}
       >
-        Cerrar Sesión (Demo)
+        {t('navigation.logout')}
       </button>
-
-      <header className={styles.topBanner}>
-        <div className={styles.brandContainer}>
-          <div className={styles.logoPlaceholder} aria-hidden="true">
-            No Image
-          </div>
-
-          <div className={styles.brandText}>
-            <h1 className={styles.brandTitle}>SPECTRUM</h1>
-          </div>
-        </div>
-
-        <div className={styles.profileSummary}>
-          <p className={styles.profileName}>Abraham Cano Ramírez</p>
-          <div className={styles.avatarPlaceholder} aria-hidden="true" />
-        </div>
-      </header>
 
       <section className={styles.bodyLayout}>
         <aside className={styles.sidebar} aria-label="Panel lateral de administración">
@@ -59,7 +44,7 @@ export const Admin = () => {
                         : styles.sidebarButton
                     }
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </NavLink>
                 </li>
               ))}
