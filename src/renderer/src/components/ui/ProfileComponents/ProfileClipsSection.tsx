@@ -5,6 +5,7 @@ import { deleteClip } from '../../../services/clips.service';
 import { ProfileSection } from './ProfileSection';
 import { PreviewClip } from '../PreviewClip/PreviewClip';
 import { ClipPlayerModal } from '../ClipPlayerModal/ClipPlayerModal';
+import { AllClipsModal } from './AllClipsModal/AllClipsModal';
 import styles from '../../../pages/Profile/Profile.module.css';
 
 /**
@@ -19,6 +20,7 @@ interface ClipData {
   url: string;
   likesCount: number;
   dislikesCount: number;
+  createdAt?: string;
 }
 
 interface ProfileClipsSectionProps {
@@ -44,6 +46,7 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
 
   const [selectedClip, setSelectedClip] = useState<ClipData | null>(null);
   const [isPlayerOpen, setIsPlayerOpen] = useState<boolean>(false);
+  const [isAllClipsOpen, setIsAllClipsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (profileUserId) {
@@ -112,6 +115,7 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
       <ProfileSection
         title={t('profile:sections.clips')}
         showSeeMore={clipsList.length > 0 && !isEditing}
+        onSeeMore={() => setIsAllClipsOpen(true)}
       >
         <div className={styles.clipsGrid}>
           {previewClips.map((clip) => (
@@ -142,6 +146,19 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
           )}
         </div>
       </ProfileSection>
+
+      <AllClipsModal
+        isOpen={isAllClipsOpen}
+        onClose={() => setIsAllClipsOpen(false)}
+        clipsList={clipsList}
+        isEditable={isEditing}
+        isProfileOwner={isOwner}
+        onPlayClip={(id) => {
+          setIsAllClipsOpen(false);
+          handlePlayClip(id);
+        }}
+        onDeleteClip={handleDeleteClip}
+      />
 
       <ClipPlayerModal
         isOpen={isPlayerOpen}

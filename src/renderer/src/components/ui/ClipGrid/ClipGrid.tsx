@@ -13,6 +13,7 @@ interface ClipItemData {
   duration?: string;
   likesCount: number;
   dislikesCount: number;
+  url: string;
 }
 
 /**
@@ -93,6 +94,7 @@ export const ClipGrid: React.FC<ClipGridProps> = ({
             title={currentClip.title}
             thumbnailUrl={currentClip.thumbnailUrl}
             duration={currentClip.duration}
+            url={currentClip.url}
             isEditable={isEditable}
             likesCount={currentClip.likesCount}
             dislikesCount={currentClip.dislikesCount}
