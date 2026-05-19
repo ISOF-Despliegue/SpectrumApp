@@ -1,92 +1,131 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ManageUsers.module.css';
+import { getModeratedUsers, toggleUserSuspension } from '../../../services/adminUsers.service';
+import { UserModerationDto } from '../../../types/admin.types';
+import { Input } from '../../../components/ui/Input';
+import { ActionButton } from '../../../components/ui/ActionButton';
+import { Pagination } from '../../../components/ui/Pagination';
 
-type UserRow = {
-  id: string;
-  username: string;
-};
+export const ManageUsers = () => {
+  const { t } = useTranslation('admin');
 
-const USERS: UserRow[] = [
-  { id: '1', username: 'Aaa' },
-  { id: '2', username: 'Bbbb' },
-  { id: '3', username: 'Ccc' }
-];
+  const [users, setUsers] = useState<UserModerationDto[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export const AdminManageUsers = () => {
-  const [search, setSearch] = useState('');
-  const [selectedUserId, setSelectedUserId] = useState('1');
+  const PAGE_SIZE = 10;
 
-  const filteredUsers = USERS.filter((user) =>
-    user.username.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleAccept = () => {
-    const selectedUser = USERS.find((user) => user.id === selectedUserId);
-
-    if (!selectedUser) {
-      window.alert('Selecciona un usuario.');
-      return;
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await getModeratedUsers(page, PAGE_SIZE, searchTerm);
+      setUsers(result.items);
+      setTotalCount(result.totalCount);
+    } catch (err: any) {
+      setError(err.response?.data?.title || t('manageUsers.errorLoad'));
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    window.alert(`Usuario seleccionado: ${selectedUser.username}`);
+  useEffect(() => {
+    fetchUsers();
+  }, [page]);
+
+  const handleSearchClick = () => {
+    setPage(1);
+    fetchUsers();
+  };
+
+  const handleToggleSuspension = async (userId: string, currentStatus: boolean) => {
+    try {
+      await toggleUserSuspension(userId, !currentStatus);
+      setUsers(users.map(u =>
+        u.id === userId ? { ...u, isSuspended: !currentStatus } : u
+      ));
+    } catch (err: any) {
+      alert(err.response?.data?.title || t('manageUsers.errorToggle'));
+    }
   };
 
   return (
-    <article className={styles.page}>
-      <header className={styles.pageHeader}>
-        <h1>Administración de usuarios</h1>
-      </header>
+    <div className={styles.container}>
+      <h1 className={styles.title}>{t('manageUsers.title')}</h1>
 
-      <section className={styles.searchSection}>
-        <p className={styles.sectionTitle}>Buscar por nombre</p>
-
-        <input
+      <div className={styles.searchBar}>
+        <Input
           type="text"
-          placeholder="Nombre de usuario"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className={styles.searchInput}
+          placeholder={t('manageUsers.searchPlaceholder')}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </section>
+        <ActionButton variant="neutral" onClick={handleSearchClick}>
+          {t('manageUsers.searchButton')}
+        </ActionButton>
+      </div>
 
-      <section className={styles.tableSection}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th aria-label="Seleccionar usuario" />
-              <th>Usuario</th>
-            </tr>
-          </thead>
+      {error && <p className={styles.errorText}>{error}</p>}
 
-          <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id}>
-                <td className={styles.radioCell}>
-                  <input
-                    type="radio"
-                    name="selectedUser"
-                    checked={selectedUserId === user.id}
-                    onChange={() => setSelectedUserId(user.id)}
-                  />
-                </td>
-                <td>{user.username}</td>
-              </tr>
-            ))}
-
-            {filteredUsers.length === 0 && (
+      {isLoading ? (
+        <p className={styles.loadingText}>{t('manageUsers.loading')}</p>
+      ) : (
+        <div className={styles.tableContainer}>
+          <table className={styles.userTable}>
+            <thead>
               <tr>
-                <td colSpan={2}>No se encontraron usuarios.</td>
+                <th>{t('manageUsers.table.user')}</th>
+                <th>{t('manageUsers.table.email')}</th>
+                <th>{t('manageUsers.table.role')}</th>
+                <th>{t('manageUsers.table.status')}</th>
+                <th>{t('manageUsers.table.actions')}</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {users.map(user => (
+                <tr key={user.id}>
+                  <td>{user.username}</td>
+                  <td>{user.email}</td>
+                  <td>{user.role}</td>
+                  <td>
+                    <span className={user.isSuspended ? styles.statusSuspended : styles.statusActive}>
+                      {user.isSuspended ? t('manageUsers.status.suspended') : t('manageUsers.status.active')}
+                    </span>
+                  </td>
+                  <td>
+                    {user.role !== 'ADMIN' && (
+                      <ActionButton
+                        variant={user.isSuspended ? 'change' : 'suspend'}
+                        size="small"
+                        onClick={() => handleToggleSuspension(user.id, user.isSuspended)}
+                      >
+                        {user.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
+                      </ActionButton>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-      <footer className={styles.footerActions}>
-        <button type="button" className={styles.actionButton} onClick={handleAccept}>
-  Aceptar
-</button>
-      </footer>
-    </article>
+          {users.length === 0 && <p className={styles.emptyText}>{t('manageUsers.empty')}</p>}
+        </div>
+      )}
+
+      {totalCount > PAGE_SIZE && (
+        <div className={styles.paginationWrapper}>
+          <Pagination
+            currentPage={page}
+            totalCount={totalCount}
+            pageSize={PAGE_SIZE}
+            onPageChange={setPage}
+          />
+        </div>
+      )}
+    </div>
   );
 };

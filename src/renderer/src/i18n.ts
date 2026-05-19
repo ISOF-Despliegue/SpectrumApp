@@ -12,6 +12,7 @@ import esFooter from './languages/es/footer.json';
 import esProfile from './languages/es/profile.json';
 import esImageUpload from './languages/es/imageUpload.json';
 import esVideoUpload from './languages/es/videoUpload.json';
+import esAdmin from './languages/es/admin.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
@@ -23,6 +24,7 @@ import enFooter from './languages/en/footer.json';
 import enProfile from './languages/es/profile.json';
 import enImageUpload from './languages/en/imageUpload.json';
 import enVideoUpload from './languages/en/videoUpload.json';
+import enAdmin from './languages/en/admin.json';
 
 i18n
   .use(LanguageDetector)
@@ -38,7 +40,8 @@ i18n
         footer: esFooter,
         profile: esProfile,
         imageUpload: esImageUpload,
-        videoUpload: esVideoUpload
+        videoUpload: esVideoUpload,
+        admin: esAdmin
       },
       en: {
         common: enCommon,
@@ -49,7 +52,8 @@ i18n
         footer: enFooter,
         profile: enProfile,
         imageUpload: enImageUpload,
-        videoUpload: enVideoUpload
+        videoUpload: enVideoUpload,
+        admin: enAdmin
       }
     },
     fallbackLng: 'es',
