@@ -7,8 +7,10 @@ import { ImageContainer } from '../../ImageContainer/ImageContainer';
 import { GameCardMedium } from '../../GameCardMedium/GameCardMedium';
 import { ScoreDisplay } from '../../ScoreDisplay/ScoreDisplay';
 import { ReportButton } from '../../ReportButton/ReportButton';
+import { ReportModal } from '../../ReportModal/ReportModal';
 
 interface ReviewCardCompleteProps {
+  reviewId: string;
   gameCover?: string;
   username: string;
   userImage?: string;
@@ -20,10 +22,10 @@ interface ReviewCardCompleteProps {
   likes: number;
   dislikes: number;
   isOwnReview?: boolean;
-  onReport?: () => void;
 }
 
 export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
+  reviewId,
   gameCover,
   username,
   userImage,
@@ -35,8 +37,9 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
   likes,
   dislikes,
   isOwnReview = false,
-  onReport,
 }) => {
+  const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
+
   return (
     <article className={styles.container}>
       <div className={styles.filmOverlay}></div>
@@ -82,10 +85,17 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
 
         {!isOwnReview && (
           <section className={styles.reportColumn}>
-            <ReportButton onClick={onReport} />
+            <ReportButton onClick={() => setIsReportModalOpen(true)} />
           </section>
         )}
       </div>
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        targetId={reviewId}
+        targetType='REVIEW'
+      />
     </article>
   );
 };

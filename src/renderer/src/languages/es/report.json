@@ -1,0 +1,24 @@
+{
+  "reportModal": {
+    "title": "Reportar Contenido",
+    "errorTitle": "Error al enviar el reporte",
+    "lengthError": "Por favor, proporciona una descripción más detallada (mínimo 10 caracteres).",
+    "submitButton": "Enviar Reporte",
+    "submitting": "Enviando...",
+    "cancelButton": "Cancelar",
+    "successMessage": "Reporte enviado con éxito. Nuestro equipo lo revisará pronto.",
+    "tooManyReports": "Has enviado demasiados reportes recientemente. Intenta de nuevo más tarde.",
+    "alreadyReported": "Ya has reportado este contenido anteriormente.",
+    "genericError": "Error al enviar el reporte. Por favor, intenta de nuevo más tarde.",
+    "reportReasons": {
+      "SPAM": "Spam o contenido comercial",
+      "HARASSMENT": "Acoso o discurso de odio",
+      "INAPPROPRIATE_CONTENT": "Contenido inapropiado u ofensivo",
+      "SPOILERS": "Spoilers no marcados",
+      "OTHER": "Otro motivo"
+    },
+    "placeholder": "Describe detalladamente por qué reportas este contenido (mín. 10 caracteres)...",
+    "closeButton": "Cerrar",
+    "reportButton": "Reportar"
+  }
+}

@@ -81,3 +81,35 @@
 .cancelBtn:hover {
   background: rgba(255, 255, 255, 0.1);
 }
+
+.selectInput {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-color, #ffffff);
+  font-family: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  appearance: none;
+}
+
+.selectInput:focus {
+  outline: none;
+  border-color: #ff4757;
+  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.2);
+}
+
+.selectInput option {
+  background: var(--background-secondary, #1a1a2e);
+  color: var(--text-color, #ffffff);
+}
+
+.errorText {
+  color: #ff4757;
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 500;
+  animation: modalFadeIn 0.2s ease-out;
+}

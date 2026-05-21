@@ -13,6 +13,7 @@ import esProfile from './languages/es/profile.json';
 import esImageUpload from './languages/es/imageUpload.json';
 import esVideoUpload from './languages/es/videoUpload.json';
 import esAdmin from './languages/es/admin.json';
+import esReport from './languages/es/report.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
@@ -25,6 +26,7 @@ import enProfile from './languages/es/profile.json';
 import enImageUpload from './languages/en/imageUpload.json';
 import enVideoUpload from './languages/en/videoUpload.json';
 import enAdmin from './languages/en/admin.json';
+import enReport from './languages/en/report.json';
 
 i18n
   .use(LanguageDetector)
@@ -41,7 +43,8 @@ i18n
         profile: esProfile,
         imageUpload: esImageUpload,
         videoUpload: esVideoUpload,
-        admin: esAdmin
+        admin: esAdmin,
+        report: esReport
       },
       en: {
         common: enCommon,
@@ -53,7 +56,8 @@ i18n
         profile: enProfile,
         imageUpload: enImageUpload,
         videoUpload: enVideoUpload,
-        admin: enAdmin
+        admin: enAdmin,
+        report: enReport
       }
     },
     fallbackLng: 'es',
