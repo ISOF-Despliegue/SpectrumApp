@@ -43,6 +43,45 @@
     "manageReviews": "Manage Reviews",
     "manageEvents": "Manage Events",
     "manageAdmins": "Manage Admins",
+    "manageReports": "Manage Reports",
     "logout": "Logout"
+  },
+  "manageReports": {
+    "title": "Report Management",
+    "filterStatus": "Status",
+    "filterType": "Content Type",
+    "loading": "Loading reports...",
+    "empty": "No reports found matching the filters.",
+    "errorLoad": "Error loading reports.",
+    "errorAction": "Error processing moderation action.",
+    "table": {
+      "reason": "Reason",
+      "targetType": "Type",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "details": {
+      "back": "← Back to list",
+      "subtitle": "Report Details",
+      "reporter": "Reported by",
+      "targetId": "Entity ID",
+      "description": "Reporter's Description",
+      "adminNotesPlaceholder": "Write internal moderation notes or justification here...",
+      "statusActions": "Change Report Status",
+      "contentActions": "Corrective Actions on the Entity",
+      "states": {
+        "PENDING": "Pending",
+        "RESOLVED": "Resolved",
+        "DISMISSED": "Dismissed"
+      },
+      "reasons": {
+        "SPAM": "Spam or commercial content",
+        "HARASSMENT": "Harassment or hate speech",
+        "INAPPROPRIATE_CONTENT": "Inappropriate content",
+        "SPOILERS": "Unmarked spoilers",
+        "OTHER": "Other reason"
+      }
+    }
   }
 }

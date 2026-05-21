@@ -14,6 +14,7 @@ const ADMIN_NAVIGATION: AdminNavigationItem[] = [
   { labelKey: 'navigation.manageReviews', to: 'manage-reviews' },
   { labelKey: 'navigation.manageEvents', to: 'manage-events' },
   { labelKey: 'navigation.manageAdmins', to: 'manage-admins' },
+  { labelKey: 'navigation.manageReports', to: 'manage-reports' },
 ];
 
 export const Admin = () => {

@@ -43,6 +43,45 @@
     "manageReviews": "Gestionar Reseñas",
     "manageEvents": "Gestionar Eventos",
     "manageAdmins": "Gestionar Administradores",
+    "manageReports": "Gestionar Reportes",
     "logout": "Cerrar Sesión"
+  },
+  "manageReports": {
+    "title": "Gestión de Reportes",
+    "filterStatus": "Estado",
+    "filterType": "Tipo de Contenido",
+    "loading": "Cargando reportes...",
+    "empty": "No hay reportes que coincidan con los filtros.",
+    "errorLoad": "Error al cargar los reportes.",
+    "errorAction": "Error al procesar la acción de moderación.",
+    "table": {
+      "reason": "Motivo",
+      "targetType": "Tipo",
+      "status": "Estado",
+      "date": "Fecha",
+      "actions": "Acciones"
+    },
+    "details": {
+      "back": "← Volver al listado",
+      "subtitle": "Detalles del Reporte",
+      "reporter": "Reportado por",
+      "targetId": "ID de la Entidad",
+      "description": "Descripción del Denunciante",
+      "adminNotesPlaceholder": "Escribe aquí las notas internas de moderación o justificación...",
+      "statusActions": "Cambiar Estado del Reporte",
+      "contentActions": "Acciones Correctivas sobre la Entidad",
+      "states": {
+        "PENDING": "Pendiente",
+        "RESOLVED": "Resuelto",
+        "DISMISSED": "Desestimado"
+      },
+      "reasons": {
+        "SPAM": "Spam o contenido comercial",
+        "HARASSMENT": "Acoso o discurso de odio",
+        "INAPPROPRIATE_CONTENT": "Contenido inapropiado",
+        "SPOILERS": "Spoilers no marcados",
+        "OTHER": "Otro motivo"
+      }
+    }
   }
 }

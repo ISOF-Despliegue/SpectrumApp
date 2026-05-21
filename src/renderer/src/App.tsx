@@ -12,6 +12,7 @@ import { ManageUsers } from './pages/Admin/ManageUsers';
 import { AdminManageReviews } from './pages/Admin/ManageReviews';
 import { AdminManageEvents } from './pages/Admin/ManageEvents';
 import { AdminManageAdmins } from './pages/Admin/ManageAdmins';
+import { ManageReports } from './pages/Admin/ManageReports';
 import { GameReviews } from './pages/Games/GameReviews';
 import { Profile } from './pages/Profile';
 
@@ -43,6 +44,7 @@ function AppContent(): React.JSX.Element {
           <Route path="manage-reviews" element={<AdminManageReviews />} />
           <Route path="manage-events" element={<AdminManageEvents />} />
           <Route path="manage-admins" element={<AdminManageAdmins />} />
+          <Route path="manage-reports" element={<ManageReports />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
