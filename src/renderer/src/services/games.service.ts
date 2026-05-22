@@ -1,11 +1,17 @@
 import { api } from './api';
+import type { GameReviewDetail } from '../types/reviews.types';
 
 export interface Game {
-  id: string;
+  id: number | string;
   title: string;
   imageUrl: string;
   released: string;
   spectrumRating: number;
+  developer?: string;
+  description?: string;
+  releaseDate?: string | null;
+  coverImageUrl?: string | null;
+  internalRating?: number;
 }
 
 export interface PagedResponse<T> {
@@ -41,7 +47,7 @@ export const getGames = async (search?: string, page: number = 1, sort: string =
 
     return {
       items: (data.items || data.Items || []).map((game: any) => ({
-        id: game.id,
+        id: game.rawgId ?? game.RawgId ?? game.id,
         title: game.title,
         imageUrl: game.coverImageUrl || game.CoverImageUrl || " ",
         released: game.releaseDate || "",
@@ -53,7 +59,31 @@ export const getGames = async (search?: string, page: number = 1, sort: string =
       totalPages: data.totalPages ?? data.TotalPages ?? 1
     };
   } catch (error) {
-    console.error("Error obtaining games:", error);
     throw error;
   }
+};
+
+export const getGameReviewDetail = async (gameId: number | string): Promise<GameReviewDetail> => {
+  const response = await api.get<GameReviewDetail>(`/Games/${gameId}/reviews-detail`);
+  const data = response.data;
+
+  return {
+    ...data,
+    game: {
+      ...data.game,
+      id: (data.game as any).rawgId ?? (data.game as any).RawgId ?? data.game.id,
+      title: data.game.title,
+      imageUrl:
+        data.game.imageUrl ||
+        data.game.coverImageUrl ||
+        (data.game as any).CoverImageUrl ||
+        '',
+      released:
+        data.game.released ||
+        data.game.releaseDate ||
+        (data.game as any).ReleaseDate ||
+        '',
+      spectrumRating: data.game.spectrumRating ?? data.game.internalRating ?? 0
+    }
+  };
 };

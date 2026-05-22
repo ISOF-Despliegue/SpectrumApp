@@ -5,15 +5,21 @@
 const MAX_VIDEO_SIZE = 61 * 1024 * 1024;
 const MAX_VIDEO_DURATION = 16;
 const ALLOWED_VIDEO_EXTENSIONS = ['.mp4', '.mov'];
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime'];
 
 /**
  * Validates the file size and extension of a video.
  * @param file The file object from the input.
  * @returns True if valid, otherwise throws an error.
  */
-export const validateVideoMetadata = (file: File): boolean => {
-  if (file.size > MAX_VIDEO_SIZE) {
-    throw new Error('Video size exceeds the 60MB limit.');
+export const validateVideoMetadata = (file: File, maxSizeBytes = MAX_VIDEO_SIZE): boolean => {
+  if (file.size > maxSizeBytes) {
+    const maxSizeMb = Math.floor(maxSizeBytes / (1024 * 1024));
+    throw new Error(`Video size exceeds the ${maxSizeMb}MB limit.`);
+  }
+
+  if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+    throw new Error('Invalid video format. Only .mp4 and .mov are allowed.');
   }
 
   const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();

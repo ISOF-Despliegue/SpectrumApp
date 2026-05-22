@@ -1,19 +1,13 @@
-import styles from './Home.module.css';
-import { useTranslation } from 'react-i18next';
+import type React from 'react';
 
-export const Home = (onProfileClick) => {
-const { t } = useTranslation('navbar');
-
+export const Home = (): React.JSX.Element => {
   return (
     <div className="home-page">
       <div style={{ display: 'flex' }}>
         <main>
-
           <h1>Bienvenido a la Home</h1>
-
         </main>
       </div>
     </div>
   );
 };
-

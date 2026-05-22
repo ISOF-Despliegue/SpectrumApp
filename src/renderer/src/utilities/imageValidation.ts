@@ -2,7 +2,7 @@
  * Utility functions for validating image files before uploading to AWS S3.
  */
 
-const MAX_IMAGE_SIZE = 6 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
 /**

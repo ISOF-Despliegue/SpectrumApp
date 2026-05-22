@@ -1,222 +1,462 @@
 .page {
   width: 100%;
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   color: var(--color-white);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.gameInfo {
+.topBar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.gameImage {
-  width: 120px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background-color: rgba(255, 255, 255, 0.04);
+.detailGrid {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(220px, 260px);
+  gap: 1.25rem;
+  align-items: start;
 }
 
-.badge {
-  width: fit-content;
+.sidePanel,
+.reviewCard,
+.reviewForm,
+.emptyState,
+.statusPanel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.sidePanel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+}
+
+.eyebrow {
   margin: 0 0 0.75rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background-color: rgba(255, 255, 255, 0.08);
-  color: var(--color-white);
+  color: #d946ef;
   font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.title {
-  margin: 0;
-  color: #d946ef;
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  font-weight: 900;
-}
-
-.description {
-  max-width: 760px;
-  margin: 0.75rem 0 0;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.6;
-}
-
-.card,
-.reviewCard,
-.emptyState {
-  width: 100%;
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
-  background-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
-}
-
-.sectionTitle {
+.gameTitle {
   margin: 0 0 1rem;
-  font-size: 1.1rem;
-  font-weight: 900;
+  color: #e879f9;
+  font-size: 1.7rem;
+  line-height: 1.15;
 }
 
-.searchRow,
-.form {
-  display: flex;
-  gap: 0.85rem;
-}
-
-.form {
-  flex-direction: column;
-}
-
-.input,
-.textarea {
+.cover {
   width: 100%;
-  padding: 0.85rem 1rem;
-  background-color: rgba(255, 255, 255, 0.03);
-  color: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
-  font-family: var(--font-global);
-  font-size: 0.95rem;
-  outline: none;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.input:focus,
-.textarea:focus {
-  border-color: rgba(217, 70, 239, 0.75);
-}
-
-.textarea {
-  resize: vertical;
-}
-
-.button,
-.secondaryButton,
-.dangerButton {
-  min-height: 44px;
-  padding: 0.8rem 1.1rem;
-  border: none;
-  border-radius: 12px;
-  color: var(--color-white);
-  font-weight: 900;
-  cursor: pointer;
-  transition: transform 0.2s ease, filter 0.2s ease;
-}
-
-.button {
-  background: var(--bg-button-gradient);
-  box-shadow: 0 8px 20px var(--color-button-glow);
-}
-
-.secondaryButton {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.dangerButton {
-  background-color: rgba(239, 68, 68, 0.9);
-}
-
-.button:hover,
-.secondaryButton:hover,
-.dangerButton:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.08);
-}
-
-.button:disabled,
-.secondaryButton:disabled,
-.dangerButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  transform: none;
-}
-
-.message {
-  margin: 1rem 0 0;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.reviewsGrid {
+.metaList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0 0;
+}
+
+.metaList div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.metaList dt,
+.ratingHint,
+.mutedText,
+.message {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.metaList dt {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.metaList dd {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.centerColumn,
+.reviewList {
+  display: grid;
   gap: 1rem;
 }
 
-.reviewHeader {
+.reviewCard,
+.reviewForm,
+.emptyState,
+.statusPanel {
+  padding: 1rem;
+}
+
+.reviewHeader,
+.formHeader,
+.formActions,
+.reviewActions,
+.topBar {
   display: flex;
+}
+
+.reviewHeader,
+.formHeader {
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.reviewHeader h2 {
-  margin: 0 0 0.4rem;
-  font-size: 1.1rem;
+.reviewAuthorBlock,
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.reviewAvatar,
+.reviewAvatarFallback,
+.commentAvatar,
+.commentAvatarFallback {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 70, 239, 0.45);
+  background: rgba(217, 70, 239, 0.18);
+  color: #f5d0fe;
+  font-weight: 900;
+}
+
+.reviewAvatar,
+.reviewAvatarFallback {
+  width: 48px;
+  height: 48px;
+}
+
+.commentAvatar,
+.commentAvatarFallback {
+  width: 36px;
+  height: 36px;
+  font-size: 0.9rem;
+}
+
+.reviewAvatar,
+.commentAvatar {
+  object-fit: cover;
+}
+
+.reviewHeader h2,
+.reviewForm h2,
+.emptyState h2 {
+  margin: 0;
+  color: #f5d0fe;
+  font-size: 1.15rem;
 }
 
 .reviewHeader p,
-.reviewContent {
-  margin: 0;
+.reviewContent,
+.emptyState p {
+  margin: 0.4rem 0 0;
   color: rgba(255, 255, 255, 0.74);
   line-height: 1.6;
 }
 
+.scoreBadge {
+  flex: 0 0 auto;
+  height: fit-content;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(217, 70, 239, 0.18);
+  color: #f0abfc;
+}
+
 .reviewContent {
   margin-top: 1rem;
 }
 
-.voteActions {
-  display: flex;
-  gap: 0.75rem;
+.attachment {
   margin-top: 1rem;
 }
 
+.attachment img,
+.attachment video {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.reviewActions {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.primaryButton,
+.secondaryButton,
+.actionButton,
+.iconButton,
+.textButton,
+.textButtonDanger {
+  min-height: 40px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--color-white);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+}
+
+.primaryButton {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--bg-button-gradient);
+  box-shadow: 0 8px 20px var(--color-button-glow);
+}
+
+.secondaryButton,
+.actionButton {
+  padding: 0.75rem 0.9rem;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.iconButton {
+  width: 40px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.textButton,
+.textButtonDanger {
+  padding: 0.7rem 0.8rem;
+  background: transparent;
+}
+
+.textButton {
+  color: #f5d0fe;
+}
+
+.textButtonDanger {
+  color: #fecaca;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover,
+.actionButton:hover,
+.iconButton:hover,
+.textButton:hover,
+.textButtonDanger:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.actionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.averageBox {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.averageBox strong {
+  color: #f0abfc;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.averageBox span {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.emptyRating {
+  display: block;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.ratingHint {
+  margin: 0 0 1rem;
+}
+
+.reviewForm {
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+}
+
+.field input,
+.field textarea,
+.commentForm input {
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-white);
+  font-family: var(--font-global);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.commentForm input:focus {
+  border-color: rgba(217, 70, 239, 0.8);
+}
+
+.formActions {
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.formActions .primaryButton {
+  width: auto;
+}
+
+.commentsBlock {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.commentList {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.commentItem {
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.commentHeader {
+  margin-bottom: 0.55rem;
+}
+
+.commentHeader strong {
+  display: block;
+  color: #f5d0fe;
+  font-size: 0.92rem;
+}
+
+.commentItem p {
+  margin: 0 0 0.35rem;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.55;
+}
+
+.commentHeader span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.82rem;
+}
+
+.commentActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+
+.commentForm {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.65rem;
+}
+
+.message {
+  margin: 0;
+}
+
+.status,
+.statusPanel {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.statusPanel {
+  display: grid;
+  gap: 1rem;
+}
+
 .emptyState {
-  grid-column: 1 / -1;
   text-align: center;
 }
 
-.emptyState h2 {
-  margin: 0 0 0.5rem;
+@media (max-width: 1100px) {
+  .detailGrid {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .detailGrid > .sidePanel:last-child {
+    grid-column: 1 / -1;
+    position: static;
+  }
 }
 
-.emptyState p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-}
+@media (max-width: 760px) {
+  .detailGrid,
+  .commentForm {
+    grid-template-columns: 1fr;
+  }
 
-@media (max-width: 720px) {
-  .header,
-  .gameInfo,
-  .searchRow,
+  .sidePanel {
+    position: static;
+  }
+
+  .topBar,
   .reviewHeader,
-  .voteActions {
+  .formActions {
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .gameImage {
-    width: 100%;
-    max-width: 220px;
-    height: 260px;
-  }
-
+  .formActions .primaryButton,
   .secondaryButton,
-  .dangerButton,
-  .button {
+  .actionButton {
     width: 100%;
+    justify-content: center;
   }
 }

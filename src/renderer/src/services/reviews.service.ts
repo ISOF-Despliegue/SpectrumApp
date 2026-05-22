@@ -1,36 +1,32 @@
 import { api } from './api';
-
-export interface Review {
-  id: string;
-  reviewId?: string;
-  gameId: number | string;
-  userId?: string;
-  username?: string;
-  title: string;
-  content: string;
-  rating: number;
-  likesCount?: number;
-  dislikesCount?: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface CreateReviewRequest {
-  gameId: number | string;
-  title: string;
-  content: string;
-  rating: number;
-}
-
-export interface UpdateReviewRequest {
-  title: string;
-  content: string;
-  rating: number;
-}
+import type {
+  CreateReviewRequest,
+  Review,
+  ReviewComment,
+  UploadedReviewAttachment,
+  UpdateReviewRequest
+} from '../types/reviews.types';
 
 export interface CastReviewVoteRequest {
   isPositive: boolean;
 }
+
+export interface VoteResult {
+  success: boolean;
+  updatedLikes: number;
+  updatedDislikes: number;
+}
+
+const sendFormData = <T>(url: string, formData: FormData): Promise<T> => {
+  return api
+    .post<T>(url, formData, {
+      transformRequest: (data, headers) => {
+        delete headers['Content-Type'];
+        return data;
+      }
+    })
+    .then((response) => response.data);
+};
 
 export const ReviewService = {
   getById: async (reviewId: string): Promise<Review> => {
@@ -53,10 +49,7 @@ export const ReviewService = {
     return response.data;
   },
 
-  update: async (
-    reviewId: string,
-    payload: UpdateReviewRequest
-  ): Promise<void> => {
+  update: async (reviewId: string, payload: UpdateReviewRequest): Promise<void> => {
     await api.put(`/Reviews/${reviewId}`, payload);
   },
 
@@ -64,10 +57,30 @@ export const ReviewService = {
     await api.delete(`/Reviews/${reviewId}`);
   },
 
-  vote: async (
-    reviewId: string,
-    payload: CastReviewVoteRequest
-  ): Promise<void> => {
-    await api.post(`/Reviews/${reviewId}/vote`, payload);
+  vote: async (reviewId: string, payload: CastReviewVoteRequest): Promise<VoteResult> => {
+    const response = await api.post<VoteResult>(`/Reviews/${reviewId}/vote`, payload);
+    return response.data;
+  },
+
+  getComments: async (reviewId: string, page = 1): Promise<ReviewComment[]> => {
+    const response = await api.get<ReviewComment[]>(`/Reviews/${reviewId}/comments`, {
+      params: { page }
+    });
+    return response.data;
+  },
+
+  createComment: async (reviewId: string, content: string): Promise<ReviewComment> => {
+    const response = await api.post<ReviewComment>(`/Reviews/${reviewId}/comments`, { content });
+    return response.data;
+  },
+
+  deleteComment: async (commentId: string): Promise<void> => {
+    await api.delete(`/Reviews/comments/${commentId}`);
+  },
+
+  uploadAttachment: async (file: File): Promise<UploadedReviewAttachment> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return sendFormData<UploadedReviewAttachment>('/Media/reviews/attachment', formData);
   }
 };

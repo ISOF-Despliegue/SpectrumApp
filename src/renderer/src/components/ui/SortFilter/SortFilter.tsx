@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './SortFilter.module.css';
 
 export interface SortOption {

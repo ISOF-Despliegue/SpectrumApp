@@ -69,8 +69,7 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
         const response = await getGames(searchQuery, currentPage, sortBy);
         setGamesList(response.items || []);
         setTotalCount(response.totalCount || 0);
-      } catch (error) {
-        console.error('Error executing centralized games lookup function:', error);
+      } catch {
         setGamesList([]);
         setTotalCount(0);
       }
@@ -128,7 +127,7 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
         file={selectedFile}
         title={clipTitle}
         description={clipDescription}
-        gameId={selectedGame.id}
+        gameId={String(selectedGame.id)}
         onSuccess={onRefreshClips}
         onClose={onClose}
         onBackToDetails={() => setCurrentStep('fillDetails')}

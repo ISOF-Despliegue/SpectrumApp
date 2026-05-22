@@ -18,6 +18,7 @@ export const Games = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("none");
 
@@ -37,8 +38,9 @@ export const Games = () => {
       setGames(response.items);
       setTotalCount(response.totalCount);
       setCurrentPage(page);
-    } catch (error) {
-      console.error("Error al obtener juegos:", error);
+      setErrorMessage('');
+    } catch {
+      setErrorMessage('No se pudieron cargar los videojuegos. Intenta nuevamente.');
     } finally {
       setLoading(false);
     }
@@ -92,6 +94,8 @@ export const Games = () => {
         options={sortOptions}
         onSortChange={setSortOption}
       />
+
+      {errorMessage && <p className={styles.noResults}>{errorMessage}</p>}
 
       {loading && games.length === 0 ? (
         <p className={styles.loading}>{tGames('status.loading')}</p>

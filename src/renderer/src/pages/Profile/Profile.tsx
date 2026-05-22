@@ -50,7 +50,6 @@ export const Profile: React.FC = () => {
   const [isInterestedModalOpen, setIsInterestedModalOpen] = useState(false);
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
   const [isClipWizardOpen, setIsClipWizardOpen] = useState(false);
-  const [clipsUpdateNonce, setClipsUpdateNonce] = useState(0);
 
   const userRole: "user" | "admin" = "user";
   const isOwner = !userId || (profile ? userId === profile.id : false);
