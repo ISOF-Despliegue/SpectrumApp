@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Input } from "../../components/ui/Input/Input";
-import { AuthService, ROLES } from "../../services/auth.service";
+import { AuthService } from "../../services/auth.service";
 import spectrumLogo from "../../assets/images/common/SpectrumLogo.png";
 import styles from "./Auth.module.css";
-import { GoogleLogin } from '@react-oauth/google';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import { getApiErrorKey, routeUserByRole } from './auth-flow.utils';
 
 export const Login: React.FC = () => {
   const { t } = useTranslation('auth');
@@ -16,15 +17,7 @@ export const Login: React.FC = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const routerUserByRole = (role: string) => {
-    if (role === ROLES.ADMIN) {
-      navigate('/admin/my-profile');
-    } else {
-      navigate('/home');
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!email || !password) {
       setError(t('errorEmptyFields'));
@@ -35,16 +28,20 @@ export const Login: React.FC = () => {
       setIsLoading(true);
       setError("");
       const response = await AuthService.login({ email, password });
-      routerUserByRole(response.role);
-    } catch (err: any) {
-      const apiError = err.response?.data?.title || "loginError";
-      setError(t(apiError));
+      routeUserByRole(response.role, navigate);
+    } catch (err: unknown) {
+      setError(t(getApiErrorKey(err, 'loginError')));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse): Promise<void> => {
+    if (!credentialResponse.credential) {
+      setError(t('googleLoginError') || t('loginError'));
+      return;
+    }
+
     try {
       setIsLoading(true);
       setError("");
@@ -53,9 +50,8 @@ export const Login: React.FC = () => {
         credential: credentialResponse.credential
       });
 
-      console.log('Google login successful:', response);
-      routerUserByRole(response.role);
-    } catch (err: any) {
+      routeUserByRole(response.role, navigate);
+    } catch {
       setError(t('googleLoginError') || t('loginError'));
     } finally {
       setIsLoading(false);
@@ -90,6 +86,14 @@ export const Login: React.FC = () => {
               {isLoading ? "..." : t('buttonLogin')}
             </button>
           </form>
+
+          <button
+            type="button"
+            className={styles.linkButton}
+            onClick={() => navigate('/forgot-password')}
+          >
+            {t('forgotPasswordLink')}
+          </button>
 
           <div className={styles.divider}>O</div>
 

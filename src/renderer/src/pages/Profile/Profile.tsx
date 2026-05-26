@@ -62,14 +62,13 @@ export const Profile: React.FC = () => {
   /**
    * Fetches profile data from the server.
    */
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     setLoading(true);
     setStatus({ type: null, message: null });
     try {
       const data = await ProfileService.getMe();
       setProfile(data);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
+    } catch {
       setStatus({ type: 'error', message: t('messages.fetchError') });
     } finally {
       setLoading(false);
@@ -79,12 +78,13 @@ export const Profile: React.FC = () => {
   /**
    * Saves the profile changes to the backend.
    */
-  const handleSaveProfile = async () => {
+  const handleSaveProfile = async (): Promise<void> => {
     if (!profile) return;
     setStatus({ type: null, message: null });
 
     try {
-      const updateData = {
+      const updateData: UserProfile = {
+        id: profile.id,
         username: profile.username,
         email: profile.email,
         profilePicture: profile.profilePicture,
@@ -93,14 +93,13 @@ export const Profile: React.FC = () => {
         platforms: profile.platforms
       };
 
-      await ProfileService.updateMyProfile(updateData as any);
+      await ProfileService.updateMyProfile(updateData);
 
       setStatus({ type: 'success', message: t('messages.profileUpdated') });
       setIsEditing(false);
 
       setTimeout(() => setStatus({ type: null, message: null }), 3000);
-    } catch (error) {
-      console.error("Update error:", error);
+    } catch {
       setStatus({
         type: 'error',
         message: t('messages.profileUpdateError') || "Error al actualizar el perfil."
@@ -108,7 +107,7 @@ export const Profile: React.FC = () => {
     }
   };
 
-  const handleDeleteGame = (gameId: string) => {
+  const handleDeleteGame = (gameId: string): void => {
     if (!profile) return;
     setProfile({
       ...profile,
@@ -116,7 +115,7 @@ export const Profile: React.FC = () => {
     });
   };
 
-  const handleSelectGame = (game: ProfileGame) => {
+  const handleSelectGame = (game: ProfileGame): void => {
     if (!profile) return;
     if (profile.interestedGames.some(g => g.id === game.id)) return;
 
@@ -197,7 +196,7 @@ export const Profile: React.FC = () => {
             )}
             <p className={styles.emailText}>{profile.email}</p>
 
-            {isEditing && (
+            {isOwner && (
               <div className={styles.passwordTrigger}>
                 <ActionButton variant="neutral" size="small" onClick={() => setIsPasswordModalOpen(true)}>
                   {t('actions.changePassword')}

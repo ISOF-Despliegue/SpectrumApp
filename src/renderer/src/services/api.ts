@@ -16,3 +16,21 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const requestUrl = error.config?.url || '';
+    const isCodeVerification =
+      requestUrl.includes('/auth/password/verify-code') ||
+      requestUrl.includes('/auth/register/verify') ||
+      requestUrl.includes('/profile/me/password/change/verify-code');
+
+    if (error.response?.status === 401 && !isCodeVerification) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+
+    return Promise.reject(error);
+  }
+);

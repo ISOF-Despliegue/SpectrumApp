@@ -38,6 +38,11 @@ export interface PasswordChangeData {
   newPassword: string;
 }
 
+export interface PasswordCodeVerifiedResponse {
+  verificationToken: string;
+  message: string;
+}
+
 /**
  * Service responsible for managing HTTP requests related to the user profile and account security.
  */
@@ -65,6 +70,19 @@ export const ProfileService = {
    */
   changePassword: async (data: PasswordChangeData): Promise<void> => {
     await api.put('/profile/change-password', data);
+  },
+
+  requestPasswordChangeCode: async (): Promise<void> => {
+    await api.post('/profile/me/password/change/request-code');
+  },
+
+  verifyPasswordChangeCode: async (code: string): Promise<PasswordCodeVerifiedResponse> => {
+    const response = await api.post<PasswordCodeVerifiedResponse>('/profile/me/password/change/verify-code', { code });
+    return response.data;
+  },
+
+  confirmPasswordChange: async (data: { verificationToken: string; newPassword: string }): Promise<void> => {
+    await api.post('/profile/me/password/change/confirm', data);
   },
 
   /**

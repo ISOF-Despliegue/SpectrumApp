@@ -1,12 +1,11 @@
 {
-
   "greeting": "Hi, {{name}}!",
   "nav": {
     "home": "Home",
     "games": "Games",
     "trending": "Trending",
     "clips": "Weekly Clips",
-    "cripta": "Crypt"
+    "cripta": "Crypt",
+    "logout": "Logout"
   }
-
 }

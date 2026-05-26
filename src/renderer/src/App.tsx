@@ -3,6 +3,9 @@ import { useLocation, Routes, Route, Navigate, HashRouter } from 'react-router-d
 import { Home } from './pages/Home';
 import { Login } from './pages/Auth/Login';
 import { Register } from './pages/Auth/Register';
+import { VerifyRegistration } from './pages/Auth/VerifyRegistration';
+import { ForgotPassword } from './pages/Auth/ForgotPassword';
+import { ResetPassword } from './pages/Auth/ResetPassword';
 import { Games } from './pages/Games';
 import { MainLayout } from './components/ui/MainLayout';
 import { Admin } from './pages/Admin';
@@ -15,10 +18,11 @@ import { AdminManageAdmins } from './pages/Admin/ManageAdmins';
 import { ManageReports } from './pages/Admin/ManageReports';
 import { GameReviews } from './pages/Games/GameReviews';
 import { Profile } from './pages/Profile';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function AppContent(): React.JSX.Element {
   const location = useLocation();
-  const isAuthRoute = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
+  const isAuthRoute = ['/', '/login', '/register', '/register/verify', '/forgot-password', '/reset-password'].includes(location.pathname);
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
@@ -31,12 +35,15 @@ function AppContent(): React.JSX.Element {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/games" element={<Games />} />
-        <Route path="/games/:gameId/reviews" element={<GameReviews />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/register/verify" element={<VerifyRegistration />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
+        <Route path="/games/:gameId/reviews" element={<ProtectedRoute><GameReviews /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
-        <Route path="/admin" element={<Admin />}>
+        <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>}>
           <Route index element={<Navigate to="my-profile" replace />} />
           <Route path="my-profile" element={<AdminMyProfile />} />
           <Route path="global-metrics" element={<AdminGlobalMetrics />} />

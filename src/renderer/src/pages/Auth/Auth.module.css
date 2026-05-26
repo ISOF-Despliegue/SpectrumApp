@@ -67,6 +67,16 @@
   font-size: 14px;
 }
 
+.successMessage {
+  background-color: rgba(46, 204, 113, 0.12);
+  color: #6ee7a8;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(46, 204, 113, 0.28);
+  font-size: 14px;
+}
+
 .submitButton {
   width: 100%;
   padding: 1rem;
@@ -95,6 +105,39 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.secondaryButton,
+.linkButton {
+  width: 100%;
+  background: transparent;
+  color: #63b3ed;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.secondaryButton {
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(99, 179, 237, 0.35);
+  border-radius: 10px;
+}
+
+.linkButton {
+  margin-top: 1rem;
+  padding: 0.25rem;
+}
+
+.secondaryButton:hover,
+.linkButton:hover {
+  color: #90cdf4;
+  text-decoration: underline;
+}
+
+.secondaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .brandSide {
