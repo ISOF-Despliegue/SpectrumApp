@@ -87,11 +87,10 @@ export const ManageReports = () => {
     }
   };
 
-  const handleDeleteContent = async (targetId: string, targetType: TargetType) => {
+  const handleDeleteContent = async (_targetId: string, targetType: TargetType) => {
     if (!window.confirm(`¿Estás seguro de eliminar este contenido de tipo ${targetType}?`)) return;
     setIsProcessingAction(true);
     try {
-      console.log(`Eliminando contenido: ${targetType} con ID: ${targetId}`);
       alert('El contenido ha sido removido lógicamente de la plataforma.');
       await handleUpdateStatus('RESOLVED');
     } catch (err: any) {

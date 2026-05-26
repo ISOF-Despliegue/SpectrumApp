@@ -5,6 +5,7 @@ import { Input } from "../../components/ui/Input/Input";
 import { AuthService } from "../../services/auth.service";
 import spectrumLogo from "../../assets/images/common/SpectrumLogo.png";
 import styles from "./Auth.module.css";
+import { getApiErrorKey, isStrongPassword } from './auth-flow.utils';
 
 export const Register: React.FC = () => {
   const { t } = useTranslation('auth');
@@ -16,25 +17,24 @@ export const Register: React.FC = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!username || !email || !password) {
       setError(t('errorEmptyFields'));
       return;
     }
-    if (password.length < 8) {
-      setError(t('errorShortPassword'));
+    if (!isStrongPassword(password)) {
+      setError(t('passwordPolicy'));
       return;
     }
 
     try {
       setIsLoading(true);
       setError("");
-      await AuthService.register({ username, email, password });
-      navigate('/home');
-    } catch (err: any) {
-      const apiError = err.response?.data?.title;
-      setError(t(apiError) || t('registrationError'));
+      const response = await AuthService.register({ username, email, password });
+      navigate('/register/verify', { state: { email: response.email }, replace: true });
+    } catch (err: unknown) {
+      setError(t(getApiErrorKey(err, 'registrationError')));
     } finally {
       setIsLoading(false);
     }

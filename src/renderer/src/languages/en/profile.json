@@ -11,7 +11,8 @@
     "security": "Security",
     "passwordCurrent": "Current password",
     "passwordNew": "New password",
-    "passwordConfirm": "Confirm password"
+    "passwordConfirm": "Confirm password",
+    "verificationCode": "Verification code"
   },
   "sections": {
     "games": "Interested games",
@@ -35,7 +36,9 @@
     "change": "Change",
     "seeMore": "See more",
     "changePassword": "Change password",
-    "close": "Close"
+    "close": "Close",
+    "sendCode": "Send code",
+    "verifyCode": "Verify code"
   },
   "orderOptions": {
     "recent": "Recent",
@@ -44,8 +47,13 @@
   },
   "messages": {
     "passwordMismatch": "Passwords do not match",
+    "passwordPolicy": "Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one number.",
     "passwordUpdated": "Password updated successfully",
-    "updateError": "Error changing password. Check your current password.",
+    "verificationCodeSent": "We sent a code to your email.",
+    "codeVerified": "Code verified. Enter your new password.",
+    "invalidCode": "The code is invalid or expired.",
+    "updateError": "Error changing password. Please try again.",
+    "fetchError": "Error loading profile",
     "profileUpdated": "Profile updated successfully",
     "profileUpdateError": "Error updating profile",
     "fillFields": "Please fill all fields",

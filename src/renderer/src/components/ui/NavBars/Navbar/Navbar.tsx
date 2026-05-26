@@ -8,6 +8,7 @@ import HappyGhostIncomplete from '../../../../assets/images/character/happyGhost
 import styles from './Navbar.module.css';
 import { ProfileService, UserProfile } from '../../../../services/profile.service';
 import defaultPhoto from '../../../../assets/images/common/defaultPhotoProfile.png';
+import { AuthService } from '../../../../services/auth.service';
 
 
 interface NavbarProps {
@@ -15,14 +16,14 @@ interface NavbarProps {
   onProfileClick: () => void;
 }
 
-export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) => {
+export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps): React.JSX.Element => {
   const { t } = useTranslation('navbar');
   const navigate = useNavigate();
   const location = useLocation();
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    const fetchProfileData = async () => {
+    const fetchProfileData = async (): Promise<void> => {
       try {
         const data = await ProfileService.getMe();
         setProfile(data);
@@ -35,11 +36,17 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
     }
   }, []);
 
-  const handleInternalProfileClick = () => {
+  const handleInternalProfileClick = (): void => {
     if (onProfileClick) {
       onProfileClick();
     }
     navigate('/profile');
+  };
+
+  const handleLogout = (): void => {
+    AuthService.logout();
+    setProfile(null);
+    navigate('/login', { replace: true });
   };
 
   const username = profile?.username || "Cargando...";
@@ -68,6 +75,9 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps) 
               imageUrl={userProfileImage}
               onClick={handleInternalProfileClick}
             />
+            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
+              {t('nav.logout')}
+            </button>
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styles from './Admin.module.css';
 import { useTranslation } from 'react-i18next';
+import { AuthService } from '../../services/auth.service';
 
 type AdminNavigationItem = {
   labelKey: string;
@@ -17,15 +18,20 @@ const ADMIN_NAVIGATION: AdminNavigationItem[] = [
   { labelKey: 'navigation.manageReports', to: 'manage-reports' },
 ];
 
-export const Admin = () => {
+export const Admin = (): React.JSX.Element => {
   const navigate = useNavigate();
   const { t } = useTranslation('admin');
+
+  const handleLogout = (): void => {
+    AuthService.logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <main className={styles.adminPage}>
       <button
         type="button"
-        onClick={() => navigate('/login')}
+        onClick={handleLogout}
         className={styles.logoutButton}
       >
         {t('navigation.logout')}

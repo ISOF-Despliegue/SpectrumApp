@@ -1,12 +1,11 @@
 {
-
-  "greeting": "¡Hola, {{name}}!",
+  "greeting": "Hola, {{name}}!",
   "nav": {
     "home": "Inicio",
     "games": "Videojuegos",
     "trending": "Tendencias",
     "clips": "Clips semanales",
-    "cripta": "Crypt"
+    "cripta": "Crypt",
+    "logout": "Cerrar sesion"
   }
-
 }
