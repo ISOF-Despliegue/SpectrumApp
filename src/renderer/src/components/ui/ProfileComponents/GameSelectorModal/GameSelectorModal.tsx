@@ -30,6 +30,7 @@ export const GameSelectorModal: React.FC<GameSelectorModalProps> = ({
   const { t: tCommon } = useTranslation('common');
   const { t: tProfile } = useTranslation('profile');
 
+  const [localSelectedIds, setLocalSelectedIds] = useState<string[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,6 +72,12 @@ export const GameSelectorModal: React.FC<GameSelectorModalProps> = ({
   }, [searchTerm, isOpen]);
 
   useEffect(() => {
+    if (isOpen) {
+      setLocalSelectedIds(alreadySelectedIds);
+    }
+  }, [alreadySelectedIds, isOpen]);
+
+  useEffect(() => {
     if (isOpen) fetchGames(1, searchTerm, sortOption);
   }, [sortOption, isOpen]);
 
@@ -105,11 +112,12 @@ export const GameSelectorModal: React.FC<GameSelectorModalProps> = ({
             <p className={styles.loading}>{tCommon('status.loading')}</p>
           ) : (
             games.map((game) => {
-              const isAdded = alreadySelectedIds.includes(game.id.toString());
+              const isAdded = localSelectedIds.includes(game.id.toString());
 
               const handleSelect = () => {
                 if (!isAdded) {
                   onSelect({ id: game.id.toString(), name: game.title, imageUrl: game.imageUrl });
+                  setLocalSelectedIds(prev => [...prev, game.id.toString()]);
                 }
               };
 
