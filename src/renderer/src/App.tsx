@@ -19,6 +19,8 @@ import { ManageReports } from './pages/Admin/ManageReports';
 import { GameReviews } from './pages/Games/GameReviews';
 import { Profile } from './pages/Profile';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { Trends } from './pages/Trends';
+import { WeeklyClips } from './pages/WeekclyClips';
 
 function AppContent(): React.JSX.Element {
   const location = useLocation();
@@ -41,6 +43,8 @@ function AppContent(): React.JSX.Element {
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
         <Route path="/games/:gameId/reviews" element={<ProtectedRoute><GameReviews /></ProtectedRoute>} />
+        <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
+        <Route path="/weekly-clips" element={<ProtectedRoute><WeeklyClips /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>}>

@@ -7,7 +7,7 @@ export const getModeratedUsers = async (
   searchTerm?: string
 ): Promise<PagedResult<UserModerationDto>> => {
   const params = new URLSearchParams({ page: page.toString(), pageSize: pageSize.toString() });
-  if (searchTerm) params.append('searchTerm', searchTerm);
+  if (searchTerm) params.append('search', searchTerm);
 
   const response = await api.get('/admin/users', { params });
   return response.data;

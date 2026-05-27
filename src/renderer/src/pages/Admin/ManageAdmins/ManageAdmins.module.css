@@ -1,111 +1,49 @@
 .page {
-  width: 100%;
-  max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
-
-.pageHeader {
-  display: flex;
-  justify-content: flex-end;
+.page h1,
+.page p {
+  margin: 0;
 }
 
-.sectionTitle {
-  font-weight: 800;
-  font-size: 18px;
+.page p {
+  color: #cbd5e0;
 }
 
-.searchSection {
-  width: 100%;
-  max-width: 760px;
-  display: flex;
-  flex-direction: column;
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.75rem;
 }
 
-.searchInput,
-.formInput,
-.selectInput {
-  width: 100%;
-  min-height: 46px;
-  padding: 0.75rem 1rem;
-  background-color: rgba(255, 255, 255, 0.03);
-  color: var(--color-white);
+.formGrid input {
+  min-height: 42px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 10px;
-  font-family: var(--font-global);
-  font-size: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  padding: 0.65rem 0.75rem;
 }
 
-.tableSection {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.table {
-  width: 100%;
-  max-width: 860px;
-  border-collapse: collapse;
-  background-color: rgba(255, 255, 255, 0.03);
-  color: var(--color-white);
-}
-
-.table th,
-.table td {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 1rem;
-  text-align: left;
-  font-size: 15px;
-}
-
-.table th {
-  background-color: rgba(255, 255, 255, 0.08);
-  font-weight: 800;
-}
-
-.radioCell,
-.checkCell {
-  width: 80px;
-  text-align: center;
-}
-
-.footerActions {
-  width: 100%;
-  max-width: 860px;
-  display: flex;
-  justify-content: flex-end;
-  align-self: center;
-}
-
-.actionButton {
-  min-width: 140px;
-  padding: 0.9rem 1.5rem;
-  background: var(--bg-button-gradient);
-  color: var(--color-white);
+.submitButton {
+  align-self: flex-start;
+  min-height: 42px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
   font-weight: 800;
+  padding: 0.65rem 1rem;
   cursor: pointer;
-  box-shadow: 0 8px 20px var(--color-button-glow);
-  transition: all 0.2s ease;
 }
 
-.actionButton:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
+.error {
+  color: #fca5a5 !important;
 }
 
-@media (max-width: 900px) {
-  .pageHeader {
-    justify-content: flex-start;
-  }
-
-  .searchSection,
-  .table,
-  .footerActions {
-    max-width: 100%;
-  }
+.success {
+  color: #86efac !important;
 }

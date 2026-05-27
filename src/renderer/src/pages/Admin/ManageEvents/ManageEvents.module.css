@@ -1,111 +1,177 @@
 .page {
-  width: 100%;
-  max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
-
-.pageHeader {
+.header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
 }
 
-.sectionTitle {
-  font-weight: 800;
-  font-size: 18px;
+.header h1,
+.header p,
+.formPanel h2,
+.rewardPanel h2,
+.eventCard h3,
+.eventCard p {
+  margin: 0;
 }
 
-.searchSection {
-  width: 100%;
-  max-width: 760px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.header p,
+.empty,
+.loading {
+  color: #cbd5e0;
 }
 
-.searchInput,
-.formInput,
-.selectInput {
-  width: 100%;
-  min-height: 46px;
-  padding: 0.75rem 1rem;
-  background-color: rgba(255, 255, 255, 0.03);
-  color: var(--color-white);
+.header select,
+.formGrid input,
+.formGrid textarea,
+.formGrid label input,
+.rewardPanel input {
+  min-height: 42px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 10px;
-  font-family: var(--font-global);
-  font-size: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  padding: 0.65rem 0.75rem;
 }
 
-.tableSection {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.table {
-  width: 100%;
-  max-width: 860px;
-  border-collapse: collapse;
-  background-color: rgba(255, 255, 255, 0.03);
-  color: var(--color-white);
-}
-
-.table th,
-.table td {
-  border: 1px solid rgba(255, 255, 255, 0.18);
+.formPanel,
+.rewardPanel {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 8px;
   padding: 1rem;
-  text-align: left;
-  font-size: 15px;
+  background: rgba(15, 23, 42, 0.5);
 }
 
-.table th {
-  background-color: rgba(255, 255, 255, 0.08);
-  font-weight: 800;
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-.radioCell,
-.checkCell {
-  width: 80px;
-  text-align: center;
+.formGrid textarea {
+  min-height: 92px;
+  resize: vertical;
 }
 
-.footerActions {
-  width: 100%;
-  max-width: 860px;
+.formGrid label {
+  display: grid;
+  gap: 0.35rem;
+  color: #cbd5e0;
+}
+
+.checkbox {
+  display: flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.5rem !important;
+}
+
+.checkbox input {
+  min-height: auto;
+}
+
+.actions,
+.cardActions,
+.rewardPanel {
   display: flex;
-  justify-content: flex-end;
-  align-self: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.actionButton {
-  min-width: 140px;
-  padding: 0.9rem 1.5rem;
-  background: var(--bg-button-gradient);
-  color: var(--color-white);
+.actions {
+  margin-top: 1rem;
+}
+
+.actions button,
+.cardActions button,
+.rewardPanel button {
+  min-height: 38px;
   border: none;
-  border-radius: 10px;
-  font-weight: 800;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 20px var(--color-button-glow);
-  transition: all 0.2s ease;
 }
 
-.actionButton:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
+.eventGrid {
+  display: grid;
+  gap: 1rem;
 }
 
-@media (max-width: 900px) {
-  .pageHeader {
-    justify-content: flex-start;
+.eventCard {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 8px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.eventCard img {
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.eventBody {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.eventTitleRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eventTitleRow span {
+  color: #67e8f9;
+  font-weight: 800;
+}
+
+.eventCard dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.eventCard dt {
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+
+.eventCard dd {
+  margin: 0;
+}
+
+.success {
+  color: #86efac;
+}
+
+.error {
+  color: #fca5a5;
+}
+
+@media (max-width: 760px) {
+  .header,
+  .eventCard {
+    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 
-  .searchSection,
-  .table,
-  .footerActions {
-    max-width: 100%;
+  .eventCard img {
+    width: 100%;
   }
 }
