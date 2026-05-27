@@ -295,6 +295,11 @@
   padding: 12px 0;
 }
 
+.reviewsList {
+  display: grid;
+  gap: 1rem;
+}
+
 .addClipBtn {
   display: flex;
   align-items: center;

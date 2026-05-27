@@ -1,0 +1,52 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.68);
+}
+
+.dialog {
+  width: min(420px, 100%);
+  border: 1px solid rgba(110, 168, 255, 0.65);
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  padding: 1.2rem;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.title {
+  margin: 0 0 0.55rem;
+  font-size: 1.1rem;
+}
+
+.message {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.button {
+  min-height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.danger {
+  border-color: #ef4444;
+  background: #dc2626;
+}

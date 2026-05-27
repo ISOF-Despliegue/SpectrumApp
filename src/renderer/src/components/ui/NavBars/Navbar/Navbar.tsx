@@ -103,7 +103,11 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps):
               onClick={() => navigate('/weekly-clips')}
               isActive={location.pathname === '/weekly-clips'}
             />
-            <NavButton label={t('nav.cripta')}/>
+            <NavButton
+              label={t('nav.cripta')}
+              onClick={() => navigate('/crypt')}
+              isActive={location.pathname === '/crypt'}
+            />
           </nav>
         )}
       </div>

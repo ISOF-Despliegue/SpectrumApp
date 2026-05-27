@@ -3,6 +3,7 @@ import styles from './ManageReviews.module.css';
 import { AdminReviewsService } from '../../../services/adminReviews.service';
 import { Review } from '../../../types/reviews.types';
 import { Pagination } from '../../../components/ui/Pagination';
+import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 
 const PAGE_SIZE = 10;
 
@@ -15,6 +16,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
 
   const loadReviews = async (nextPage = page): Promise<void> => {
     if (!gameQuery.trim()) {
@@ -42,10 +44,10 @@ export const AdminManageReviews = (): React.JSX.Element => {
   };
 
   const deleteReview = async (reviewId: string): Promise<void> => {
-    if (!window.confirm('Deseas borrar esta resena?')) return;
     setIsLoading(true);
     try {
       await AdminReviewsService.delete(reviewId);
+      setReviewToDelete(null);
       await loadReviews(page);
     } catch {
       setError('No se pudo borrar la resena.');
@@ -94,7 +96,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
               <strong>{review.dislikesCount}</strong>
               <span>dislikes</span>
             </div>
-            <button onClick={() => deleteReview(review.id)}>Borrar</button>
+            <button onClick={() => setReviewToDelete(review.id)}>Borrar</button>
           </article>
         ))}
       </section>
@@ -107,6 +109,16 @@ export const AdminManageReviews = (): React.JSX.Element => {
           onPageChange={(nextPage) => loadReviews(nextPage)}
         />
       )}
+
+      <ConfirmationModal
+        isOpen={Boolean(reviewToDelete)}
+        title="Borrar resena"
+        message="La resena se ocultara con borrado logico. Deseas continuar?"
+        confirmLabel="Borrar"
+        variant="danger"
+        onConfirm={() => reviewToDelete && deleteReview(reviewToDelete)}
+        onCancel={() => setReviewToDelete(null)}
+      />
     </div>
   );
 };

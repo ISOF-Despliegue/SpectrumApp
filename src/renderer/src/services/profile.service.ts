@@ -56,6 +56,11 @@ export const ProfileService = {
     return response.data;
   },
 
+  getPublicProfile: async (userId: string): Promise<UserProfile> => {
+    const response = await api.get<UserProfile>(`profile/users/${userId}`);
+    return response.data;
+  },
+
   /**
    * Updates the profile information (username, bio, games, platforms) of the currently authenticated user.
    * @param profileData The updated profile object.
@@ -101,5 +106,9 @@ export const ProfileService = {
     });
 
     return response.data.avatarUrl;
+  },
+
+  blockUser: async (userId: string, reason?: string): Promise<void> => {
+    await api.post(`/profile/users/${userId}/block`, { reason });
   }
 };

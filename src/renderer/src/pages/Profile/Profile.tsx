@@ -14,6 +14,11 @@ import { PlatformSelectionModal } from '../../components/ui/ProfileComponents/Pl
 import { PasswordChangeModal } from '../../components/ui/ProfileComponents/PasswordChangeModal';
 import { ProfileClipsSection } from '@renderer/components/ui/ProfileComponents/ProfileClipsSection';
 import { ClipUploadFlowModal } from '@renderer/components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
+import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
+import { ReviewDetailModal } from '../../components/ui/ReviewDetailModal';
+import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
+import { ReviewService } from '../../services/reviews.service';
+import type { Review } from '../../types/reviews.types';
 
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
 import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
@@ -50,6 +55,9 @@ export const Profile: React.FC = () => {
   const [isInterestedModalOpen, setIsInterestedModalOpen] = useState(false);
   const [isGameSelectorOpen, setIsGameSelectorOpen] = useState(false);
   const [isClipWizardOpen, setIsClipWizardOpen] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [isBlockConfirmOpen, setIsBlockConfirmOpen] = useState(false);
 
   const userRole: "user" | "admin" = "user";
   const isOwner = !userId || (profile ? userId === profile.id : false);
@@ -66,8 +74,14 @@ export const Profile: React.FC = () => {
     setLoading(true);
     setStatus({ type: null, message: null });
     try {
-      const data = await ProfileService.getMe();
+      const data = userId
+        ? await ProfileService.getPublicProfile(userId)
+        : await ProfileService.getMe();
+      const userReviews = userId
+        ? await ReviewService.getByUser(userId)
+        : await ReviewService.getMyReviews();
       setProfile(data);
+      setReviews(userReviews);
     } catch {
       setStatus({ type: 'error', message: t('messages.fetchError') });
     } finally {
@@ -131,6 +145,18 @@ export const Profile: React.FC = () => {
       ...profile,
       profilePicture: newUrl
     });
+  };
+
+  const handleBlockProfile = async (): Promise<void> => {
+    if (!userId) return;
+    try {
+      await ProfileService.blockUser(userId);
+      setStatus({ type: 'success', message: 'Perfil bloqueado.' });
+    } catch {
+      setStatus({ type: 'error', message: 'No fue posible bloquear este perfil.' });
+    } finally {
+      setIsBlockConfirmOpen(false);
+    }
   };
 
   if (loading) return <div className={styles.statusScreen}>{t('loading')}</div>;
@@ -220,7 +246,26 @@ export const Profile: React.FC = () => {
           </section>
 
           <ProfileSection title={t('sections.reviews')} showSeeMore={true}>
-            <p className={styles.emptyPlaceholder}>{t('placeholders.emptyReviews')}</p>
+            <div className={styles.reviewsList}>
+              {reviews.map((review) => (
+                <ReviewCardPre
+                  key={review.id}
+                  gameCover={review.gameCoverUrl}
+                  username={review.username}
+                  userImage={review.userProfileImageUrl || review.profilePicture}
+                  reviewTitle={review.title}
+                  reviewContent={review.content}
+                  reviewDate={new Date(review.createdAt).toLocaleDateString()}
+                  reviewImage={review.attachmentType === 'image' ? review.attachmentUrl || review.imageUrl : undefined}
+                  likes={review.likesCount}
+                  score={review.rating}
+                  dislikes={review.dislikesCount}
+                  isOwnReview={review.isOwnReview}
+                  onClick={() => setSelectedReview(review)}
+                />
+              ))}
+              {reviews.length === 0 && <p className={styles.emptyPlaceholder}>{t('placeholders.emptyReviews')}</p>}
+            </div>
           </ProfileSection>
         </main>
 
@@ -243,7 +288,7 @@ export const Profile: React.FC = () => {
             )}
 
             {!isOwner && !isAdmin && (
-              <ActionButton variant="block">{t('actions.block')}</ActionButton>
+              <ActionButton variant="block" onClick={() => setIsBlockConfirmOpen(true)}>{t('actions.block')}</ActionButton>
             )}
 
             {isAdmin && !isOwner && (
@@ -329,6 +374,17 @@ export const Profile: React.FC = () => {
           onRefreshClips={fetchData}
         />
       )}
+
+      <ReviewDetailModal review={selectedReview} onClose={() => setSelectedReview(null)} />
+      <ConfirmationModal
+        isOpen={isBlockConfirmOpen}
+        title="Bloquear perfil"
+        message="Este perfil quedara bloqueado para tu cuenta. Puedes confirmar la accion?"
+        confirmLabel="Bloquear"
+        variant="danger"
+        onConfirm={handleBlockProfile}
+        onCancel={() => setIsBlockConfirmOpen(false)}
+      />
     </div>
   );
 };

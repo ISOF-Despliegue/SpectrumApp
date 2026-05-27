@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './ManageEvents.module.css';
 import { DropsService } from '../../../services/drops.service';
 import { DropEvent, DropEventPayload } from '../../../types/drops.types';
+import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 
 const toLocalInput = (date: Date): string => {
   const offset = date.getTimezoneOffset() * 60000;
@@ -59,6 +60,8 @@ export const AdminManageEvents = (): React.JSX.Element => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [rewardEventId, setRewardEventId] = useState<string | null>(null);
   const [rewardCode, setRewardCode] = useState('');
+  const [finishEventId, setFinishEventId] = useState<string | null>(null);
+  const [isRewardConfirmOpen, setIsRewardConfirmOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -229,7 +232,7 @@ export const AdminManageEvents = (): React.JSX.Element => {
               <div className={styles.cardActions}>
                 <button onClick={() => { setEditingId(event.eventId); setForm(fromEvent(event)); }}>Editar</button>
                 <button onClick={() => runAction(() => DropsService.publish(event.eventId), 'Sorteo publicado.')}>Publicar</button>
-                <button onClick={() => runAction(() => DropsService.finish(event.eventId), 'Sorteo finalizado.')}>Finalizar</button>
+                <button onClick={() => setFinishEventId(event.eventId)}>Finalizar</button>
                 {event.status === 'FINISHED' && event.winnerUserId && event.rewardDeliveryStatus !== 'SENT' && (
                   <button onClick={() => setRewardEventId(event.eventId)}>Enviar recompensa</button>
                 )}
@@ -248,10 +251,37 @@ export const AdminManageEvents = (): React.JSX.Element => {
             onChange={(event) => setRewardCode(event.target.value)}
             placeholder="Codigo real del juego o suscripcion"
           />
-          <button onClick={handleReward} disabled={isLoading}>Confirmar envio</button>
+          <button onClick={() => setIsRewardConfirmOpen(true)} disabled={isLoading}>Confirmar envio</button>
           <button onClick={() => setRewardEventId(null)}>Cancelar</button>
         </section>
       )}
+
+      <ConfirmationModal
+        isOpen={Boolean(finishEventId)}
+        title="Finalizar sorteo"
+        message="El sorteo dejara de admitir uniones y reclamos. Deseas continuar?"
+        confirmLabel="Finalizar"
+        variant="danger"
+        onConfirm={() => {
+          if (!finishEventId) return;
+          const eventId = finishEventId;
+          setFinishEventId(null);
+          runAction(() => DropsService.finish(eventId), 'Sorteo finalizado.');
+        }}
+        onCancel={() => setFinishEventId(null)}
+      />
+
+      <ConfirmationModal
+        isOpen={isRewardConfirmOpen}
+        title="Enviar recompensa"
+        message="Se enviara el codigo real por correo al ganador y no se mostrara nuevamente. Confirmas el envio?"
+        confirmLabel="Enviar"
+        onConfirm={() => {
+          setIsRewardConfirmOpen(false);
+          handleReward();
+        }}
+        onCancel={() => setIsRewardConfirmOpen(false)}
+      />
     </div>
   );
 };

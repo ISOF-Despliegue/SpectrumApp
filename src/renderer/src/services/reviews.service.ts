@@ -44,6 +44,11 @@ export const ReviewService = {
     return response.data;
   },
 
+  getByUser: async (userId: string): Promise<Review[]> => {
+    const response = await api.get<Review[]>(`/Reviews/users/${userId}`);
+    return response.data;
+  },
+
   create: async (payload: CreateReviewRequest): Promise<Review> => {
     const response = await api.post<Review>('/Reviews', payload);
     return response.data;

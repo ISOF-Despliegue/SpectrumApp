@@ -34,6 +34,7 @@ export interface WeeklyReview {
   attachmentType: string;
   likesCount: number;
   dislikesCount: number;
+  commentsCount: number;
   createdAt: string;
 }
 
@@ -50,6 +51,35 @@ export interface WeeklyTrends {
   weekStart: string;
   weekEnd: string;
   games: WeeklyTrendGame[];
+}
+
+export interface NamedMetric {
+  id: string;
+  label: string;
+  count: number;
+  score: number;
+  imageUrl?: string | null;
+}
+
+export interface TrendsDashboard {
+  weekStart: string;
+  weekEnd: string;
+  monthStart: string;
+  monthEnd: string;
+  weeklyInteractions: NamedMetric[];
+  weeklyDiscussions: WeeklyReview[];
+  worstOfWeek: NamedMetric[];
+  bestOfWeek: NamedMetric[];
+  consoleOfMonth: NamedMetric[];
+  topReviewersOfMonth: NamedMetric[];
+  genresOfMonth: NamedMetric[];
+}
+
+export interface CryptDashboard {
+  monthStart: string;
+  monthEnd: string;
+  worstGames: NamedMetric[];
+  gamesWithoutReviews: NamedMetric[];
 }
 
 export type WeeklyClipsPage = PagedResult<WeeklyReview>;

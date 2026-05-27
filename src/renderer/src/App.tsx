@@ -21,6 +21,7 @@ import { Profile } from './pages/Profile';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { Trends } from './pages/Trends';
 import { WeeklyClips } from './pages/WeekclyClips';
+import { Crypt } from './pages/Crypt';
 
 function AppContent(): React.JSX.Element {
   const location = useLocation();
@@ -45,7 +46,9 @@ function AppContent(): React.JSX.Element {
         <Route path="/games/:gameId/reviews" element={<ProtectedRoute><GameReviews /></ProtectedRoute>} />
         <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
         <Route path="/weekly-clips" element={<ProtectedRoute><WeeklyClips /></ProtectedRoute>} />
+        <Route path="/crypt" element={<ProtectedRoute><Crypt /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/users/:userId" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>}>
           <Route index element={<Navigate to="my-profile" replace />} />
