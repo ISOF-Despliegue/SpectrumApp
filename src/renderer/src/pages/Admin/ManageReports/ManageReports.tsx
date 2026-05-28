@@ -199,20 +199,20 @@ export const ManageReports = (): React.JSX.Element => {
         <div className={styles.filterItem}>
           <label>{t('manageReports.filterStatus')}</label>
           <select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value as ReportStatus | ''); setPage(1); }}>
-            <option value="">Todos</option>
-            <option value="PENDING">Pendientes</option>
-            <option value="RESOLVED">Resueltos</option>
-            <option value="DISMISSED">Desestimados</option>
+            <option value="">{t('manageReports.filters.all')}</option>
+            <option value="PENDING">{t('manageReports.filters.pending')}</option>
+            <option value="RESOLVED">{t('manageReports.filters.resolved')}</option>
+            <option value="DISMISSED">{t('manageReports.filters.dismissed')}</option>
           </select>
         </div>
         <div className={styles.filterItem}>
           <label>{t('manageReports.filterType')}</label>
           <select value={typeFilter} onChange={(event) => { setTypeFilter(event.target.value as TargetType | ''); setPage(1); }}>
-            <option value="">Todos</option>
-            <option value="REVIEW">Reseñas</option>
-            <option value="COMMENT">Comentarios</option>
-            <option value="USER">Usuarios</option>
-            <option value="GAME_CLIP">Clips</option>
+            <option value="">{t('manageReports.filters.all')}</option>
+            <option value="REVIEW">{t('manageReports.filters.review')}</option>
+            <option value="COMMENT">{t('manageReports.filters.comment')}</option>
+            <option value="USER">{t('manageReports.filters.user')}</option>
+            <option value="GAME_CLIP">{t('manageReports.filters.clip')}</option>
           </select>
         </div>
       </div>

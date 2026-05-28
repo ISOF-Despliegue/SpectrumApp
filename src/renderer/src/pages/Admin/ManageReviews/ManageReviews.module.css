@@ -5,16 +5,13 @@
 }
 
 .header h1,
-.header p,
-.reviewRow h3,
-.reviewRow p {
+.header p {
   margin: 0;
 }
 
 .header p,
 .empty,
-.loading,
-.reviewRow span {
+.loading {
   color: #cbd5e0;
 }
 
@@ -29,13 +26,13 @@
   min-height: 42px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(15, 23, 42, 0.86);
   color: #ffffff;
   padding: 0.65rem 0.75rem;
 }
 
 .filters button,
-.reviewRow button {
+.reviewItem > button {
   min-height: 42px;
   border: none;
   border-radius: 8px;
@@ -45,35 +42,66 @@
   cursor: pointer;
 }
 
+.autocomplete {
+  position: relative;
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid rgba(110, 168, 255, 0.55);
+  border-radius: 8px;
+  background: #101827;
+  padding: 0.35rem;
+}
+
+.suggestions button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  background: transparent;
+  text-align: left;
+}
+
+.suggestions button:hover {
+  background: rgba(59, 130, 246, 0.18);
+}
+
+.suggestions img {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.suggestions span {
+  color: #cbd5e1;
+}
+
 .reviewList {
   display: grid;
   gap: 0.75rem;
 }
 
-.reviewRow {
+.reviewItem {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 90px 96px;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  gap: 0.75rem;
   align-items: center;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-radius: 8px;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
 }
 
-.scoreBox {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.1rem 0.35rem;
-  color: #cbd5e0;
+.reviewItem > button {
+  background: #dc2626;
 }
 
-.error {
-  color: #fca5a5;
-}
-
-@media (max-width: 760px) {
-  .reviewRow {
+@media (max-width: 900px) {
+  .reviewItem {
     grid-template-columns: 1fr;
   }
 }

@@ -46,6 +46,14 @@
   animation: pulseRed 1.5s infinite;
 }
 
+.container:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  animation: none;
+  box-shadow: none;
+}
+
 .activeState {
   background: rgba(255, 0, 0, 0.15);
   border-color: #ff0000;

@@ -14,7 +14,8 @@ export const ReportButton: React.FC<ReportButtonProps> = ({ onClick }) => {
     <button
       className={styles.reportBtn}
       onClick={onClick}
-      title={t('reportButton')}
+      title={t('reportModal.reportButton')}
+      aria-label={t('reportModal.reportButton')}
     >
       <PiWarningOctagonFill className={styles.icon} />
     </button>

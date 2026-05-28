@@ -1,13 +1,12 @@
 import React from 'react';
 import styles from './ReviewCardComplete.module.css';
 import { ProfileImage } from '../../ProfileImage/ProfileImage';
-import { LikeCard } from '../../LikeCard/LikeCard';
-import { DislikeCard } from '../../DislikeCard/DislikeCard';
 import { ImageContainer } from '../../ImageContainer/ImageContainer';
 import { GameCardMedium } from '../../GameCardMedium/GameCardMedium';
 import { ScoreDisplay } from '../../ScoreDisplay/ScoreDisplay';
 import { ReportButton } from '../../ReportButton/ReportButton';
 import { ReportModal } from '../../ReportModal/ReportModal';
+import { ReviewVoteControls } from '../../ReviewVoteControls';
 
 interface ReviewCardCompleteProps {
   reviewId: string;
@@ -22,6 +21,8 @@ interface ReviewCardCompleteProps {
   likes: number;
   dislikes: number;
   isOwnReview?: boolean;
+  ownerUserId?: string;
+  currentUserId?: string;
 }
 
 export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
@@ -37,6 +38,8 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
   likes,
   dislikes,
   isOwnReview = false,
+  ownerUserId,
+  currentUserId
 }) => {
   const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
 
@@ -64,8 +67,12 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
           </div>
 
           <div className={styles.interactionsRow}>
-            <LikeCard initialLikes={likes} size="medium"/>
-            <DislikeCard initialDislikes={dislikes} size="medium"/>
+            <ReviewVoteControls
+              reviewId={reviewId}
+              likes={likes}
+              dislikes={dislikes}
+              isOwnReview={isOwnReview}
+            />
           </div>
         </section>
 
@@ -95,6 +102,8 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
         onClose={() => setIsReportModalOpen(false)}
         targetId={reviewId}
         targetType='REVIEW'
+        currentUserId={currentUserId}
+        targetOwnerId={ownerUserId}
       />
     </article>
   );

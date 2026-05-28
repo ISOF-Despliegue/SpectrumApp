@@ -51,6 +51,11 @@
   color: #cbd5e0;
 }
 
+.memberSince {
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
 .badges {
   display: flex;
   gap: 10px;
@@ -115,4 +120,19 @@
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contentSection {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.contentSection h3 {
+  margin: 0;
+}
+
+.reviewList {
+  display: grid;
+  gap: 12px;
 }

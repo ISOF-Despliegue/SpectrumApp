@@ -29,6 +29,7 @@ export const ReviewDetailModal = ({ review, onClose }: ReviewDetailModalProps): 
           likes={review.likesCount}
           dislikes={review.dislikesCount}
           isOwnReview={review.isOwnReview}
+          ownerUserId={review.userId}
         />
       </section>
     </div>

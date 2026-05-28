@@ -60,6 +60,10 @@ const fromEvent = (event: DropEvent): DropEventPayload => ({
   publishNow: false
 });
 
+const canEditEvent = (event: DropEvent): boolean => {
+  return event.status === 'UPCOMING' || event.status === 'SCHEDULED' || event.status === 'DRAFT';
+};
+
 export const AdminManageEvents = (): React.JSX.Element => {
   const { t } = useTranslation('admin');
   const toast = useToast();
@@ -273,7 +277,20 @@ export const AdminManageEvents = (): React.JSX.Element => {
                 <div><dt>{t('manageEvents.labels.winners')}</dt><dd>{event.winners?.map((winner) => winner.username).join(', ') || event.winnerUsername || t('manageEvents.pending')}</dd></div>
               </dl>
               <div className={styles.cardActions}>
-                <button onClick={() => { setEditingId(event.eventId); setForm(fromEvent(event)); }}>{t('manageEvents.edit')}</button>
+                <button
+                  onClick={() => {
+                    if (!canEditEvent(event)) {
+                      toast.warning(t('manageEvents.notEditable'));
+                      return;
+                    }
+                    setEditingId(event.eventId);
+                    setForm(fromEvent(event));
+                  }}
+                  disabled={!canEditEvent(event)}
+                  title={!canEditEvent(event) ? t('manageEvents.notEditable') : undefined}
+                >
+                  {t('manageEvents.edit')}
+                </button>
                 <button onClick={() => runAction(() => DropsService.publish(event.eventId), t('manageEvents.published'))}>{t('manageEvents.publish')}</button>
                 <button onClick={() => setFinishEventId(event.eventId)}>{t('manageEvents.finish')}</button>
               </div>

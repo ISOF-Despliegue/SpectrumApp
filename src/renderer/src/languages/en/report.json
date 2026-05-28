@@ -1,23 +1,22 @@
 {
   "reportModal": {
-    "title": "Report Content",
+    "title": "Report content",
     "errorTitle": "Error submitting report",
-    "lengthError": "Please provide a more detailed description (minimum 10 characters).",
-    "submitButton": "Submit Report",
+    "lengthError": "Please provide a more detailed description, minimum 10 characters.",
+    "submitButton": "Submit report",
     "submitting": "Submitting...",
     "cancelButton": "Cancel",
     "successMessage": "Report submitted successfully. Our team will review it soon.",
     "tooManyReports": "You have submitted too many reports recently. Please try again later.",
     "alreadyReported": "You have already reported this content.",
-    "genericError": "Error submitting report. Please try again later.",
+    "genericError": "The report could not be submitted. Please try again later.",
+    "notAllowed": "You cannot report your own content.",
     "reportReasons": {
-      "SPAM": "Spam or commercial content",
-      "HARASSMENT": "Harassment or hate speech",
-      "INAPPROPRIATE_CONTENT": "Inappropriate or offensive content",
-      "SPOILERS": "Unmarked spoilers",
-      "OTHER": "Other reason"
+      "SPAM": "Spam",
+      "ACOSO": "Harassment",
+      "CONTENIDO_INAPROPIADO": "Inappropriate content"
     },
-    "placeholder": "Please describe in detail why you are reporting this content (min. 10 characters)...",
+    "placeholder": "Describe why you are reporting this content...",
     "closeButton": "Close",
     "reportButton": "Report"
   }

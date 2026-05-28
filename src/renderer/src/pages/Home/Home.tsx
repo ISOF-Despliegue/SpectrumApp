@@ -1,12 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import { DropsService } from '../../services/drops.service';
 import { HomeService } from '../../services/home.service';
 import { DropEvent } from '../../types/drops.types';
 import { GlobalSearchItem, HomeDashboard } from '../../types/home.types';
+import { useToast } from '../../components/ui/Toast';
+import bannerOne from '../../assets/images/Banner1.gif';
+import bannerTwo from '../../assets/images/Banner2.png';
+
+const HERO_IMAGES = [bannerOne, bannerTwo];
 
 export const Home = (): React.JSX.Element => {
+  const { t } = useTranslation('home');
+  const toast = useToast();
   const navigate = useNavigate();
   const [dashboard, setDashboard] = useState<HomeDashboard | null>(null);
   const [selectedDrop, setSelectedDrop] = useState<DropEvent | null>(null);
@@ -16,6 +24,7 @@ export const Home = (): React.JSX.Element => {
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [bannerIndex, setBannerIndex] = useState(0);
 
   const loadDashboard = async (): Promise<void> => {
     setIsLoading(true);
@@ -23,7 +32,7 @@ export const Home = (): React.JSX.Element => {
     try {
       setDashboard(await HomeService.getDashboard());
     } catch {
-      setError('No se pudo cargar el inicio.');
+      setError(t('states.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -31,6 +40,14 @@ export const Home = (): React.JSX.Element => {
 
   useEffect(() => {
     loadDashboard();
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setBannerIndex((current) => (current + 1) % HERO_IMAGES.length);
+    }, 10000);
+
+    return () => window.clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -58,10 +75,14 @@ export const Home = (): React.JSX.Element => {
   const countdownText = useMemo(() => {
     if (!selectedDrop) return '';
     const startsInMs = new Date(selectedDrop.startAt).getTime() - Date.now();
-    if (startsInMs <= 0) return 'El sorteo está por comenzar.';
+    if (startsInMs <= 0) return t('drops.aboutToStart');
     const minutes = Math.ceil(startsInMs / 60000);
-    return `Faltan ${minutes} min para que empiece.`;
-  }, [selectedDrop]);
+    return t('drops.startsIn', { minutes });
+  }, [selectedDrop, t]);
+
+  const changeBanner = (direction: number): void => {
+    setBannerIndex((current) => (current + direction + HERO_IMAGES.length) % HERO_IMAGES.length);
+  };
 
   const openSearchResult = (item: GlobalSearchItem): void => {
     setSearchText('');
@@ -79,10 +100,13 @@ export const Home = (): React.JSX.Element => {
     try {
       await DropsService.join(drop.eventId);
       setSelectedDrop(drop);
-      setMessage('Has entrado al sorteo.');
+      setMessage(t('drops.joined'));
+      toast.success(t('drops.joined'));
       await loadDashboard();
-    } catch {
-      setError('No fue posible participar en este sorteo.');
+    } catch (err: any) {
+      const friendlyMessage = err.response?.data?.title || t('drops.joinError');
+      toast.error(friendlyMessage);
+      setError(friendlyMessage);
     }
   };
 
@@ -93,15 +117,18 @@ export const Home = (): React.JSX.Element => {
     try {
       const result = await DropsService.claim(selectedDrop.eventId);
       if (result.success) {
-        setMessage('Ganaste. Tu recompensa llegará a tu correo en las próximas 24 horas.');
+        setMessage(t('drops.winnerMessage'));
+        toast.success(t('drops.winnerMessage'));
       } else if (result.winnerUsername) {
-        setMessage(`Sorteo finalizado. Ganador: ${result.winnerUsername}.`);
+        setMessage(t('drops.finishedWithWinner', { username: result.winnerUsername }));
       } else {
-        setMessage('El sorteo ya no admite reclamos o no hay códigos disponibles.');
+        setMessage(t('drops.claimUnavailable'));
       }
       await loadDashboard();
-    } catch {
-      setError('No fue posible reclamar este sorteo.');
+    } catch (err: any) {
+      const friendlyMessage = err.response?.data?.title || t('drops.claimError');
+      toast.error(friendlyMessage);
+      setError(friendlyMessage);
     }
   };
 
@@ -112,18 +139,18 @@ export const Home = (): React.JSX.Element => {
           <input
             value={searchText}
             onChange={(event) => setSearchText(event.target.value)}
-            placeholder="Buscar videojuegos o usuarios"
-            aria-label="Buscar videojuegos o usuarios"
+            placeholder={t('search.placeholder')}
+            aria-label={t('search.placeholder')}
           />
           {(searchResults.length > 0 || isSearching) && (
             <div className={styles.searchResults}>
-              {isSearching && <p>Buscando...</p>}
+              {isSearching && <p>{t('search.loading')}</p>}
               {!isSearching && searchResults.map((item) => (
                 <button key={`${item.type}-${item.id}`} type="button" onClick={() => openSearchResult(item)}>
                   {item.imageUrl && <img src={item.imageUrl} alt="" loading="lazy" />}
                   <span>
                     <strong>{item.title}</strong>
-                    <small>{item.type === 'game' ? 'Videojuego' : 'Usuario'} {item.subtitle ? `- ${item.subtitle}` : ''}</small>
+                    <small>{item.type === 'game' ? t('search.game') : t('search.user')} {item.subtitle ? `- ${item.subtitle}` : ''}</small>
                   </span>
                 </button>
               ))}
@@ -133,17 +160,35 @@ export const Home = (): React.JSX.Element => {
       </section>
 
       <header className={styles.banner}>
-        <h1>{dashboard?.bannerTitle || 'SPECTRUM'}</h1>
-        <p>{dashboard?.bannerSubtitle || 'Descubre juegos, reseñas y sorteos.'}</p>
+        <img src={HERO_IMAGES[bannerIndex]} alt="" className={styles.bannerImage} />
+        <div className={styles.bannerContent}>
+          <h1>{dashboard?.bannerTitle || t('banner.fallbackTitle')}</h1>
+          <p>{dashboard?.bannerSubtitle || t('banner.fallbackSubtitle')}</p>
+        </div>
+        <div className={styles.bannerControls}>
+          <button type="button" onClick={() => changeBanner(-1)} aria-label={t('banner.previous')}>‹</button>
+          <div className={styles.bannerDots}>
+            {HERO_IMAGES.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={index === bannerIndex ? styles.activeDot : ''}
+                onClick={() => setBannerIndex(index)}
+                aria-label={t('banner.goTo', { index: index + 1 })}
+              />
+            ))}
+          </div>
+          <button type="button" onClick={() => changeBanner(1)} aria-label={t('banner.next')}>›</button>
+        </div>
       </header>
 
       {message && <p className={styles.success}>{message}</p>}
       {error && <p className={styles.error}>{error}</p>}
-      {isLoading && <p className={styles.loading}>Cargando inicio...</p>}
+      {isLoading && <p className={styles.loading}>{t('states.loading')}</p>}
 
       <main className={styles.columns}>
         <section className={styles.panel}>
-          <h2>Juegos mas recientes</h2>
+          <h2>{t('sections.recentGames')}</h2>
           <div className={styles.gameGrid}>
             {(dashboard?.recentGames || []).map((game) => (
               <button key={game.gameId} type="button" className={styles.gameCard} onClick={() => navigate(`/games/${game.gameId}/reviews`)}>
@@ -152,11 +197,11 @@ export const Home = (): React.JSX.Element => {
               </button>
             ))}
           </div>
-          {!isLoading && dashboard?.recentGames.length === 0 && <p className={styles.empty}>No hay juegos recientes.</p>}
+          {!isLoading && dashboard?.recentGames.length === 0 && <p className={styles.empty}>{t('empty.recentGames')}</p>}
         </section>
 
         <section className={`${styles.panel} ${styles.centerPanel}`}>
-          <h2>Resenas populares hoy</h2>
+          <h2>{t('sections.popularReviews')}</h2>
           <div className={styles.reviewList}>
             {(dashboard?.popularReviewsToday || []).map((review) => (
               <button key={review.reviewId} type="button" className={styles.reviewCard} onClick={() => navigate(`/games/${review.gameId}/reviews`)}>
@@ -164,16 +209,16 @@ export const Home = (): React.JSX.Element => {
                 <span>
                   <strong>{review.title}</strong>
                   <small>{review.username} - {review.gameTitle}</small>
-                  <em>{review.likesCount} likes - {review.commentsCount} respuestas</em>
+                  <em>{t('reviews.likes', { count: review.likesCount })} - {t('reviews.comments', { count: review.commentsCount })}</em>
                 </span>
               </button>
             ))}
           </div>
-          {!isLoading && dashboard?.popularReviewsToday.length === 0 && <p className={styles.empty}>No hay actividad destacada hoy.</p>}
+          {!isLoading && dashboard?.popularReviewsToday.length === 0 && <p className={styles.empty}>{t('empty.popularReviews')}</p>}
         </section>
 
         <section className={styles.panel}>
-          <h2>Sorteo de la semana</h2>
+          <h2>{t('sections.weeklyDrop')}</h2>
           <div className={styles.dropList}>
             {(dashboard?.weeklyDrops || []).map((drop) => (
               <article className={styles.dropCard} key={drop.eventId}>
@@ -182,22 +227,24 @@ export const Home = (): React.JSX.Element => {
                 <span>{drop.gameTitle} - {drop.platform}</span>
                 <small>{new Date(drop.startAt).toLocaleDateString()} - {drop.status}</small>
                 {drop.winnerUsername ? (
-                  <p>Ganador: {drop.winnerUsername}</p>
+                  <p>{t('drops.winner', { username: drop.winnerUsername })}</p>
+                ) : drop.status === 'ACTIVE_JOIN' ? (
+                  <button type="button" onClick={() => joinDrop(drop)}>{t('drops.join')}</button>
                 ) : (
-                  <button type="button" onClick={() => joinDrop(drop)}>Participar</button>
+                  <button type="button" onClick={() => setSelectedDrop(drop)}>{t('drops.details')}</button>
                 )}
               </article>
             ))}
           </div>
-          {!isLoading && dashboard?.weeklyDrops.length === 0 && <p className={styles.empty}>No hay sorteos esta semana.</p>}
+          {!isLoading && dashboard?.weeklyDrops.length === 0 && <p className={styles.empty}>{t('empty.weeklyDrops')}</p>}
         </section>
       </main>
 
       {selectedDrop && (
         <div className={styles.modalOverlay} role="presentation" onMouseDown={() => setSelectedDrop(null)}>
           <section className={styles.dropModal} role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
-            <button className={styles.closeButton} type="button" onClick={() => setSelectedDrop(null)}>x</button>
-            <h2>Has entrado al sorteo</h2>
+            <button className={styles.closeButton} type="button" onClick={() => setSelectedDrop(null)} aria-label={t('drops.close')}>x</button>
+            <h2>{t('drops.modalTitle')}</h2>
             {selectedDrop.imageUrl && <img src={selectedDrop.imageUrl} alt="" />}
             <h3>{selectedDrop.gameTitle}</h3>
             <p>{new Date(selectedDrop.startAt).toLocaleString()} - {new Date(selectedDrop.endAt).toLocaleString()}</p>
@@ -205,11 +252,11 @@ export const Home = (): React.JSX.Element => {
 
             {selectedDrop.status === 'REVEAL_ACTIVE' ? (
               <div className={styles.claimBox}>
-                <p>La revelación está activa. Presiona reclamar para intentar obtener un código disponible.</p>
-                <button type="button" onClick={claimDrop}>Canjear código</button>
+                <p>{t('drops.revealActive')}</p>
+                <button type="button" onClick={claimDrop}>{t('drops.claim')}</button>
               </div>
             ) : (
-              <p>La reclamación se habilitará cuando llegue la hora de revelación.</p>
+              <p>{t('drops.claimSoon')}</p>
             )}
           </section>
         </div>

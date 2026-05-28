@@ -1,1 +1,13 @@
-{}
+{
+  "title": "Crypt",
+  "subtitle": "A game graveyard based on this month's reviews.",
+  "worstTitle": "Top 5 worst games",
+  "restTitle": "Games from beyond",
+  "loadError": "Crypt could not be loaded.",
+  "loading": "Loading charts...",
+  "emptyWorst": "There are no negative ratings this month.",
+  "emptyRest": "All recent games have activity.",
+  "rating": "Rating {{score}}",
+  "noReviews": "{{count}} reviews",
+  "openGame": "Open {{name}}"
+}

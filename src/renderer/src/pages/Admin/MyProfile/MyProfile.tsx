@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './MyProfile.module.css';
 import { AdminProfile, AdminProfileService, UpdateAdminProfilePayload } from '../../../services/adminProfile.service';
 import { useToast } from '../../../components/ui/Toast';
+import { EditableProfileImage } from '../../../components/ui/ProfileComponents/EditableProfileImage';
 
 const toEditablePayload = (profile: AdminProfile): UpdateAdminProfilePayload => ({
   username: profile.username,
@@ -41,6 +42,12 @@ export const AdminMyProfile = (): React.JSX.Element => {
 
   const updateField = (field: keyof UpdateAdminProfilePayload, value: string): void => {
     setForm((current) => current ? { ...current, [field]: value } : current);
+  };
+
+  const handleAvatarUpdated = (newUrl: string): void => {
+    setProfile((current) => current ? { ...current, profilePicture: newUrl } : current);
+    setForm((current) => current ? { ...current, profilePicture: newUrl } : current);
+    toast.success(t('adminProfile.successSave'));
   };
 
   const cancelEdit = (): void => {
@@ -102,7 +109,11 @@ export const AdminMyProfile = (): React.JSX.Element => {
 
       <section className={styles.card}>
         <div className={styles.avatar}>
-          {profile.profilePicture ? <img src={profile.profilePicture} alt="" /> : <span>{profile.username.slice(0, 2).toUpperCase()}</span>}
+          <EditableProfileImage
+            imageUrl={form.profilePicture || profile.profilePicture}
+            isEditing={isEditing}
+            onAvatarUpdated={handleAvatarUpdated}
+          />
         </div>
         <div className={styles.formGrid}>
           <label>

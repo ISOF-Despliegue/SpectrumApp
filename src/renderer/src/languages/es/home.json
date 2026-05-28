@@ -1,5 +1,54 @@
 {
   "menu": {
     "title": "Inicio"
+  },
+  "search": {
+    "placeholder": "Buscar videojuegos o usuarios",
+    "loading": "Buscando...",
+    "game": "Videojuego",
+    "user": "Usuario"
+  },
+  "banner": {
+    "fallbackTitle": "SPECTRUM",
+    "fallbackSubtitle": "Descubre juegos, reseñas y sorteos.",
+    "previous": "Ver banner anterior",
+    "next": "Ver banner siguiente",
+    "goTo": "Ver banner {{index}}"
+  },
+  "states": {
+    "loadError": "No se pudo cargar el inicio.",
+    "loading": "Cargando inicio..."
+  },
+  "sections": {
+    "recentGames": "Juegos más recientes",
+    "popularReviews": "Reseñas populares hoy",
+    "weeklyDrop": "Sorteo de la semana"
+  },
+  "empty": {
+    "recentGames": "No hay juegos recientes.",
+    "popularReviews": "No hay actividad destacada hoy.",
+    "weeklyDrops": "No hay sorteos esta semana."
+  },
+  "drops": {
+    "join": "Participar",
+    "details": "Ver sorteo",
+    "joined": "Has entrado al sorteo.",
+    "joinError": "No fue posible participar en este sorteo.",
+    "claim": "Canjear código",
+    "claimError": "No fue posible reclamar este sorteo.",
+    "winner": "Ganador: {{username}}",
+    "winnerMessage": "Ganaste. Tu recompensa llegará a tu correo en las próximas 24 horas.",
+    "finishedWithWinner": "Sorteo finalizado. Ganador: {{username}}.",
+    "claimUnavailable": "El sorteo ya no admite reclamos o no hay códigos disponibles.",
+    "aboutToStart": "El sorteo está por comenzar.",
+    "startsIn": "Faltan {{minutes}} min para que empiece.",
+    "modalTitle": "Has entrado al sorteo",
+    "revealActive": "La revelación está activa. Presiona reclamar para intentar obtener un código disponible.",
+    "claimSoon": "La reclamación se habilitará cuando llegue la hora de revelación.",
+    "close": "Cerrar sorteo"
+  },
+  "reviews": {
+    "likes": "{{count}} likes",
+    "comments": "{{count}} respuestas"
   }
 }

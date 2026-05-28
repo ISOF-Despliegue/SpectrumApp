@@ -4,6 +4,7 @@ import { ActionButton } from '../ActionButton';
 import { TargetType } from '../../../types/reports.types';
 import { submitReport } from '../../../services/reports.service';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../Toast';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -22,12 +23,11 @@ export const ReportModal: React.FC<ReportModalProps> = ({
   currentUserId,
   targetOwnerId
 }) => {
-  const [reason, setReason] = useState('INAPPROPRIATE_CONTENT');
+  const [reason, setReason] = useState('CONTENIDO_INAPROPIADO');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const { t } = useTranslation('report');
+  const toast = useToast();
 
   if (!isOpen) return null;
 
@@ -46,10 +46,8 @@ export const ReportModal: React.FC<ReportModalProps> = ({
   }
 
   const handleSubmit = async () => {
-    setError(null);
-    setSuccess(null);
     if (description.trim().length < 10) {
-      setError(t('reportModal.lengthError'));
+      toast.warning(t('reportModal.lengthError'));
       return;
     }
 
@@ -61,16 +59,16 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         reason,
         description: description.trim()
       });
-      setSuccess(t('reportModal.successMessage'));
+      toast.success(t('reportModal.successMessage'));
       setDescription('');
-      window.setTimeout(onClose, 900);
+      onClose();
     } catch (err: any) {
       if (err.response?.status === 429) {
-        setError(t('reportModal.tooManyReports'));
+        toast.error(t('reportModal.tooManyReports'));
       } else if (err.response?.status === 409) {
-        setError(t('reportModal.alreadyReported'));
+        toast.error(t('reportModal.alreadyReported'));
       } else {
-        setError(err.response?.data?.title || t('reportModal.genericError'));
+        toast.error(err.response?.data?.title || t('reportModal.genericError'));
       }
     } finally {
       setIsSubmitting(false);
@@ -89,10 +87,8 @@ export const ReportModal: React.FC<ReportModalProps> = ({
             onChange={(e) => setReason(e.target.value)}
           >
             <option value="SPAM">{t('reportModal.reportReasons.SPAM')}</option>
-            <option value="HARASSMENT">{t('reportModal.reportReasons.HARASSMENT')}</option>
-            <option value="INAPPROPRIATE_CONTENT">{t('reportModal.reportReasons.INAPPROPRIATE_CONTENT')}</option>
-            <option value="SPOILERS">{t('reportModal.reportReasons.SPOILERS')}</option>
-            <option value="OTHER">{t('reportModal.reportReasons.OTHER')}</option>
+            <option value="ACOSO">{t('reportModal.reportReasons.ACOSO')}</option>
+            <option value="CONTENIDO_INAPROPIADO">{t('reportModal.reportReasons.CONTENIDO_INAPROPIADO')}</option>
           </select>
 
           <textarea
@@ -102,10 +98,6 @@ export const ReportModal: React.FC<ReportModalProps> = ({
             rows={4}
             className={styles.textarea}
           />
-
-          {error && <p className={styles.errorText}>{error}</p>}
-          {success && <p className={styles.successText}>{success}</p>}
-
           <div className={styles.actions}>
             <button type="button" onClick={onClose} className={styles.cancelBtn}>{t('reportModal.cancelButton')}</button>
             <ActionButton

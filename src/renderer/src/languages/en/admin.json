@@ -40,6 +40,10 @@
     "errorLoad": "Error loading users.",
     "errorToggle": "Error changing user status.",
     "statusChanged": "User status updated.",
+    "confirmSuspendTitle": "Suspend user",
+    "confirmReactivateTitle": "Reactivate user",
+    "confirmSuspendMessage": "This action will temporarily suspend the user. Do you want to continue?",
+    "confirmReactivateMessage": "This action will restore the user's access. Do you want to continue?",
     "table": {
       "user": "User",
       "email": "Email",
@@ -85,6 +89,16 @@
     "confirmDeleteTitle": "Delete content",
     "confirmDeleteMessage": "Are you sure you want to delete this {{type}} content?",
     "confirm": "Confirm",
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed",
+      "review": "Reviews",
+      "comment": "Comments",
+      "user": "Users",
+      "clip": "Clips"
+    },
     "table": {
       "reason": "Reason",
       "targetType": "Type",
@@ -114,11 +128,37 @@
       },
       "reasons": {
         "SPAM": "Spam or commercial content",
+        "ACOSO": "Harassment",
+        "CONTENIDO_INAPROPIADO": "Inappropriate content",
         "HARASSMENT": "Harassment or hate speech",
         "INAPPROPRIATE_CONTENT": "Inappropriate content",
         "SPOILERS": "Unmarked spoilers",
         "OTHER": "Other reason"
       }
+    }
+  },
+  "manageReviews": {
+    "title": "Manage reviews",
+    "subtitle": "Search a game first and moderate paginated reviews.",
+    "gamePlaceholder": "Search game",
+    "reviewPlaceholder": "Username or review title",
+    "search": "Search",
+    "loading": "Loading reviews...",
+    "empty": "No results.",
+    "selectGameFirst": "Search and select a game first.",
+    "loadError": "Reviews could not be loaded.",
+    "deleteError": "The review could not be deleted.",
+    "deleted": "Review deleted successfully.",
+    "delete": "Delete",
+    "deleteTitle": "Delete review",
+    "deleteMessage": "The review will be deleted. Do you want to continue?",
+    "searching": "Searching...",
+    "sort": {
+      "dateDesc": "Newest first",
+      "dateAsc": "Oldest first",
+      "likes": "Likes",
+      "dislikes": "Dislikes",
+      "alpha": "Alphabetical"
     }
   },
   "manageEvents": {

@@ -2,13 +2,11 @@
   "searchers": {
     "searchByName": "Search by name"
   },
-
   "pagination": {
     "previous": "Previous",
     "next": "Next",
     "pageInfo": "Page {{current}} of {{total}}"
   },
-
   "filters": {
     "sortBy": "Sort by",
     "options": {
@@ -17,19 +15,25 @@
       "nameDesc": "Name (Z-A)",
       "dateNew": "Newest",
       "dateOld": "Oldest",
-      "ratingDesc": "Highest Rated"
-    },
-
-    "status": {
-    "loading": "Cargando..."
+      "ratingDesc": "Highest rated"
     }
   },
-
+  "status": {
+    "loading": "Loading..."
+  },
   "confirmations": {
     "yes": "Yes",
     "no": "No"
+  },
+  "toast": {
+    "close": "Close notification"
+  },
+  "reviews": {
+    "vote": {
+      "like": "Like",
+      "dislike": "Dislike",
+      "ownReview": "You cannot vote on your own review.",
+      "error": "Your vote could not be saved."
+    }
   }
 }
-
-
-

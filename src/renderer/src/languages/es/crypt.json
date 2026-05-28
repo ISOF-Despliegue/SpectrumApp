@@ -1,1 +1,13 @@
-{}
+{
+  "title": "Ultratumba",
+  "subtitle": "Un cementerio de juegos según sus reseñas del mes actual.",
+  "worstTitle": "Top 5 peores juegos",
+  "restTitle": "Juegos del más allá",
+  "loadError": "No se pudo cargar Ultratumba.",
+  "loading": "Cargando gráficas...",
+  "emptyWorst": "No hay calificaciones negativas este mes.",
+  "emptyRest": "Todos los juegos recientes tienen actividad.",
+  "rating": "Calificación {{score}}",
+  "noReviews": "{{count}} reseñas",
+  "openGame": "Abrir {{name}}"
+}

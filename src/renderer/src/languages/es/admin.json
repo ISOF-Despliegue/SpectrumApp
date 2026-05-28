@@ -28,7 +28,8 @@
       "phoneNumber": "Teléfono",
       "address": "Dirección",
       "rfc": "RFC",
-      "role": "Rol"
+      "role": "Rol",
+      "avatar": "Foto de perfil"
     }
   },
   "manageUsers": {
@@ -40,6 +41,10 @@
     "errorLoad": "Error al cargar los usuarios.",
     "errorToggle": "Error al cambiar el estado del usuario.",
     "statusChanged": "Estado del usuario actualizado.",
+    "confirmSuspendTitle": "Suspender usuario",
+    "confirmReactivateTitle": "Reactivar usuario",
+    "confirmSuspendMessage": "Esta acción suspenderá temporalmente al usuario. ¿Deseas continuar?",
+    "confirmReactivateMessage": "Esta acción reactivará el acceso del usuario. ¿Deseas continuar?",
     "table": {
       "user": "Usuario",
       "email": "Correo",
@@ -85,6 +90,16 @@
     "confirmDeleteTitle": "Eliminar contenido",
     "confirmDeleteMessage": "¿Estás seguro de eliminar este contenido de tipo {{type}}?",
     "confirm": "Confirmar",
+    "filters": {
+      "all": "Todos",
+      "pending": "Pendientes",
+      "resolved": "Resueltos",
+      "dismissed": "Desestimados",
+      "review": "Reseñas",
+      "comment": "Comentarios",
+      "user": "Usuarios",
+      "clip": "Clips"
+    },
     "table": {
       "reason": "Motivo",
       "targetType": "Tipo",
@@ -113,12 +128,38 @@
         "DISMISSED": "Desestimado"
       },
       "reasons": {
-        "SPAM": "Spam o contenido comercial",
-        "HARASSMENT": "Acoso o discurso de odio",
+        "SPAM": "Spam",
+        "ACOSO": "Acoso",
+        "CONTENIDO_INAPROPIADO": "Contenido inapropiado",
+        "HARASSMENT": "Acoso",
         "INAPPROPRIATE_CONTENT": "Contenido inapropiado",
         "SPOILERS": "Spoilers no marcados",
         "OTHER": "Otro motivo"
       }
+    }
+  },
+  "manageReviews": {
+    "title": "Administrar reseñas",
+    "subtitle": "Busca primero un juego y modera reseñas paginadas.",
+    "gamePlaceholder": "Buscar juego",
+    "reviewPlaceholder": "Usuario o título de reseña",
+    "search": "Buscar",
+    "loading": "Cargando reseñas...",
+    "empty": "Sin resultados.",
+    "selectGameFirst": "Primero busca y selecciona un juego.",
+    "loadError": "No se pudieron cargar las reseñas.",
+    "deleteError": "No se pudo borrar la reseña.",
+    "deleted": "Reseña borrada correctamente.",
+    "delete": "Borrar",
+    "deleteTitle": "Borrar reseña",
+    "deleteMessage": "La reseña se va a borrar. ¿Deseas continuar?",
+    "searching": "Buscando...",
+    "sort": {
+      "dateDesc": "Fecha descendente",
+      "dateAsc": "Fecha ascendente",
+      "likes": "Likes",
+      "dislikes": "Dislikes",
+      "alpha": "Alfabético"
     }
   },
   "manageEvents": {
@@ -149,6 +190,7 @@
     "finish": "Finalizar",
     "finishTitle": "Finalizar sorteo",
     "finishMessage": "El sorteo dejará de admitir uniones y reclamos. ¿Deseas continuar?",
+    "notEditable": "Solo los sorteos próximos pueden editarse.",
     "labels": {
       "title": "Título",
       "game": "Buscar juego",

@@ -1,1 +1,11 @@
-{}
+{
+  "title": "Clips semanales",
+  "subtitle": "Reseñas y clips con video más likeados durante la semana actual.",
+  "upload": "Subir clip",
+  "play": "Reproducir clip",
+  "topMonth": "Top 3 del mes",
+  "loadError": "No se pudieron cargar los clips semanales.",
+  "loading": "Cargando clips...",
+  "empty": "No hay clips destacados esta semana.",
+  "likes": "{{count}} likes"
+}

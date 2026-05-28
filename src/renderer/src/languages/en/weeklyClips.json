@@ -1,1 +1,11 @@
-{}
+{
+  "title": "Weekly clips",
+  "subtitle": "Reviews and clips with video most liked during the current week.",
+  "upload": "Upload clip",
+  "play": "Play clip",
+  "topMonth": "Top 3 this month",
+  "loadError": "Weekly clips could not be loaded.",
+  "loading": "Loading clips...",
+  "empty": "There are no highlighted clips this week.",
+  "likes": "{{count}} likes"
+}

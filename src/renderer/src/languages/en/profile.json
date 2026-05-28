@@ -49,7 +49,7 @@
     "passwordMismatch": "Passwords do not match",
     "passwordPolicy": "Password must be at least 8 characters and include one uppercase letter, one lowercase letter, and one number.",
     "passwordUpdated": "Password updated successfully",
-    "verificationCodeSent": "We sent a code to your email.",
+    "verificationCodeSent": "We sent a code to your email. It expires in 15 minutes.",
     "codeVerified": "Code verified. Enter your new password.",
     "invalidCode": "The code is invalid or expired.",
     "updateError": "Error changing password. Please try again.",
@@ -58,6 +58,11 @@
     "profileUpdateError": "Error updating profile",
     "fillFields": "Please fill all fields",
     "deleteClipConfirmation": "Are you sure you want to delete this clip?"
+  },
+  "block": {
+    "title": "Block profile",
+    "message": "This profile will be blocked for your account. Do you want to continue?",
+    "confirm": "Block"
   },
   "selector": {
     "title": "Select Interested Games",

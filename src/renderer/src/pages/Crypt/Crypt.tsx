@@ -1,61 +1,96 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { AnalyticsService } from '../../services/analytics.service';
 import { CryptDashboard, NamedMetric } from '../../types/analytics.types';
+import { ScoreDisplay } from '../../components/ui/ScoreDisplay/ScoreDisplay';
+import { useToast } from '../../components/ui/Toast';
 import styles from './Crypt.module.css';
+import backgroundCrypt from '../../assets/images/backgroundCrypt.png';
+import ghostFriky from '../../assets/images/ghostFriky.png';
+import lapidaGeneral from '../../assets/images/lapidaGeneral.png';
+import lapidaTop from '../../assets/images/lapidaTop.png';
 
-const TileChart = ({ items }: { items: NamedMetric[] }): React.JSX.Element => (
-  <div className={styles.tiles}>
-    {items.map((item) => (
-      <article key={item.id} className={styles.tile}>
-        {item.imageUrl && <img src={item.imageUrl} alt="" loading="lazy" />}
-        <strong>{item.label}</strong>
-        <span>{item.score > 0 ? item.score.toFixed(1) : `${item.count} resenas`}</span>
-      </article>
-    ))}
-  </div>
-);
+const TombstoneGrid = ({
+  items,
+  variant
+}: {
+  items: NamedMetric[];
+  variant: 'top' | 'general';
+}): React.JSX.Element => {
+  const { t } = useTranslation('crypt');
+  const navigate = useNavigate();
+
+  return (
+    <div className={variant === 'top' ? styles.topTombs : styles.generalTombs}>
+      {items.map((item) => {
+        const score = item.score > 0 ? Math.round(item.score * 10) : 0;
+        return (
+          <button
+            type="button"
+            key={item.id}
+            className={`${styles.tombstone} ${variant === 'top' ? styles.topTombstone : styles.generalTombstone}`}
+            onClick={() => navigate(`/games/${item.id}/reviews`)}
+            aria-label={t('openGame', { name: item.label })}
+          >
+            <img className={styles.tombImage} src={variant === 'top' ? lapidaTop : lapidaGeneral} alt="" loading="lazy" />
+            <span className={styles.gamePortrait}>
+              {item.imageUrl && <img src={item.imageUrl} alt="" loading="lazy" />}
+            </span>
+            <strong>{item.label}</strong>
+            {item.score > 0 ? (
+              <ScoreDisplay score={score} size="small" />
+            ) : (
+              <span className={styles.noReviews}>{t('noReviews', { count: item.count })}</span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 export const Crypt = (): React.JSX.Element => {
+  const { t } = useTranslation('crypt');
+  const toast = useToast();
   const [dashboard, setDashboard] = useState<CryptDashboard | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async (): Promise<void> => {
       setIsLoading(true);
-      setError(null);
       try {
         setDashboard(await AnalyticsService.getCryptDashboard());
       } catch {
-        setError('No se pudo cargar Ultratumba.');
+        toast.error(t('loadError'));
       } finally {
         setIsLoading(false);
       }
     };
 
     load();
-  }, []);
+  }, [t, toast]);
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} style={{ backgroundImage: `url(${backgroundCrypt})` }}>
       <header className={styles.header}>
-        <h1>Ultratumba</h1>
-        <p>Lo peor del gaming y juegos sin actividad durante el mes actual.</p>
+        <h1>{t('title')}</h1>
+        <p>{t('subtitle')}</p>
       </header>
 
-      {error && <p className={styles.error}>{error}</p>}
-      {isLoading && <p className={styles.loading}>Cargando graficas...</p>}
+      {isLoading && <p className={styles.loading}>{t('loading')}</p>}
 
-      <section className={styles.panel}>
-        <h2>TOP 5 PEORES JUEGOS</h2>
-        {!isLoading && dashboard?.worstGames.length === 0 && <p className={styles.empty}>No hay calificaciones negativas este mes.</p>}
-        <TileChart items={dashboard?.worstGames || []} />
+      <section className={`${styles.panel} ${styles.worstPanel}`}>
+        <img className={styles.ghost} src={ghostFriky} alt="" loading="lazy" />
+        <h2>{t('worstTitle')}</h2>
+        {!isLoading && dashboard?.worstGames.length === 0 && <p className={styles.empty}>{t('emptyWorst')}</p>}
+        <TombstoneGrid items={dashboard?.worstGames || []} variant="top" />
       </section>
 
       <section className={styles.panel}>
-        <h2>JUEGOS DEL MAS ALLA</h2>
-        {!isLoading && dashboard?.gamesWithoutReviews.length === 0 && <p className={styles.empty}>Todos los juegos recientes tienen actividad.</p>}
-        <TileChart items={dashboard?.gamesWithoutReviews || []} />
+        <h2>{t('restTitle')}</h2>
+        {!isLoading && dashboard?.gamesWithoutReviews.length === 0 && <p className={styles.empty}>{t('emptyRest')}</p>}
+        <TombstoneGrid items={dashboard?.gamesWithoutReviews || []} variant="general" />
       </section>
     </div>
   );

@@ -91,27 +91,89 @@
 }
 
 .banner {
+  position: relative;
+  overflow: hidden;
   min-height: 190px;
   display: grid;
   align-content: center;
   justify-items: center;
   border: 1px solid rgba(110, 168, 255, 0.65);
   border-radius: 8px;
-  background:
-    linear-gradient(rgba(37, 99, 235, 0.78), rgba(37, 99, 235, 0.48)),
-    url('../../assets/images/common/SpectrumLogo.png') center/contain no-repeat;
+  background: #0f172a;
   text-align: center;
 }
 
-.banner h1 {
+.bannerImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(2, 6, 23, 0.88), rgba(2, 6, 23, 0.32));
+}
+
+.bannerContent {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  padding: 1.25rem;
+}
+
+.bannerContent h1 {
   margin: 0;
   font-size: clamp(2.2rem, 6vw, 4.6rem);
   letter-spacing: 0;
 }
 
-.banner p {
+.bannerContent p {
   margin: 0.35rem 0 0;
   color: #e0f2fe;
+}
+
+.bannerControls {
+  position: absolute;
+  inset: auto 1rem 1rem 1rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.bannerControls button {
+  pointer-events: auto;
+  min-width: 34px;
+  min-height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  cursor: pointer;
+}
+
+.bannerDots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.bannerDots button {
+  min-width: 10px;
+  width: 10px;
+  height: 10px;
+  min-height: 10px;
+  padding: 0;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.bannerDots .activeDot {
+  background: #fde047;
+  border-color: #fde047;
 }
 
 .columns {

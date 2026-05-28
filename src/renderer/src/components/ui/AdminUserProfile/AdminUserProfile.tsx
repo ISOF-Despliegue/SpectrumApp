@@ -6,6 +6,12 @@ import { getUserDetail, deleteUser, toggleUserSuspension } from '../../../servic
 import { ActionButton } from '../../../components/ui/ActionButton';
 import { ProfileImageMedium } from '../../../components/ui/ProfileImageMedium';
 import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
+import { ReviewCardPre } from '../ReviewCards/ReviewCardPre';
+import { ReviewDetailModal } from '../ReviewDetailModal';
+import { ProfileClipsSection } from '../ProfileComponents/ProfileClipsSection';
+import { ReviewService } from '../../../services/reviews.service';
+import { useToast } from '../Toast';
+import type { Review } from '../../../types/reviews.types';
 
 interface AdminUserProfileProps {
   userId: string;
@@ -14,44 +20,55 @@ interface AdminUserProfileProps {
 
 export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBack }) => {
   const { t } = useTranslation('admin');
+  const toast = useToast();
   const [profile, setProfile] = useState<AdminUserDetailDto | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState<string | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isSuspendConfirmOpen, setIsSuspendConfirmOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
   }, [userId]);
 
-  const loadProfile = async () => {
+  const loadProfile = async (): Promise<void> => {
     try {
-      const data = await getUserDetail(userId);
+      const [data, userReviews] = await Promise.all([
+        getUserDetail(userId),
+        ReviewService.getByUser(userId)
+      ]);
       setProfile(data);
-    } catch (error) {
-      setMessage(t('manageUsers.errorLoad'));
+      setReviews(userReviews);
+    } catch {
+      toast.error(t('manageUsers.errorLoad'));
       onBack();
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleToggleSuspension = async () => {
+  const handleToggleSuspension = async (): Promise<void> => {
     if (!profile) return;
     try {
       await toggleUserSuspension(profile.id, !profile.isSuspended);
       setProfile({ ...profile, isSuspended: !profile.isSuspended });
+      toast.success(t('manageUsers.statusChanged'));
     } catch (error: any) {
-      setMessage(error.response?.data?.title || t('manageUsers.errorToggle'));
+      toast.error(error.response?.data?.title || t('manageUsers.errorToggle'));
+    } finally {
+      setIsSuspendConfirmOpen(false);
     }
   };
 
-  const handleDeleteUser = async () => {
+  const handleDeleteUser = async (): Promise<void> => {
     if (!profile) return;
     try {
       await deleteUser(profile.id);
+      toast.success(t('manageUsers.profile.actions.confirmDelete'));
       onBack();
     } catch (error: any) {
-      setMessage(error.response?.data?.title || 'No se pudo desactivar la cuenta del usuario.');
+      toast.error(error.response?.data?.title || t('manageUsers.errorToggle'));
     } finally {
       setIsDeleteConfirmOpen(false);
     }
@@ -66,8 +83,6 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
         {t('manageUsers.profile.back')}
       </button>
 
-      {message && <p className={styles.loadingText}>{message}</p>}
-
       <div className={styles.headerCard}>
         <ProfileImageMedium
           imageUrl={profile.avatarUrl || undefined}
@@ -76,7 +91,7 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
         <div className={styles.userInfo}>
           <h2>{profile.username}</h2>
           <p>{profile.email}</p>
-          <p style={{ fontSize: '0.85rem', marginTop: '4px' }}>
+          <p className={styles.memberSince}>
             {t('manageUsers.profile.memberSince')}: {new Date(profile.createdAt).toLocaleDateString()}
           </p>
           <div className={styles.badges}>
@@ -103,7 +118,7 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
         <div className={styles.actionsSection}>
           <ActionButton
             variant={profile.isSuspended ? 'change' : 'suspend'}
-            onClick={handleToggleSuspension}
+            onClick={() => setIsSuspendConfirmOpen(true)}
           >
             {profile.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
           </ActionButton>
@@ -117,11 +132,57 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
         </div>
       )}
 
+      <section className={styles.contentSection}>
+        <h3>{t('manageUsers.profile.metrics.reviews')}</h3>
+        <div className={styles.reviewList}>
+          {reviews.map((review) => (
+            <ReviewCardPre
+              key={review.id}
+              reviewId={review.id}
+              gameCover={review.gameCoverUrl}
+              username={review.username}
+              userImage={review.userProfileImageUrl || review.profilePicture}
+              reviewTitle={review.title}
+              reviewContent={review.content}
+              reviewDate={new Date(review.createdAt).toLocaleDateString()}
+              reviewImage={review.attachmentType === 'image' ? review.attachmentUrl || review.imageUrl : undefined}
+              likes={review.likesCount}
+              dislikes={review.dislikesCount}
+              score={review.rating}
+              isOwnReview={review.isOwnReview}
+              onClick={() => setSelectedReview(review)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.contentSection}>
+        <h3>{t('manageUsers.profile.metrics.clips')}</h3>
+        <ProfileClipsSection
+          profileUserId={profile.id}
+          isEditing={false}
+          isOwner={false}
+          onOpenUploadWizard={() => {}}
+        />
+      </section>
+
+      <ReviewDetailModal review={selectedReview} onClose={() => setSelectedReview(null)} />
+
+      <ConfirmationModal
+        isOpen={isSuspendConfirmOpen}
+        title={profile.isSuspended ? t('manageUsers.confirmReactivateTitle') : t('manageUsers.confirmSuspendTitle')}
+        message={profile.isSuspended ? t('manageUsers.confirmReactivateMessage') : t('manageUsers.confirmSuspendMessage')}
+        confirmLabel={profile.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
+        variant={profile.isSuspended ? 'default' : 'danger'}
+        onConfirm={handleToggleSuspension}
+        onCancel={() => setIsSuspendConfirmOpen(false)}
+      />
+
       <ConfirmationModal
         isOpen={isDeleteConfirmOpen}
-        title="Desactivar cuenta"
-        message="Esta acción desactivará la cuenta del usuario. ¿Deseas continuar?"
-        confirmLabel="Desactivar"
+        title={t('manageUsers.profile.actions.delete')}
+        message={t('manageUsers.profile.actions.confirmDelete')}
+        confirmLabel={t('manageUsers.profile.actions.delete')}
         variant="danger"
         onConfirm={handleDeleteUser}
         onCancel={() => setIsDeleteConfirmOpen(false)}

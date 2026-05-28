@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ToastProvider.module.css';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -19,6 +20,7 @@ type ToastContextValue = {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
+  const { t } = useTranslation('common');
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const removeToast = useCallback((id: number): void => {
@@ -45,7 +47,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }): Reac
         {toasts.map((toast) => (
           <div key={toast.id} className={`${styles.toast} ${styles[toast.type]}`}>
             <span>{toast.message}</span>
-            <button type="button" onClick={() => removeToast(toast.id)} aria-label="Cerrar notificación">
+            <button type="button" onClick={() => removeToast(toast.id)} aria-label={t('toast.close')}>
               x
             </button>
           </div>

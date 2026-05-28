@@ -5,25 +5,25 @@
   "adminPath": "Usuarios",
   "labels": {
     "platforms": "Plataformas:",
-    "description": "Descripcion",
-    "noDescription": "No hay descripcion disponible.",
+    "description": "Descripción",
+    "noDescription": "No hay descripción disponible.",
     "orderBy": "Ordenar por",
     "security": "Seguridad",
-    "passwordCurrent": "Contrasena actual",
-    "passwordNew": "Nueva contrasena",
-    "passwordConfirm": "Confirmar contrasena",
-    "verificationCode": "Codigo de verificacion"
+    "passwordCurrent": "Contraseña actual",
+    "passwordNew": "Nueva contraseña",
+    "passwordConfirm": "Confirmar contraseña",
+    "verificationCode": "Código de verificación"
   },
   "sections": {
-    "games": "Juegos de interes",
-    "reviews": "Mis resenas",
+    "games": "Juegos de interés",
+    "reviews": "Mis reseñas",
     "clips": "Clips"
   },
   "placeholders": {
-    "bio": "Cuentanos un poco sobre ti...",
-    "emptyReviews": "Aqui se cargaran tus resenas...",
-    "emptyClips": "Aqui se cargaran tus clips...",
-    "emptyGames": "Aun no has agregado juegos de interes."
+    "bio": "Cuéntanos un poco sobre ti...",
+    "emptyReviews": "Aquí se cargarán tus reseñas...",
+    "emptyClips": "Aquí se cargarán tus clips...",
+    "emptyGames": "Aún no has agregado juegos de interés."
   },
   "actions": {
     "edit": "Editar perfil",
@@ -34,11 +34,11 @@
     "delete": "Borrar",
     "deleteProfile": "Eliminar perfil",
     "change": "Cambiar",
-    "seeMore": "Ver mas",
-    "changePassword": "Cambiar contrasena",
+    "seeMore": "Ver más",
+    "changePassword": "Cambiar contraseña",
     "close": "Cerrar",
-    "sendCode": "Enviar codigo",
-    "verifyCode": "Verificar codigo"
+    "sendCode": "Enviar código",
+    "verifyCode": "Verificar código"
   },
   "orderOptions": {
     "recent": "Recientes",
@@ -46,21 +46,26 @@
     "alphabetical": "A-Z"
   },
   "messages": {
-    "passwordMismatch": "Las contrasenas no coinciden",
-    "passwordPolicy": "La contrasena debe tener al menos 8 caracteres, una mayuscula, una minuscula y un numero.",
-    "passwordUpdated": "Contrasena actualizada con exito",
-    "verificationCodeSent": "Te enviamos un codigo a tu correo.",
-    "codeVerified": "Codigo verificado. Ingresa tu nueva contrasena.",
-    "invalidCode": "El codigo no es valido o expiro.",
-    "updateError": "Error al cambiar la contrasena. Intenta nuevamente.",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordPolicy": "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.",
+    "passwordUpdated": "Contraseña actualizada con éxito",
+    "verificationCodeSent": "Te enviamos un código a tu correo. Expira en 15 minutos.",
+    "codeVerified": "Código verificado. Ingresa tu nueva contraseña.",
+    "invalidCode": "El código no es válido o expiró.",
+    "updateError": "Error al cambiar la contraseña. Intenta nuevamente.",
     "fetchError": "Error al cargar el perfil",
-    "profileUpdated": "Se ha actualizado el perfil con exito",
+    "profileUpdated": "Se ha actualizado el perfil con éxito",
     "profileUpdateError": "Error al actualizar el perfil",
     "fillFields": "Por favor, completa todos los campos",
-    "deleteClipConfirmation": "Seguro que deseas eliminar este clip?"
+    "deleteClipConfirmation": "¿Seguro que deseas eliminar este clip?"
+  },
+  "block": {
+    "title": "Bloquear perfil",
+    "message": "Este perfil quedará bloqueado para tu cuenta. ¿Deseas continuar?",
+    "confirm": "Bloquear"
   },
   "selector": {
-    "title": "Seleccionar juegos de interes",
+    "title": "Seleccionar juegos de interés",
     "add": "Agregar",
     "added": "Ya en lista",
     "manageTitle": "Gestionar mis juegos"
@@ -71,7 +76,7 @@
     "uploadBtn": "Subir nuevo clip",
     "player": {
       "closeBtnTooltip": "Cerrar reproductor",
-      "notSupported": "Tu navegador no soporta la reproduccion de este video."
+      "notSupported": "Tu navegador no soporta la reproducción de este video."
     }
   }
 }

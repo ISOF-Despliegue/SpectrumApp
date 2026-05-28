@@ -7,9 +7,12 @@ import { Input } from '../../../components/ui/Input';
 import { ActionButton } from '../../../components/ui/ActionButton';
 import { Pagination } from '../../../components/ui/Pagination';
 import { AdminUserProfile } from '../../../components/ui/AdminUserProfile';
+import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
+import { useToast } from '../../../components/ui/Toast';
 
 export const ManageUsers = () => {
   const { t } = useTranslation('admin');
+  const toast = useToast();
 
   const [users, setUsers] = useState<UserModerationDto[]>([]);
   const [page, setPage] = useState(1);
@@ -18,6 +21,7 @@ export const ManageUsers = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [pendingSuspension, setPendingSuspension] = useState<UserModerationDto | null>(null);
 
   const PAGE_SIZE = 10;
 
@@ -29,7 +33,9 @@ export const ManageUsers = () => {
       setUsers(result.items);
       setTotalCount(result.totalCount);
     } catch (err: any) {
-      setError(err.response?.data?.title || t('manageUsers.errorLoad'));
+      const message = err.response?.data?.title || t('manageUsers.errorLoad');
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -50,8 +56,11 @@ export const ManageUsers = () => {
       setUsers(users.map(u =>
         u.id === userId ? { ...u, isSuspended: !currentStatus } : u
       ));
+      toast.success(t('manageUsers.statusChanged'));
     } catch (err: any) {
-      setError(err.response?.data?.title || t('manageUsers.errorToggle'));
+      toast.error(err.response?.data?.title || t('manageUsers.errorToggle'));
+    } finally {
+      setPendingSuspension(null);
     }
   };
 
@@ -126,7 +135,7 @@ export const ManageUsers = () => {
                         <ActionButton
                           variant={user.isSuspended ? 'change' : 'suspend'}
                           size="small"
-                          onClick={() => handleToggleSuspension(user.id, user.isSuspended)}
+                          onClick={() => setPendingSuspension(user)}
                         >
                           {user.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
                         </ActionButton>
@@ -152,6 +161,15 @@ export const ManageUsers = () => {
           />
         </div>
       )}
+      <ConfirmationModal
+        isOpen={Boolean(pendingSuspension)}
+        title={pendingSuspension?.isSuspended ? t('manageUsers.confirmReactivateTitle') : t('manageUsers.confirmSuspendTitle')}
+        message={pendingSuspension?.isSuspended ? t('manageUsers.confirmReactivateMessage') : t('manageUsers.confirmSuspendMessage')}
+        confirmLabel={pendingSuspension?.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
+        variant={pendingSuspension?.isSuspended ? 'default' : 'danger'}
+        onConfirm={() => pendingSuspension && handleToggleSuspension(pendingSuspension.id, pendingSuspension.isSuspended)}
+        onCancel={() => setPendingSuspension(null)}
+      />
     </div>
   );
 };

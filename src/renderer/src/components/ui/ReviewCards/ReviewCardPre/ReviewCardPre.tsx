@@ -1,14 +1,14 @@
 import React from 'react';
 import styles from './ReviewCardPre.module.css';
 import { ProfileImage } from '../../ProfileImage/ProfileImage';
-import { LikeCard } from '../../LikeCard/LikeCard';
-import { DislikeCard } from '../../DislikeCard/DislikeCard';
 import { ImageContainer } from '../../ImageContainer/ImageContainer';
 import { GameCard } from '../../GameCard/GameCard';
 import { ScoreDisplay } from '../../ScoreDisplay/ScoreDisplay';
 import { ReportButton } from '../../ReportButton/ReportButton';
+import { ReviewVoteControls } from '../../ReviewVoteControls';
 
 interface ReviewCardPreProps {
+  reviewId?: string;
   gameCover?: string;
   username: string;
   userImage?: string;
@@ -25,6 +25,7 @@ interface ReviewCardPreProps {
 }
 
 export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
+  reviewId,
   gameCover,
   username,
   userImage,
@@ -90,8 +91,15 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
         </div>
 
         <div className={styles.interactions}>
-          <LikeCard initialLikes={likes} size="small" />
-          <DislikeCard initialDislikes={dislikes} size="small" />
+          {reviewId && (
+            <ReviewVoteControls
+              reviewId={reviewId}
+              likes={likes}
+              dislikes={dislikes}
+              isOwnReview={isOwnReview}
+              size="small"
+            />
+          )}
         </div>
       </section>
     </article>

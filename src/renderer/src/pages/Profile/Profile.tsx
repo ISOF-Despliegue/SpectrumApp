@@ -19,6 +19,7 @@ import { ReviewDetailModal } from '../../components/ui/ReviewDetailModal';
 import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
 import { ReviewService } from '../../services/reviews.service';
 import type { Review } from '../../types/reviews.types';
+import { useToast } from '../../components/ui/Toast';
 
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
 import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
@@ -40,6 +41,7 @@ const PLATFORM_LOGOS: Record<string, string> = {
  */
 export const Profile: React.FC = () => {
   const { t } = useTranslation('profile');
+  const toast = useToast();
   const { userId } = useParams<{ userId: string }>();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -83,6 +85,7 @@ export const Profile: React.FC = () => {
       setProfile(data);
       setReviews(userReviews);
     } catch {
+      toast.error(t('messages.fetchError'));
       setStatus({ type: 'error', message: t('messages.fetchError') });
     } finally {
       setLoading(false);
@@ -112,10 +115,12 @@ export const Profile: React.FC = () => {
       setProfile(refreshedProfile);
 
       setStatus({ type: 'success', message: t('messages.profileUpdated') });
+      toast.success(t('messages.profileUpdated'));
       setIsEditing(false);
 
       setTimeout(() => setStatus({ type: null, message: null }), 3000);
     } catch {
+      toast.error(t('messages.profileUpdateError'));
       setStatus({
         type: 'error',
         message: t('messages.profileUpdateError') || "Error al actualizar el perfil."
@@ -153,9 +158,9 @@ export const Profile: React.FC = () => {
     if (!userId) return;
     try {
       await ProfileService.blockUser(userId);
-      setStatus({ type: 'success', message: 'Perfil bloqueado.' });
+      toast.success(t('block.title'));
     } catch {
-      setStatus({ type: 'error', message: 'No fue posible bloquear este perfil.' });
+      toast.error(t('messages.profileUpdateError'));
     } finally {
       setIsBlockConfirmOpen(false);
     }
@@ -254,6 +259,7 @@ export const Profile: React.FC = () => {
               {reviews.map((review) => (
                 <ReviewCardPre
                   key={review.id}
+                  reviewId={review.id}
                   gameCover={review.gameCoverUrl}
                   username={review.username}
                   userImage={review.userProfileImageUrl || review.profilePicture}
@@ -382,9 +388,9 @@ export const Profile: React.FC = () => {
       <ReviewDetailModal review={selectedReview} onClose={() => setSelectedReview(null)} />
       <ConfirmationModal
         isOpen={isBlockConfirmOpen}
-        title="Bloquear perfil"
-        message="Este perfil quedara bloqueado para tu cuenta. Puedes confirmar la accion?"
-        confirmLabel="Bloquear"
+        title={t('block.title')}
+        message={t('block.message')}
+        confirmLabel={t('block.confirm')}
         variant="danger"
         onConfirm={handleBlockProfile}
         onCancel={() => setIsBlockConfirmOpen(false)}

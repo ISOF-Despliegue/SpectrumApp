@@ -1,8 +1,54 @@
 {
   "menu": {
     "title": "Home"
+  },
+  "search": {
+    "placeholder": "Search games or users",
+    "loading": "Searching...",
+    "game": "Game",
+    "user": "User"
+  },
+  "banner": {
+    "fallbackTitle": "SPECTRUM",
+    "fallbackSubtitle": "Discover games, reviews, and giveaways.",
+    "previous": "View previous banner",
+    "next": "View next banner",
+    "goTo": "View banner {{index}}"
+  },
+  "states": {
+    "loadError": "The home dashboard could not be loaded.",
+    "loading": "Loading home..."
+  },
+  "sections": {
+    "recentGames": "Newest games",
+    "popularReviews": "Popular reviews today",
+    "weeklyDrop": "Weekly giveaway"
+  },
+  "empty": {
+    "recentGames": "No recent games.",
+    "popularReviews": "No highlighted activity today.",
+    "weeklyDrops": "No giveaways this week."
+  },
+  "drops": {
+    "join": "Join",
+    "details": "View giveaway",
+    "joined": "You joined the giveaway.",
+    "joinError": "You could not join this giveaway.",
+    "claim": "Claim code",
+    "claimError": "You could not claim this giveaway.",
+    "winner": "Winner: {{username}}",
+    "winnerMessage": "You won. Your reward will arrive by email within the next 24 hours.",
+    "finishedWithWinner": "Giveaway finished. Winner: {{username}}.",
+    "claimUnavailable": "This giveaway no longer accepts claims or has no available codes.",
+    "aboutToStart": "The giveaway is about to start.",
+    "startsIn": "{{minutes}} min until it starts.",
+    "modalTitle": "You joined the giveaway",
+    "revealActive": "Reveal is active. Press claim to try to get an available code.",
+    "claimSoon": "Claiming will be enabled when the reveal time arrives.",
+    "close": "Close giveaway"
+  },
+  "reviews": {
+    "likes": "{{count}} likes",
+    "comments": "{{count}} replies"
   }
 }
-
-
-
