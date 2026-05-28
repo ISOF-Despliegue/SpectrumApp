@@ -44,6 +44,7 @@
   margin-bottom: 1rem;
   font-size: clamp(1.1rem, 2vw, 1.45rem);
   text-transform: uppercase;
+  text-align: center;
   text-shadow: 0 3px 8px #000;
 }
 
@@ -108,16 +109,16 @@
 .gamePortrait {
   position: relative;
   z-index: 1;
-  width: 58%;
+  width: 44%;
   aspect-ratio: 1;
-  margin-top: 18%;
+  margin-top: 16%;
   border-radius: 999px;
   overflow: hidden;
   background: rgba(15, 23, 42, 0.86);
 }
 
 .topTombstone .gamePortrait {
-  width: 62%;
+  width: 48%;
 }
 
 .gamePortrait img {
@@ -136,11 +137,20 @@
 .tombstone strong {
   max-width: 80%;
   font-size: 0.9rem;
+  line-height: 1.15;
   text-shadow: 0 2px 6px #000;
 }
 
 .topTombstone strong {
   font-size: 1rem;
+}
+
+.tombstone > div {
+  transform: translateY(-6px) scale(0.88);
+}
+
+.topTombstone > div {
+  transform: translateY(-8px) scale(0.92);
 }
 
 .noReviews {

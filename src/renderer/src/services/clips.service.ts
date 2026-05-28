@@ -1,5 +1,6 @@
 import { api } from './api';
 import { MultipartInitResponse, CompleteUploadRequest } from '../types/media.types';
+import type { VoteResult } from './reviews.service';
 
 /**
  * Initiates a multipart video upload session by sending the full video file
@@ -72,4 +73,9 @@ export const completeVideoUpload = async (request: CompleteUploadRequest): Promi
  */
 export const deleteClip = async (clipId: string): Promise<void> => {
   await api.delete(`/Media/clips/${clipId}`);
+};
+
+export const voteClip = async (clipId: string, isPositive: boolean): Promise<VoteResult> => {
+  const response = await api.post<VoteResult>(`/Media/clips/${clipId}/vote`, { isPositive });
+  return response.data;
 };

@@ -31,6 +31,29 @@
       "role": "Role"
     }
   },
+  "globalMetrics": {
+    "title": "Global metrics",
+    "subtitle": "Aggregated system activity without downloading complete lists.",
+    "loading": "Loading metrics...",
+    "loadError": "Metrics could not be loaded.",
+    "emptyPeriod": "No data for the selected period.",
+    "emptyGames": "No game activity in this period.",
+    "periods": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
+    "cards": {
+      "newUsers": "New users",
+      "newReviews": "New reviews",
+      "window": "Window",
+      "mostSearchedGames": "Most searched games"
+    },
+    "charts": {
+      "newUsers": "New users",
+      "newReviews": "New reviews"
+    }
+  },
   "manageUsers": {
     "title": "User moderation",
     "searchPlaceholder": "Search by name or email...",
@@ -152,6 +175,9 @@
     "delete": "Delete",
     "deleteTitle": "Delete review",
     "deleteMessage": "The review will be deleted. Do you want to continue?",
+    "deleteReasonLabel": "Deletion reason",
+    "deleteReasonPlaceholder": "Describe why this review will be deleted",
+    "deleteReasonRequired": "Write a reason with at least 10 characters.",
     "searching": "Searching...",
     "sort": {
       "dateDesc": "Newest first",

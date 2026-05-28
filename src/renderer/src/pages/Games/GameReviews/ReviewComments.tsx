@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ReviewService } from '../../../services/reviews.service';
 import type { ReviewComment } from '../../../types/reviews.types';
 import { validateComment } from '../../../utilities/reviewValidation';
@@ -20,6 +21,7 @@ export const ReviewComments = ({
   onCommentsChanged,
   onMessage
 }: ReviewCommentsProps): React.JSX.Element => {
+  const { t } = useTranslation('gameReviews');
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +30,7 @@ export const ReviewComments = ({
     event.preventDefault();
 
     if (!isAuthenticated) {
-      onMessage('Inicia sesion para responder.');
+      onMessage(t('comments.loginRequired'));
       return;
     }
 
@@ -43,9 +45,9 @@ export const ReviewComments = ({
       const newComment = await ReviewService.createComment(reviewId, content.trim());
       onCommentsChanged([...comments, newComment]);
       setContent('');
-      onMessage('Respuesta publicada.');
+      onMessage(t('messages.commentPublished'));
     } catch {
-      onMessage('No se pudo publicar la respuesta. Intenta nuevamente.');
+      onMessage(t('messages.commentPublishError'));
     } finally {
       setIsSaving(false);
     }
@@ -56,9 +58,9 @@ export const ReviewComments = ({
       setIsSaving(true);
       await ReviewService.deleteComment(commentId);
       onCommentsChanged(comments.filter((comment) => comment.id !== commentId));
-      onMessage('Respuesta eliminada.');
+      onMessage(t('messages.commentDeleted'));
     } catch {
-      onMessage('No se pudo eliminar la respuesta.');
+      onMessage(t('messages.commentDeleteError'));
     } finally {
       setIsSaving(false);
     }
@@ -84,7 +86,7 @@ export const ReviewComments = ({
   return (
     <div className={styles.commentsBlock}>
       {comments.length === 0 ? (
-        <p className={styles.mutedText}>Aun no hay respuestas.</p>
+        <p className={styles.mutedText}>{t('comments.empty')}</p>
       ) : (
         <ul className={styles.commentList}>
           {comments.map((comment) => (
@@ -112,7 +114,7 @@ export const ReviewComments = ({
                   disabled={!isAuthenticated || isSaving}
                   onClick={() => replyToComment(comment)}
                 >
-                  Responder
+                    {t('comments.reply')}
                 </button>
                 {comment.canDelete && (
                   <button
@@ -121,7 +123,7 @@ export const ReviewComments = ({
                     disabled={isSaving}
                     onClick={() => deleteComment(comment.id)}
                   >
-                    Eliminar
+                    {t('comments.delete')}
                   </button>
                 )}
               </div>
@@ -136,10 +138,10 @@ export const ReviewComments = ({
           value={content}
           maxLength={500}
           onChange={(event) => setContent(event.target.value)}
-          placeholder="Responder esta resena"
+          placeholder={t('comments.placeholder')}
         />
         <button className={styles.secondaryButton} type="submit" disabled={isSaving}>
-          Responder
+          {t('comments.reply')}
         </button>
       </form>
     </div>

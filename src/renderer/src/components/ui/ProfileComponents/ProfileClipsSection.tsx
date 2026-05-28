@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../../services/api';
-import { deleteClip } from '../../../services/clips.service';
+import { deleteClip, voteClip } from '../../../services/clips.service';
 import { ProfileSection } from './ProfileSection';
 import { PreviewClip } from '../PreviewClip/PreviewClip';
 import { ClipPlayerModal } from '../ClipPlayerModal/ClipPlayerModal';
 import { AllClipsModal } from './AllClipsModal/AllClipsModal';
+import { useToast } from '../Toast';
 import styles from '../../../pages/Profile/Profile.module.css';
 
 /**
@@ -20,6 +21,8 @@ interface ClipData {
   url: string;
   likesCount: number;
   dislikesCount: number;
+  userVote?: 'like' | 'dislike' | null;
+  userId?: string;
   createdAt?: string;
 }
 
@@ -40,7 +43,8 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
   isOwner,
   onOpenUploadWizard
 }) => {
-  const { t } = useTranslation(['profile']);
+  const { t } = useTranslation(['profile', 'common']);
+  const toast = useToast();
   const [clipsList, setClipsList] = useState<ClipData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -98,6 +102,32 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
     }
   };
 
+  const handleVoteClip = async (clipId: string, isPositive: boolean): Promise<void> => {
+    if (isOwner) {
+      toast.warning(t('common:clips.vote.ownClip'));
+      return;
+    }
+
+    try {
+      const result = await voteClip(clipId, isPositive);
+      const nextVote = isPositive ? 'like' : 'dislike';
+      setClipsList((current) =>
+        current.map((clip) =>
+          clip.id === clipId
+            ? {
+                ...clip,
+                likesCount: result.updatedLikes,
+                dislikesCount: result.updatedDislikes,
+                userVote: clip.userVote === nextVote ? null : nextVote
+              }
+            : clip
+        )
+      );
+    } catch (error: any) {
+      toast.error(error.response?.data?.title || t('common:clips.vote.error'));
+    }
+  };
+
   const previewClips = clipsList.slice(0, 4);
 
   if (!isLoading && clipsList.length === 0 && !isEditing) {
@@ -129,9 +159,11 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
               likesCount={clip.likesCount}
               dislikesCount={clip.dislikesCount}
               isOwner={isOwner}
-              userVote={null}
+              userVote={clip.userVote ?? null}
               onPlay={handlePlayClip}
               onDelete={handleDeleteClip}
+              onLike={() => { void handleVoteClip(clip.id, true); }}
+              onDislike={() => { void handleVoteClip(clip.id, false); }}
             />
           ))}
 
@@ -158,6 +190,8 @@ export const ProfileClipsSection: React.FC<ProfileClipsSectionProps> = ({
           handlePlayClip(id);
         }}
         onDeleteClip={handleDeleteClip}
+        onLikeClip={(id) => { void handleVoteClip(id, true); }}
+        onDislikeClip={(id) => { void handleVoteClip(id, false); }}
       />
 
       <ClipPlayerModal

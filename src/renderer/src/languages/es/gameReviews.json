@@ -1,0 +1,69 @@
+{
+  "errors": {
+    "sessionExpired": "Tu sesión expiró. Inicia sesión nuevamente.",
+    "forbidden": "No tienes permisos para realizar esta acción.",
+    "notFound": "No encontramos el recurso solicitado.",
+    "generic": "Algo salió mal. Intenta nuevamente.",
+    "invalidGame": "El videojuego seleccionado no es válido.",
+    "detailLoad": "No se pudo cargar el detalle del videojuego.",
+    "commentsLoad": "No se pudieron cargar las respuestas."
+  },
+  "navigation": {
+    "backToGames": "Volver a videojuegos"
+  },
+  "status": {
+    "loadingDetail": "Cargando detalle del videojuego..."
+  },
+  "messages": {
+    "authRequiredCreate": "Inicia sesión para crear una reseña.",
+    "updated": "Reseña actualizada.",
+    "published": "Reseña publicada.",
+    "deleted": "Reseña eliminada.",
+    "commentPublished": "Respuesta publicada.",
+    "commentDeleted": "Respuesta eliminada.",
+    "commentPublishError": "No se pudo publicar la respuesta. Intenta nuevamente.",
+    "commentDeleteError": "No se pudo eliminar la respuesta."
+  },
+  "empty": {
+    "title": "No hay reseñas todavía",
+    "body": "Publica la primera opinión de este videojuego."
+  },
+  "rating": {
+    "eyebrow": "Promedio",
+    "noRating": "Sin calificación",
+    "count_one": "1 reseña publicada",
+    "count_other": "{{count}} reseñas publicadas",
+    "create": "Crear reseña"
+  },
+  "form": {
+    "editTitle": "Editar reseña",
+    "createTitle": "Crear reseña",
+    "close": "Cerrar formulario",
+    "title": "Título",
+    "titlePlaceholder": "Una mirada clara al juego",
+    "content": "Contenido",
+    "contentPlaceholder": "Cuenta qué funciona, qué falla y para quién lo recomiendas.",
+    "rating": "Calificación",
+    "attachment": "Captura o video opcional",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "saving": "Guardando..."
+  },
+  "comments": {
+    "empty": "Aún no hay respuestas.",
+    "reply": "Responder",
+    "delete": "Eliminar",
+    "placeholder": "Responder esta reseña",
+    "loginRequired": "Inicia sesión para responder."
+  },
+  "reviewCard": {
+    "openDetail": "Abrir detalle de reseña",
+    "viewReplies": "Ver respuestas",
+    "hideReplies": "Ocultar respuestas",
+    "reply": "Responder",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteConfirmTitle": "Eliminar reseña",
+    "deleteConfirmMessage": "La reseña se va a borrar. ¿Deseas continuar?"
+  }
+}

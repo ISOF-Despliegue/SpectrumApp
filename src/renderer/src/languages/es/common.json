@@ -35,5 +35,13 @@
       "ownReview": "No puedes votar tu propia reseña.",
       "error": "No fue posible registrar tu voto."
     }
+  },
+  "clips": {
+    "vote": {
+      "like": "Me gusta",
+      "dislike": "No me gusta",
+      "ownClip": "No puedes votar tu propio clip.",
+      "error": "No fue posible registrar tu voto."
+    }
   }
 }

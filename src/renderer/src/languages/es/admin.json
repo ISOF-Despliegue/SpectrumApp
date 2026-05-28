@@ -32,6 +32,29 @@
       "avatar": "Foto de perfil"
     }
   },
+  "globalMetrics": {
+    "title": "Métricas globales",
+    "subtitle": "Actividad agregada del sistema sin descargar listados completos.",
+    "loading": "Cargando métricas...",
+    "loadError": "No se pudieron cargar las métricas.",
+    "emptyPeriod": "Sin datos para el periodo seleccionado.",
+    "emptyGames": "Sin actividad de juegos en este periodo.",
+    "periods": {
+      "day": "Día",
+      "week": "Semana",
+      "month": "Mes"
+    },
+    "cards": {
+      "newUsers": "Usuarios nuevos",
+      "newReviews": "Reseñas nuevas",
+      "window": "Ventana",
+      "mostSearchedGames": "Juegos más buscados"
+    },
+    "charts": {
+      "newUsers": "Usuarios nuevos",
+      "newReviews": "Nuevas reseñas"
+    }
+  },
   "manageUsers": {
     "title": "Moderación de usuarios",
     "searchPlaceholder": "Buscar por nombre o correo...",
@@ -153,6 +176,9 @@
     "delete": "Borrar",
     "deleteTitle": "Borrar reseña",
     "deleteMessage": "La reseña se va a borrar. ¿Deseas continuar?",
+    "deleteReasonLabel": "Motivo de eliminación",
+    "deleteReasonPlaceholder": "Describe por qué se eliminará esta reseña",
+    "deleteReasonRequired": "Escribe un motivo de al menos 10 caracteres.",
     "searching": "Buscando...",
     "sort": {
       "dateDesc": "Fecha descendente",

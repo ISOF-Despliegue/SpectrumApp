@@ -76,28 +76,35 @@ export const ReportModal: React.FC<ReportModalProps> = ({
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modalContent}>
+    <div className={styles.overlay} role="presentation" onMouseDown={onClose}>
+      <div className={styles.modalContent} role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
         <h2>{t('reportModal.title')}</h2>
         <div className={styles.formContent}>
 
-          <select
-            className={styles.selectInput}
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          >
-            <option value="SPAM">{t('reportModal.reportReasons.SPAM')}</option>
-            <option value="ACOSO">{t('reportModal.reportReasons.ACOSO')}</option>
-            <option value="CONTENIDO_INAPROPIADO">{t('reportModal.reportReasons.CONTENIDO_INAPROPIADO')}</option>
-          </select>
+          <label className={styles.field}>
+            <span>{t('reportModal.reasonLabel')}</span>
+            <select
+              className={styles.selectInput}
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            >
+              <option value="SPAM">{t('reportModal.reportReasons.SPAM')}</option>
+              <option value="ACOSO">{t('reportModal.reportReasons.ACOSO')}</option>
+              <option value="CONTENIDO_INAPROPIADO">{t('reportModal.reportReasons.CONTENIDO_INAPROPIADO')}</option>
+            </select>
+          </label>
 
-          <textarea
-            placeholder={t('reportModal.placeholder')}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            className={styles.textarea}
-          />
+          <label className={styles.field}>
+            <span>{t('reportModal.descriptionLabel')}</span>
+            <textarea
+              placeholder={t('reportModal.placeholder')}
+              value={description}
+              maxLength={500}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={5}
+              className={styles.textarea}
+            />
+          </label>
           <div className={styles.actions}>
             <button type="button" onClick={onClose} className={styles.cancelBtn}>{t('reportModal.cancelButton')}</button>
             <ActionButton

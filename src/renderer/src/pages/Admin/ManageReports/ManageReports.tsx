@@ -17,7 +17,7 @@ export const ManageReports = (): React.JSX.Element => {
   const [reports, setReports] = useState<ReportSummaryDto[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<ReportStatus | ''>('PENDING');
+  const [statusFilter, setStatusFilter] = useState<ReportStatus | ''>('');
   const [typeFilter, setTypeFilter] = useState<TargetType | ''>('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);

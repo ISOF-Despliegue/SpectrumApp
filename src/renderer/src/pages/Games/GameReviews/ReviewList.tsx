@@ -1,40 +1,25 @@
 import type React from 'react';
-import type { Review, ReviewComment } from '../../../types/reviews.types';
-import { ReviewCard } from './ReviewCard';
+import { useTranslation } from 'react-i18next';
+import type { Review } from '../../../types/reviews.types';
+import { ReviewCardPre } from '../../../components/ui/ReviewCards/ReviewCardPre';
 import styles from './GameReviews.module.css';
 
 interface ReviewListProps {
   reviews: Review[];
-  commentsByReviewId: Record<string, ReviewComment[]>;
-  visibleComments: Set<string>;
-  isBusy: boolean;
-  isAuthenticated: boolean;
-  onEdit: (review: Review) => void;
-  onDelete: (reviewId: string) => void;
-  onVote: (reviewId: string, isPositive: boolean) => void;
-  onToggleComments: (reviewId: string) => void;
-  onCommentsChanged: (reviewId: string, comments: ReviewComment[]) => void;
-  onMessage: (message: string) => void;
+  onOpenReview: (review: Review) => void;
 }
 
 export const ReviewList = ({
   reviews,
-  commentsByReviewId,
-  visibleComments,
-  isBusy,
-  isAuthenticated,
-  onEdit,
-  onDelete,
-  onVote,
-  onToggleComments,
-  onCommentsChanged,
-  onMessage
+  onOpenReview
 }: ReviewListProps): React.JSX.Element => {
+  const { t } = useTranslation('gameReviews');
+
   if (reviews.length === 0) {
     return (
       <div className={styles.emptyState}>
-        <h2>No hay resenas todavia</h2>
-        <p>Publica la primera opinion de este videojuego.</p>
+        <h2>{t('empty.title')}</h2>
+        <p>{t('empty.body')}</p>
       </div>
     );
   }
@@ -42,19 +27,21 @@ export const ReviewList = ({
   return (
     <section className={styles.reviewList}>
       {reviews.map((review) => (
-        <ReviewCard
+        <ReviewCardPre
           key={review.id}
-          review={review}
-          comments={commentsByReviewId[review.id] ?? []}
-          commentsVisible={visibleComments.has(review.id)}
-          isBusy={isBusy}
-          isAuthenticated={isAuthenticated}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onVote={onVote}
-          onToggleComments={onToggleComments}
-          onCommentsChanged={onCommentsChanged}
-          onMessage={onMessage}
+          reviewId={review.id}
+          gameCover={review.gameCoverUrl}
+          username={review.username}
+          userImage={review.userProfileImageUrl || review.profilePicture}
+          reviewTitle={review.title}
+          reviewContent={review.content}
+          reviewDate={new Date(review.createdAt).toLocaleDateString()}
+          reviewImage={review.attachmentType === 'image' ? review.attachmentUrl || review.imageUrl : undefined}
+          likes={review.likesCount}
+          dislikes={review.dislikesCount}
+          score={review.rating}
+          isOwnReview={review.isOwnReview}
+          onClick={() => onOpenReview(review)}
         />
       ))}
     </section>

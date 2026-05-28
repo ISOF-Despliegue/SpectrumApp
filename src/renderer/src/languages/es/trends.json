@@ -1,1 +1,39 @@
-{}
+{
+  "title": "Tendencia",
+  "subtitle": "Gráficas calculadas por ventanas de semana y mes desde el backend.",
+  "loading": "Cargando tendencias...",
+  "loadError": "No se pudieron cargar las tendencias.",
+  "empty": "Aún no hay actividad suficiente para graficar.",
+  "sections": {
+    "weeklyTrend": "Tendencia semanal",
+    "weeklyDiscussions": "Discusiones de la semana",
+    "worstOfWeek": "Lo peor de la semana",
+    "bestOfWeek": "Lo mejor de la semana",
+    "consoleOfMonth": "Consola del mes",
+    "topReviewersOfMonth": "Top reseñadores del mes",
+    "genresOfMonth": "Géneros con más interacción"
+  },
+  "discussionMeta": "{{comments}} comentarios · {{likes}} likes",
+  "openReview": "Abrir reseña {{title}}",
+  "genreUnavailable": "Género no disponible",
+  "genres": {
+    "1": "Carreras",
+    "2": "Disparos",
+    "3": "Aventura",
+    "4": "Acción",
+    "5": "RPG",
+    "6": "Lucha",
+    "7": "Rompecabezas",
+    "10": "Estrategia",
+    "11": "Arcade",
+    "14": "Simulación",
+    "15": "Deportes",
+    "19": "Familiar",
+    "28": "Juegos de mesa",
+    "34": "Educativo",
+    "40": "Casual",
+    "51": "Indie",
+    "59": "Multijugador masivo",
+    "83": "Plataformas"
+  }
+}

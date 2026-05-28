@@ -8,7 +8,14 @@ interface ScoreDisplayProps {
 
 export const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, size = 'large' }) => {
   const getScoreState = () => {
-    if (score < 60) return { stateClass: styles.rotting, effectClass: styles.drop };
+    const isTenPointScale = score <= 10;
+    if (isTenPointScale) {
+      if (score < 7) return { stateClass: styles.rotting, effectClass: styles.drop };
+      if (score < 9) return { stateClass: styles.spectral, effectClass: styles.spore };
+      return { stateClass: styles.divine, effectClass: styles.sparkle };
+    }
+
+    if (score < 70) return { stateClass: styles.rotting, effectClass: styles.drop };
     if (score < 90) return { stateClass: styles.spectral, effectClass: styles.spore };
     return { stateClass: styles.divine, effectClass: styles.sparkle };
   };

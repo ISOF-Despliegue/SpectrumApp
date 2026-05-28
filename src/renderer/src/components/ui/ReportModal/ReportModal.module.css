@@ -4,6 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  padding: 16px;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   display: flex;
@@ -22,6 +23,8 @@
   color: var(--text-color, #ffffff);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   animation: modalFadeIn 0.3s ease-out;
+  max-height: min(680px, calc(100vh - 32px));
+  overflow: auto;
 }
 
 @keyframes modalFadeIn {
@@ -42,6 +45,16 @@
   gap: 16px;
 }
 
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.86);
+}
+
 .textarea {
   width: 100%;
   background: rgba(0, 0, 0, 0.2);
@@ -52,6 +65,7 @@
   font-family: inherit;
   font-size: 0.95rem;
   resize: vertical;
+  min-height: 120px;
 }
 
 .textarea:focus {

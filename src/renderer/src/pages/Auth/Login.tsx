@@ -10,7 +10,7 @@ import { getApiErrorKey, routeUserByRole } from './auth-flow.utils';
 import { useToast } from '../../components/ui/Toast';
 
 export const Login: React.FC = () => {
-  const { t } = useTranslation('auth');
+  const { t, i18n } = useTranslation('auth');
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -18,6 +18,11 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const changeLanguage = async (language: string): Promise<void> => {
+    await i18n.changeLanguage(language);
+    localStorage.setItem('i18nextLng', language);
+  };
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -72,6 +77,13 @@ export const Login: React.FC = () => {
       <div className={styles.authCard}>
 
         <div className={styles.formSide}>
+          <label className={styles.languageSelector}>
+            <span>{t('languageLabel')}</span>
+            <select value={i18n.resolvedLanguage || 'es'} onChange={(event) => { void changeLanguage(event.target.value); }}>
+              <option value="es">{t('languageSpanish')}</option>
+              <option value="en">{t('languageEnglish')}</option>
+            </select>
+          </label>
           <h1 className={styles.title}>{t('loginTitle')}</h1>
 
           {error && <div className={styles.errorMessage}>{error}</div>}
@@ -92,7 +104,7 @@ export const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <button type="submit" className={styles.submitButton} disabled={isLoading}>
-              {isLoading ? "..." : t('buttonLogin')}
+              {isLoading ? t('loading') : t('buttonLogin')}
             </button>
           </form>
 
@@ -104,7 +116,7 @@ export const Login: React.FC = () => {
             {t('forgotPasswordLink')}
           </button>
 
-          <div className={styles.divider}>O</div>
+          <div className={styles.divider}>{t('dividerOr')}</div>
 
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <GoogleLogin

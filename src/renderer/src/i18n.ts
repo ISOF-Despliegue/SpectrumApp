@@ -17,6 +17,7 @@ import esReport from './languages/es/report.json';
 import esTrends from './languages/es/trends.json';
 import esCrypt from './languages/es/crypt.json';
 import esWeeklyClips from './languages/es/weeklyClips.json';
+import esGameReviews from './languages/es/gameReviews.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
@@ -33,6 +34,7 @@ import enReport from './languages/en/report.json';
 import enTrends from './languages/en/trends.json';
 import enCrypt from './languages/en/crypt.json';
 import enWeeklyClips from './languages/en/weeklyClips.json';
+import enGameReviews from './languages/en/gameReviews.json';
 
 i18n
   .use(LanguageDetector)
@@ -53,7 +55,8 @@ i18n
         report: esReport,
         trends: esTrends,
         crypt: esCrypt,
-        weeklyClips: esWeeklyClips
+        weeklyClips: esWeeklyClips,
+        gameReviews: esGameReviews
       },
       en: {
         common: enCommon,
@@ -69,10 +72,15 @@ i18n
         report: enReport,
         trends: enTrends,
         crypt: enCrypt,
-        weeklyClips: enWeeklyClips
+        weeklyClips: enWeeklyClips,
+        gameReviews: enGameReviews
       }
     },
     fallbackLng: 'es',
+    detection: {
+      order: ['localStorage'],
+      caches: ['localStorage']
+    },
     defaultNS: 'common',
     interpolation: {
       escapeValue: false

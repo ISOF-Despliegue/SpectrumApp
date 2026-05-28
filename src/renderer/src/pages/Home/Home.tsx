@@ -161,12 +161,8 @@ export const Home = (): React.JSX.Element => {
 
       <header className={styles.banner}>
         <img src={HERO_IMAGES[bannerIndex]} alt="" className={styles.bannerImage} />
-        <div className={styles.bannerContent}>
-          <h1>{dashboard?.bannerTitle || t('banner.fallbackTitle')}</h1>
-          <p>{dashboard?.bannerSubtitle || t('banner.fallbackSubtitle')}</p>
-        </div>
         <div className={styles.bannerControls}>
-          <button type="button" onClick={() => changeBanner(-1)} aria-label={t('banner.previous')}>‹</button>
+          <button type="button" onClick={() => changeBanner(-1)} aria-label={t('banner.previous')}>{'<'}</button>
           <div className={styles.bannerDots}>
             {HERO_IMAGES.map((_, index) => (
               <button
@@ -178,7 +174,7 @@ export const Home = (): React.JSX.Element => {
               />
             ))}
           </div>
-          <button type="button" onClick={() => changeBanner(1)} aria-label={t('banner.next')}>›</button>
+          <button type="button" onClick={() => changeBanner(1)} aria-label={t('banner.next')}>{'>'}</button>
         </div>
       </header>
 

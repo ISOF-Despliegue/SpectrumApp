@@ -35,5 +35,13 @@
       "ownReview": "You cannot vote on your own review.",
       "error": "Your vote could not be saved."
     }
+  },
+  "clips": {
+    "vote": {
+      "like": "Like",
+      "dislike": "Dislike",
+      "ownClip": "You cannot vote on your own clip.",
+      "error": "Your vote could not be saved."
+    }
   }
 }

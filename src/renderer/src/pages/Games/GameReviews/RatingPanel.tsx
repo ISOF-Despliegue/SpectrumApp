@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './GameReviews.module.css';
 
 interface RatingPanelProps {
@@ -12,12 +13,13 @@ export const RatingPanel = ({
   reviewsCount,
   onCreateReview
 }: RatingPanelProps): React.JSX.Element => {
+  const { t } = useTranslation('gameReviews');
   return (
     <aside className={styles.sidePanel}>
-      <p className={styles.eyebrow}>Promedio</p>
+      <p className={styles.eyebrow}>{t('rating.eyebrow')}</p>
       <div className={styles.averageBox}>
         {averageRating === null ? (
-          <span className={styles.emptyRating}>Sin calificacion</span>
+          <span className={styles.emptyRating}>{t('rating.noRating')}</span>
         ) : (
           <>
             <strong>{averageRating.toFixed(1)}</strong>
@@ -26,10 +28,10 @@ export const RatingPanel = ({
         )}
       </div>
       <p className={styles.ratingHint}>
-        {reviewsCount === 1 ? '1 resena publicada' : `${reviewsCount} resenas publicadas`}
+        {t('rating.count', { count: reviewsCount })}
       </p>
       <button className={styles.primaryButton} type="button" onClick={onCreateReview}>
-        Crear resena
+        {t('rating.create')}
       </button>
     </aside>
   );

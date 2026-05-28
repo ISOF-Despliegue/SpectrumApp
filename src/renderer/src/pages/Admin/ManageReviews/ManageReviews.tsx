@@ -5,7 +5,6 @@ import { AdminReviewsService } from '../../../services/adminReviews.service';
 import { Game, getGames } from '../../../services/games.service';
 import { Review } from '../../../types/reviews.types';
 import { Pagination } from '../../../components/ui/Pagination';
-import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 import { ReviewCardPre } from '../../../components/ui/ReviewCards/ReviewCardPre';
 import { ReviewDetailModal } from '../../../components/ui/ReviewDetailModal';
 import { useToast } from '../../../components/ui/Toast';
@@ -27,6 +26,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
+  const [deleteReason, setDeleteReason] = useState('');
 
   useEffect(() => {
     const query = gameQuery.trim();
@@ -82,10 +82,16 @@ export const AdminManageReviews = (): React.JSX.Element => {
   };
 
   const deleteReview = async (reviewId: string): Promise<void> => {
+    if (deleteReason.trim().length < 10) {
+      toast.warning(t('manageReviews.deleteReasonRequired'));
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await AdminReviewsService.delete(reviewId);
+      await AdminReviewsService.delete(reviewId, deleteReason.trim());
       setReviewToDelete(null);
+      setDeleteReason('');
       toast.success(t('manageReviews.deleted'));
       await loadReviews(page);
     } catch {
@@ -158,7 +164,15 @@ export const AdminManageReviews = (): React.JSX.Element => {
               isOwnReview={review.isOwnReview}
               onClick={() => setSelectedReview(review)}
             />
-            <button type="button" onClick={() => setReviewToDelete(review.id)}>{t('manageReviews.delete')}</button>
+            <button
+              type="button"
+              onClick={() => {
+                setReviewToDelete(review.id);
+                setDeleteReason('');
+              }}
+            >
+              {t('manageReviews.delete')}
+            </button>
           </div>
         ))}
       </section>
@@ -174,15 +188,31 @@ export const AdminManageReviews = (): React.JSX.Element => {
 
       <ReviewDetailModal review={selectedReview} onClose={() => setSelectedReview(null)} />
 
-      <ConfirmationModal
-        isOpen={Boolean(reviewToDelete)}
-        title={t('manageReviews.deleteTitle')}
-        message={t('manageReviews.deleteMessage')}
-        confirmLabel={t('manageReviews.delete')}
-        variant="danger"
-        onConfirm={() => reviewToDelete && deleteReview(reviewToDelete)}
-        onCancel={() => setReviewToDelete(null)}
-      />
+      {reviewToDelete && (
+        <div className={styles.modalOverlay} role="presentation" onMouseDown={() => setReviewToDelete(null)}>
+          <section className={styles.deleteDialog} role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()}>
+            <h2>{t('manageReviews.deleteTitle')}</h2>
+            <p>{t('manageReviews.deleteMessage')}</p>
+            <label>
+              <span>{t('manageReviews.deleteReasonLabel')}</span>
+              <textarea
+                value={deleteReason}
+                maxLength={300}
+                minLength={10}
+                rows={4}
+                onChange={(event) => setDeleteReason(event.target.value)}
+                placeholder={t('manageReviews.deleteReasonPlaceholder')}
+              />
+            </label>
+            <div className={styles.dialogActions}>
+              <button type="button" onClick={() => setReviewToDelete(null)}>{t('adminProfile.cancel')}</button>
+              <button type="button" disabled={deleteReason.trim().length < 10} onClick={() => deleteReview(reviewToDelete)}>
+                {t('manageReviews.delete')}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 };

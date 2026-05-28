@@ -139,7 +139,7 @@ export const PreviewClip: React.FC<PreviewClipProps> = ({
             <div className="voteButton" onClick={handleLikeClick}>
               <img
                 src={userVote === 'like' ? manoLikeActive : manoLike}
-                alt="Like"
+                alt={t('common:clips.vote.like')}
                 className="voteIcon"
               />
               <span className="voteCounter">{likesCount}</span>
@@ -148,7 +148,7 @@ export const PreviewClip: React.FC<PreviewClipProps> = ({
             <div className="voteButton" onClick={handleDislikeClick}>
               <img
                 src={userVote === 'dislike' ? manoDislikeActive : manoDislike}
-                alt="Dislike"
+                alt={t('common:clips.vote.dislike')}
                 className="voteIcon"
               />
               <span className="voteCounter">{dislikesCount}</span>

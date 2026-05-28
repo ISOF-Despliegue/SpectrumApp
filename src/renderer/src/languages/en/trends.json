@@ -1,1 +1,39 @@
-{}
+{
+  "title": "Trends",
+  "subtitle": "Charts calculated from weekly and monthly backend windows.",
+  "loading": "Loading trends...",
+  "loadError": "Trends could not be loaded.",
+  "empty": "There is not enough activity to chart yet.",
+  "sections": {
+    "weeklyTrend": "Weekly trend",
+    "weeklyDiscussions": "Discussions of the week",
+    "worstOfWeek": "Worst of the week",
+    "bestOfWeek": "Best of the week",
+    "consoleOfMonth": "Console of the month",
+    "topReviewersOfMonth": "Top reviewers of the month",
+    "genresOfMonth": "Genres with the most interaction"
+  },
+  "discussionMeta": "{{comments}} comments · {{likes}} likes",
+  "openReview": "Open review {{title}}",
+  "genreUnavailable": "Genre unavailable",
+  "genres": {
+    "1": "Racing",
+    "2": "Shooter",
+    "3": "Adventure",
+    "4": "Action",
+    "5": "RPG",
+    "6": "Fighting",
+    "7": "Puzzle",
+    "10": "Strategy",
+    "11": "Arcade",
+    "14": "Simulation",
+    "15": "Sports",
+    "19": "Family",
+    "28": "Board games",
+    "34": "Educational",
+    "40": "Casual",
+    "51": "Indie",
+    "59": "Massively multiplayer",
+    "83": "Platformer"
+  }
+}

@@ -15,7 +15,7 @@ export const AdminReviewsService = {
     return response.data;
   },
 
-  delete: async (reviewId: string): Promise<void> => {
-    await api.delete(`/admin/reviews/${reviewId}`);
+  delete: async (reviewId: string, reason: string): Promise<void> => {
+    await api.delete(`/admin/reviews/${reviewId}`, { data: { reason } });
   }
 };

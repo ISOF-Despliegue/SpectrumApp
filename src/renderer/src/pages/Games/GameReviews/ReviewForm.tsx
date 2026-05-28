@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Review, ReviewFormValues } from '../../../types/reviews.types';
 import styles from './GameReviews.module.css';
 
@@ -23,6 +24,7 @@ export const ReviewForm = ({
   onCancel,
   onSubmit
 }: ReviewFormProps): React.JSX.Element => {
+  const { t } = useTranslation('gameReviews');
   const [values, setValues] = useState<ReviewFormValues>(getInitialValues(initialReview));
 
   useEffect(() => {
@@ -37,35 +39,35 @@ export const ReviewForm = ({
   return (
     <form className={styles.reviewForm} onSubmit={handleSubmit}>
       <div className={styles.formHeader}>
-        <h2>{initialReview ? 'Editar resena' : 'Crear resena'}</h2>
-        <button className={styles.iconButton} type="button" onClick={onCancel} aria-label="Cerrar formulario">
+        <h2>{initialReview ? t('form.editTitle') : t('form.createTitle')}</h2>
+        <button className={styles.iconButton} type="button" onClick={onCancel} aria-label={t('form.close')}>
           x
         </button>
       </div>
 
       <label className={styles.field}>
-        <span>Titulo</span>
+        <span>{t('form.title')}</span>
         <input
           value={values.title}
           maxLength={120}
           onChange={(event) => setValues((current) => ({ ...current, title: event.target.value }))}
-          placeholder="Una mirada clara al juego"
+          placeholder={t('form.titlePlaceholder')}
         />
       </label>
 
       <label className={styles.field}>
-        <span>Contenido</span>
+        <span>{t('form.content')}</span>
         <textarea
           value={values.content}
           maxLength={2000}
           rows={6}
           onChange={(event) => setValues((current) => ({ ...current, content: event.target.value }))}
-          placeholder="Cuenta que funciona, que falla y para quien lo recomiendas."
+          placeholder={t('form.contentPlaceholder')}
         />
       </label>
 
       <label className={styles.field}>
-        <span>Calificacion</span>
+        <span>{t('form.rating')}</span>
         <input
           type="number"
           min={5}
@@ -78,7 +80,7 @@ export const ReviewForm = ({
       </label>
 
       <label className={styles.field}>
-        <span>Captura o video opcional</span>
+        <span>{t('form.attachment')}</span>
         <input
           type="file"
           accept="image/jpeg,image/png,video/mp4,video/quicktime"
@@ -90,10 +92,10 @@ export const ReviewForm = ({
 
       <div className={styles.formActions}>
         <button className={styles.secondaryButton} type="button" onClick={onCancel}>
-          Cancelar
+          {t('form.cancel')}
         </button>
         <button className={styles.primaryButton} type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Guardando...' : 'Guardar'}
+          {isSubmitting ? t('form.saving') : t('form.save')}
         </button>
       </div>
     </form>

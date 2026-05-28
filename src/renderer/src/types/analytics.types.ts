@@ -35,6 +35,9 @@ export interface WeeklyReview {
   likesCount: number;
   dislikesCount: number;
   commentsCount: number;
+  sourceType: 'REVIEW' | 'GAME_CLIP';
+  userVote?: 'like' | 'dislike' | null;
+  isOwnContent: boolean;
   createdAt: string;
 }
 

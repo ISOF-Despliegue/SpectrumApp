@@ -11,6 +11,8 @@
     "alreadyReported": "You have already reported this content.",
     "genericError": "The report could not be submitted. Please try again later.",
     "notAllowed": "You cannot report your own content.",
+    "reasonLabel": "Reason",
+    "descriptionLabel": "Description",
     "reportReasons": {
       "SPAM": "Spam",
       "ACOSO": "Harassment",

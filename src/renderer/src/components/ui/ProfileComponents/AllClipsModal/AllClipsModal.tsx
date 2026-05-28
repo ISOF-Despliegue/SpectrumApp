@@ -16,6 +16,7 @@ interface ClipData {
   url: string;
   likesCount: number;
   dislikesCount: number;
+  userVote?: 'like' | 'dislike' | null;
   createdAt?: string;
   CreatedAt?: string;
 }
@@ -38,6 +39,8 @@ interface AllClipsModalProps {
   isProfileOwner: boolean;
   onPlayClip: (id: string) => void;
   onDeleteClip: (id: string) => void;
+  onLikeClip?: (id: string) => void;
+  onDislikeClip?: (id: string) => void;
 }
 
 /**
@@ -51,7 +54,9 @@ export const AllClipsModal: React.FC<AllClipsModalProps> = ({
   isEditable,
   isProfileOwner,
   onPlayClip,
-  onDeleteClip
+  onDeleteClip,
+  onLikeClip,
+  onDislikeClip
 }) => {
   const { t } = useTranslation(['profile']);
   const [sortBy, setSortBy] = useState<string>('recent');
@@ -119,9 +124,11 @@ export const AllClipsModal: React.FC<AllClipsModalProps> = ({
             isLoading={false}
             isEditable={isEditable}
             isProfileOwner={isProfileOwner}
-            userVotes={{}}
+            userVotes={Object.fromEntries(sortedClips.map((clip) => [clip.id, clip.userVote ?? null]))}
             onPlayClip={onPlayClip}
             onDeleteClip={onDeleteClip}
+            onLikeClip={onLikeClip}
+            onDislikeClip={onDislikeClip}
           />
         </div>
       </div>

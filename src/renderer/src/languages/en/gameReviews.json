@@ -1,0 +1,69 @@
+{
+  "errors": {
+    "sessionExpired": "Your session expired. Please sign in again.",
+    "forbidden": "You do not have permission to perform this action.",
+    "notFound": "We could not find the requested resource.",
+    "generic": "Something went wrong. Please try again.",
+    "invalidGame": "The selected game is not valid.",
+    "detailLoad": "The game detail could not be loaded.",
+    "commentsLoad": "The replies could not be loaded."
+  },
+  "navigation": {
+    "backToGames": "Back to games"
+  },
+  "status": {
+    "loadingDetail": "Loading game detail..."
+  },
+  "messages": {
+    "authRequiredCreate": "Sign in to create a review.",
+    "updated": "Review updated.",
+    "published": "Review published.",
+    "deleted": "Review deleted.",
+    "commentPublished": "Reply published.",
+    "commentDeleted": "Reply deleted.",
+    "commentPublishError": "The reply could not be published. Please try again.",
+    "commentDeleteError": "The reply could not be deleted."
+  },
+  "empty": {
+    "title": "No reviews yet",
+    "body": "Publish the first opinion about this game."
+  },
+  "rating": {
+    "eyebrow": "Average",
+    "noRating": "No rating",
+    "count_one": "1 published review",
+    "count_other": "{{count}} published reviews",
+    "create": "Create review"
+  },
+  "form": {
+    "editTitle": "Edit review",
+    "createTitle": "Create review",
+    "close": "Close form",
+    "title": "Title",
+    "titlePlaceholder": "A clear look at the game",
+    "content": "Content",
+    "contentPlaceholder": "Share what works, what fails, and who you recommend it for.",
+    "rating": "Rating",
+    "attachment": "Optional screenshot or video",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
+  "comments": {
+    "empty": "There are no replies yet.",
+    "reply": "Reply",
+    "delete": "Delete",
+    "placeholder": "Reply to this review",
+    "loginRequired": "Sign in to reply."
+  },
+  "reviewCard": {
+    "openDetail": "Open review detail",
+    "viewReplies": "View replies",
+    "hideReplies": "Hide replies",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirmTitle": "Delete review",
+    "deleteConfirmMessage": "This review will be deleted. Do you want to continue?"
+  }
+}

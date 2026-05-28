@@ -6,6 +6,8 @@ import { WeeklyReview } from '../../types/analytics.types';
 import { Pagination } from '../../components/ui/Pagination';
 import { ClipUploadFlowModal } from '../../components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
 import { useToast } from '../../components/ui/Toast';
+import { ClipVoteControls } from '../../components/ui/ClipVoteControls';
+import { ReviewVoteControls } from '../../components/ui/ReviewVoteControls';
 
 const PAGE_SIZE = 6;
 
@@ -32,7 +34,24 @@ const ClipCard = ({
       <div className={styles.cardBody}>
         <h2>{clip.title}</h2>
         <p>{clip.gameTitle} - {clip.username}</p>
-        <span>{t('likes', { count: clip.likesCount })}</span>
+        {clip.sourceType === 'GAME_CLIP' ? (
+          <ClipVoteControls
+            clipId={clip.reviewId}
+            likes={clip.likesCount}
+            dislikes={clip.dislikesCount}
+            userVote={clip.userVote ?? null}
+            isOwnClip={clip.isOwnContent}
+            size="small"
+          />
+        ) : (
+          <ReviewVoteControls
+            reviewId={clip.reviewId}
+            likes={clip.likesCount}
+            dislikes={clip.dislikesCount}
+            isOwnReview={clip.isOwnContent}
+            size="small"
+          />
+        )}
       </div>
     </article>
   );

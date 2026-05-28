@@ -1,10 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ReviewCardPre.module.css';
 import { ProfileImage } from '../../ProfileImage/ProfileImage';
 import { ImageContainer } from '../../ImageContainer/ImageContainer';
 import { GameCard } from '../../GameCard/GameCard';
 import { ScoreDisplay } from '../../ScoreDisplay/ScoreDisplay';
-import { ReportButton } from '../../ReportButton/ReportButton';
 import { ReviewVoteControls } from '../../ReviewVoteControls';
 
 interface ReviewCardPreProps {
@@ -20,7 +20,6 @@ interface ReviewCardPreProps {
   score: number;
   dislikes: number;
   isOwnReview?: boolean;
-  onReport?: () => void;
   onClick?: () => void;
 }
 
@@ -37,9 +36,9 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
   dislikes,
   reviewImage,
   isOwnReview = false,
-  onReport,
   onClick
 }) => {
+  const { t } = useTranslation('gameReviews');
 
   const handleInternalClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,6 +50,7 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
       onClick={onClick}
       role="button"
       tabIndex={0}
+      aria-label={t('reviewCard.openDetail')}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
     >
       <div className={styles.filmOverlay}></div>
@@ -83,11 +83,6 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
       <section className={styles.actionsCol} onClick={handleInternalClick}>
         <div className={styles.topActions}>
           <time className={styles.date}>{reviewDate}</time>
-          {!isOwnReview && (
-            <ReportButton
-              onClick={() => onReport?.()}
-            />
-          )}
         </div>
 
         <div className={styles.interactions}>

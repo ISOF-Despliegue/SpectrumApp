@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getGameReviewDetail } from '../../../services/games.service';
 import { ReviewService } from '../../../services/reviews.service';
@@ -15,27 +16,31 @@ import { GameSummary } from './GameSummary';
 import { RatingPanel } from './RatingPanel';
 import { ReviewForm } from './ReviewForm';
 import { ReviewList } from './ReviewList';
+import { ReviewDetailModal } from '../../../components/ui/ReviewDetailModal';
+import { useToast } from '../../../components/ui/Toast';
 import styles from './GameReviews.module.css';
 
-const getFriendlyErrorMessage = (error: unknown): string => {
+const getFriendlyErrorMessage = (error: unknown, t: (key: string) => string): string => {
   const axiosError = error as { response?: { status?: number; data?: { detail?: string; title?: string } } };
 
   if (axiosError.response?.status === 401) {
-    return 'Tu sesion expiro. Inicia sesion nuevamente.';
+    return t('errors.sessionExpired');
   }
 
   if (axiosError.response?.status === 403) {
-    return 'No tienes permisos para realizar esta accion.';
+    return t('errors.forbidden');
   }
 
   if (axiosError.response?.status === 404) {
-    return 'No encontramos el recurso solicitado.';
+    return t('errors.notFound');
   }
 
-  return axiosError.response?.data?.detail || axiosError.response?.data?.title || 'Algo salio mal. Intenta nuevamente.';
+  return axiosError.response?.data?.detail || axiosError.response?.data?.title || t('errors.generic');
 };
 
 export const GameReviews = (): React.JSX.Element => {
+  const { t } = useTranslation('gameReviews');
+  const toast = useToast();
   const navigate = useNavigate();
   const { gameId } = useParams<{ gameId: string }>();
   const isAuthenticated = Boolean(localStorage.getItem('token'));
@@ -44,6 +49,7 @@ export const GameReviews = (): React.JSX.Element => {
   const [commentsByReviewId, setCommentsByReviewId] = useState<Record<string, ReviewComment[]>>({});
   const [visibleComments, setVisibleComments] = useState<Set<string>>(new Set());
   const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isBusy, setIsBusy] = useState(false);
@@ -61,7 +67,7 @@ export const GameReviews = (): React.JSX.Element => {
 
   const loadDetail = useCallback(async (): Promise<void> => {
     if (!Number.isInteger(numericGameId) || numericGameId <= 0) {
-      setMessage('El videojuego seleccionado no es valido.');
+      setMessage(t('errors.invalidGame'));
       setIsLoading(false);
       return;
     }
@@ -72,11 +78,11 @@ export const GameReviews = (): React.JSX.Element => {
       setDetail(response);
       setMessage('');
     } catch (error) {
-      setMessage(getFriendlyErrorMessage(error));
+      setMessage(getFriendlyErrorMessage(error, t));
     } finally {
       setIsLoading(false);
     }
-  }, [numericGameId]);
+  }, [numericGameId, t]);
 
   useEffect(() => {
     loadDetail();
@@ -92,7 +98,7 @@ export const GameReviews = (): React.JSX.Element => {
 
   const handleSubmitReview = async (values: ReviewFormValues): Promise<void> => {
     if (!isAuthenticated) {
-      setMessage('Inicia sesion para crear una resena.');
+      toast.warning(t('messages.authRequiredCreate'));
       return;
     }
 
@@ -116,7 +122,7 @@ export const GameReviews = (): React.JSX.Element => {
           imageUrl,
           mediaType
         });
-        setMessage('Resena actualizada.');
+        toast.success(t('messages.updated'));
       } else {
         await ReviewService.create({
           gameId: numericGameId,
@@ -126,14 +132,14 @@ export const GameReviews = (): React.JSX.Element => {
           imageUrl,
           mediaType
         });
-        setMessage('Resena publicada.');
+        toast.success(t('messages.published'));
       }
 
       setIsFormOpen(false);
       setEditingReview(null);
       await loadDetail();
     } catch (error) {
-      setMessage(getFriendlyErrorMessage(error));
+      toast.error(getFriendlyErrorMessage(error, t));
     } finally {
       setIsBusy(false);
     }
@@ -143,38 +149,10 @@ export const GameReviews = (): React.JSX.Element => {
     try {
       setIsBusy(true);
       await ReviewService.delete(reviewId);
-      setMessage('Resena eliminada.');
       await loadDetail();
     } catch (error) {
-      setMessage(getFriendlyErrorMessage(error));
-    } finally {
-      setIsBusy(false);
-    }
-  };
-
-  const handleVote = async (reviewId: string, isPositive: boolean): Promise<void> => {
-    try {
-      setIsBusy(true);
-      const result = await ReviewService.vote(reviewId, { isPositive });
-      setDetail((current) =>
-        current
-          ? {
-              ...current,
-              reviews: current.reviews.map((review) =>
-                review.id === reviewId
-                  ? {
-                      ...review,
-                      likesCount: result.updatedLikes,
-                      dislikesCount: result.updatedDislikes
-                    }
-                  : review
-              )
-            }
-          : current
-      );
-      setMessage(isPositive ? 'Like registrado.' : 'Dislike registrado.');
-    } catch (error) {
-      setMessage(getFriendlyErrorMessage(error));
+      toast.error(getFriendlyErrorMessage(error, t));
+      throw error;
     } finally {
       setIsBusy(false);
     }
@@ -197,7 +175,7 @@ export const GameReviews = (): React.JSX.Element => {
         const comments = await ReviewService.getComments(reviewId);
         setCommentsByReviewId((current) => ({ ...current, [reviewId]: comments }));
       } catch {
-        setMessage('No se pudieron cargar las respuestas.');
+        toast.error(t('errors.commentsLoad'));
       }
     }
   };
@@ -208,20 +186,21 @@ export const GameReviews = (): React.JSX.Element => {
   };
 
   const openEditForm = (review: Review): void => {
+    setSelectedReview(null);
     setEditingReview(review);
     setIsFormOpen(true);
   };
 
   if (isLoading) {
-    return <p className={styles.status}>Cargando detalle del videojuego...</p>;
+    return <p className={styles.status}>{t('status.loadingDetail')}</p>;
   }
 
   if (!detail) {
     return (
       <section className={styles.statusPanel}>
-        <p>{message || 'No se pudo cargar el detalle del videojuego.'}</p>
+        <p>{message || t('errors.detailLoad')}</p>
         <button className={styles.secondaryButton} type="button" onClick={() => navigate('/games')}>
-          Volver a videojuegos
+          {t('navigation.backToGames')}
         </button>
       </section>
     );
@@ -231,7 +210,7 @@ export const GameReviews = (): React.JSX.Element => {
     <article className={styles.page}>
       <div className={styles.topBar}>
         <button className={styles.secondaryButton} type="button" onClick={() => navigate('/games')}>
-          Volver a videojuegos
+          {t('navigation.backToGames')}
         </button>
         {message && <p className={styles.message}>{message}</p>}
       </div>
@@ -248,24 +227,13 @@ export const GameReviews = (): React.JSX.Element => {
                 setIsFormOpen(false);
                 setEditingReview(null);
               }}
-              onSubmit={handleSubmitReview}
+            onSubmit={handleSubmitReview}
             />
           )}
 
           <ReviewList
             reviews={detail.reviews}
-            commentsByReviewId={commentsByReviewId}
-            visibleComments={visibleComments}
-            isBusy={isBusy}
-            isAuthenticated={isAuthenticated}
-            onEdit={openEditForm}
-            onDelete={handleDeleteReview}
-            onVote={handleVote}
-            onToggleComments={toggleComments}
-            onMessage={setMessage}
-            onCommentsChanged={(reviewId, comments) =>
-              setCommentsByReviewId((current) => ({ ...current, [reviewId]: comments }))
-            }
+            onOpenReview={setSelectedReview}
           />
         </main>
 
@@ -275,6 +243,20 @@ export const GameReviews = (): React.JSX.Element => {
           onCreateReview={openCreateForm}
         />
       </div>
+      <ReviewDetailModal
+        review={selectedReview}
+        comments={selectedReview ? commentsByReviewId[selectedReview.id] ?? [] : []}
+        commentsVisible={selectedReview ? visibleComments.has(selectedReview.id) : false}
+        isBusy={isBusy}
+        isAuthenticated={isAuthenticated}
+        onEdit={openEditForm}
+        onDelete={handleDeleteReview}
+        onToggleComments={toggleComments}
+        onCommentsChanged={(reviewId, comments) =>
+          setCommentsByReviewId((current) => ({ ...current, [reviewId]: comments }))
+        }
+        onClose={() => setSelectedReview(null)}
+      />
     </article>
   );
 };
