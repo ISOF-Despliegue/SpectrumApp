@@ -18,6 +18,7 @@ release/
 .env
 .env.local
 .env.*.local
+.env.*
 
 # =========================
 # Archivos de Sistema Operativo e IDEs
