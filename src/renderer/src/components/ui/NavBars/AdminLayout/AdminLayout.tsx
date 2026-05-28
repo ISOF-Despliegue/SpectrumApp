@@ -15,7 +15,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
       </aside>
 
       <div className={styles.mainContent}>
-        <Navbar hideNavigation={true} onProfileClick={() => {}} />
+        <Navbar hideNavigation={true} />
 
         <section className={styles.pageContent}>
           {children}

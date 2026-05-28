@@ -1,12 +1,45 @@
 {
+  "navigation": {
+    "myProfile": "Mi perfil",
+    "globalMetrics": "Métricas globales",
+    "manageUsers": "Gestionar usuarios",
+    "manageReviews": "Gestionar reseñas",
+    "manageEvents": "Gestionar sorteos",
+    "manageAdmins": "Gestionar administradores",
+    "manageReports": "Gestionar reportes",
+    "logout": "Cerrar sesión"
+  },
+  "adminProfile": {
+    "title": "Mi perfil administrativo",
+    "subtitle": "Datos reales de la cuenta administrativa autenticada.",
+    "loading": "Cargando perfil administrativo...",
+    "errorLoad": "No se pudo cargar el perfil administrativo.",
+    "errorSave": "No se pudo guardar el perfil.",
+    "successSave": "Perfil actualizado correctamente.",
+    "edit": "Editar perfil",
+    "save": "Guardar cambios",
+    "cancel": "Cancelar",
+    "readOnly": "Este dato se gestiona desde el flujo seguro de administradores.",
+    "fields": {
+      "username": "Usuario",
+      "email": "Correo",
+      "firstName": "Nombre",
+      "lastName": "Apellidos",
+      "phoneNumber": "Teléfono",
+      "address": "Dirección",
+      "rfc": "RFC",
+      "role": "Rol"
+    }
+  },
   "manageUsers": {
-    "title": "Moderación de Usuarios",
+    "title": "Moderación de usuarios",
     "searchPlaceholder": "Buscar por nombre o correo...",
     "searchButton": "Buscar",
     "loading": "Cargando usuarios...",
     "empty": "No se encontraron usuarios.",
-    "errorLoad": "Error al cargar los usuarios",
-    "errorToggle": "Error al cambiar el estado",
+    "errorLoad": "Error al cargar los usuarios.",
+    "errorToggle": "Error al cambiar el estado del usuario.",
+    "statusChanged": "Estado del usuario actualizado.",
     "table": {
       "user": "Usuario",
       "email": "Correo",
@@ -21,55 +54,59 @@
     "actions": {
       "reactivate": "Reactivar",
       "suspend": "Suspender",
-      "viewProfile": "Ver Perfil"
+      "viewProfile": "Ver perfil"
     },
     "profile": {
-      "back": "← Volver a la lista",
+      "back": "Volver a la lista",
       "memberSince": "Miembro desde",
       "metrics": {
         "reviews": "Reseñas publicadas",
         "clips": "Clips subidos"
       },
       "actions": {
-        "delete": "Eliminar Cuenta",
-        "confirmDelete": "¿Estás seguro de que deseas eliminar permanentemente a este usuario? Esta acción no se puede deshacer."
+        "delete": "Eliminar cuenta",
+        "confirmDelete": "Esta acción desactivará la cuenta del usuario. ¿Deseas continuar?"
       }
     }
   },
-  "navigation": {
-    "myProfile": "Mi Perfil",
-    "globalMetrics": "Métricas Globales",
-    "manageUsers": "Gestionar Usuarios",
-    "manageReviews": "Gestionar Reseñas",
-    "manageEvents": "Gestionar Eventos",
-    "manageAdmins": "Gestionar Administradores",
-    "manageReports": "Gestionar Reportes",
-    "logout": "Cerrar Sesión"
-  },
   "manageReports": {
-    "title": "Gestión de Reportes",
+    "title": "Gestión de reportes",
     "filterStatus": "Estado",
-    "filterType": "Tipo de Contenido",
+    "filterType": "Tipo de contenido",
     "loading": "Cargando reportes...",
     "empty": "No hay reportes que coincidan con los filtros.",
     "errorLoad": "Error al cargar los reportes.",
     "errorAction": "Error al procesar la acción de moderación.",
+    "statusUpdated": "Reporte marcado como {{status}}.",
+    "userSuspended": "Usuario suspendido del sistema de forma preventiva.",
+    "contentDeleted": "El contenido se eliminó de la plataforma.",
+    "confirmSuspendTitle": "Suspender usuario",
+    "confirmSuspendMessage": "¿Deseas aplicar una suspensión inmediata al usuario asociado a este reporte?",
+    "confirmDeleteTitle": "Eliminar contenido",
+    "confirmDeleteMessage": "¿Estás seguro de eliminar este contenido de tipo {{type}}?",
+    "confirm": "Confirmar",
     "table": {
       "reason": "Motivo",
       "targetType": "Tipo",
       "status": "Estado",
       "date": "Fecha",
-      "actions": "Acciones"
+      "actions": "Acciones",
+      "viewDetail": "Ver detalle"
     },
     "details": {
-      "back": "← Volver al listado",
-      "subtitle": "Detalles del Reporte",
+      "back": "Volver al listado",
+      "subtitle": "Detalles del reporte",
       "reporter": "Reportado por",
-      "targetId": "ID de la Entidad",
-      "description": "Descripción del Denunciante",
-      "adminNotesPlaceholder": "Escribe aquí las notas internas de moderación o justificación...",
-      "statusActions": "Cambiar Estado del Reporte",
-      "contentActions": "Acciones Correctivas sobre la Entidad",
+      "targetId": "ID de la entidad",
+      "description": "Descripción del denunciante",
+      "noDescription": "Sin descripción adicional.",
+      "adminNotesPlaceholder": "Escribe notas internas de moderación o justificación...",
+      "statusActions": "Cambiar estado del reporte",
+      "contentActions": "Acciones correctivas sobre la entidad",
+      "resolve": "Resolver ticket",
+      "dismiss": "Desestimar reporte",
+      "suspendAuthor": "Suspender autor",
+      "deleteContent": "Eliminar contenido",
       "states": {
         "PENDING": "Pendiente",
         "RESOLVED": "Resuelto",
@@ -83,5 +120,59 @@
         "OTHER": "Otro motivo"
       }
     }
+  },
+  "manageEvents": {
+    "title": "Gestionar sorteos",
+    "subtitle": "Sorteos con múltiples códigos reales, ganadores trazables y entrega automática.",
+    "current": "Actuales",
+    "upcoming": "Próximos",
+    "past": "Pasados",
+    "all": "Todos",
+    "createTitle": "Crear sorteo",
+    "editTitle": "Editar sorteo",
+    "loading": "Cargando...",
+    "empty": "No hay sorteos para este filtro.",
+    "created": "Sorteo creado.",
+    "updated": "Sorteo actualizado.",
+    "published": "Sorteo publicado.",
+    "finished": "Sorteo finalizado.",
+    "saveError": "No se pudo guardar el sorteo.",
+    "loadError": "No se pudieron cargar los sorteos.",
+    "actionError": "No se pudo completar la acción.",
+    "searching": "Buscando...",
+    "publishNow": "Publicar al guardar",
+    "saveChanges": "Guardar cambios",
+    "create": "Crear sorteo",
+    "cancelEdit": "Cancelar edición",
+    "edit": "Editar",
+    "publish": "Publicar",
+    "finish": "Finalizar",
+    "finishTitle": "Finalizar sorteo",
+    "finishMessage": "El sorteo dejará de admitir uniones y reclamos. ¿Deseas continuar?",
+    "labels": {
+      "title": "Título",
+      "game": "Buscar juego",
+      "platform": "Plataforma",
+      "description": "Descripción",
+      "codes": "Códigos reales, uno por línea",
+      "totalSlots": "Lugares totales",
+      "startAt": "Inicio",
+      "joinDeadlineAt": "Cierre de unión",
+      "revealAt": "Revelación",
+      "endAt": "Fin",
+      "gameLabel": "Juego",
+      "slots": "Lugares",
+      "codesCount": "Códigos",
+      "winners": "Ganadores"
+    },
+    "validation": {
+      "required": "Título, juego y plataforma son obligatorios.",
+      "codesRequired": "Agrega al menos un código real del premio.",
+      "codeLength": "Cada código real debe tener máximo 50 caracteres.",
+      "duplicateCodes": "Los códigos reales no deben repetirse.",
+      "slots": "Los lugares totales deben ser mayores a cero.",
+      "dates": "Las fechas deben seguir inicio, cierre, revelación y fin."
+    },
+    "pending": "Pendiente"
   }
 }

@@ -1,178 +1,138 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './MyProfile.module.css';
+import { AdminProfile, AdminProfileService, UpdateAdminProfilePayload } from '../../../services/adminProfile.service';
+import { useToast } from '../../../components/ui/Toast';
 
-type ProfileData = {
-  role: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  rfc: string;
-  password: string;
-};
+const toEditablePayload = (profile: AdminProfile): UpdateAdminProfilePayload => ({
+  username: profile.username,
+  firstName: profile.firstName,
+  lastName: profile.lastName,
+  phoneNumber: profile.phoneNumber,
+  address: profile.address,
+  profilePicture: profile.profilePicture ?? ''
+});
 
-const INITIAL_PROFILE_DATA: ProfileData = {
-  role: 'Admin',
-  fullName: 'Abraham Cano Ramírez',
-  email: 'canoabraham172@gmail.com',
-  phone: '2289824567',
-  address: 'Av. Xalapa, Ferrer Guardia, #5, Xalapa',
-  rfc: 'AJBS75VCA8TBA',
-  password: 'PasswordDemo123'
-};
-
-const maskValue = (value: string) => '*'.repeat(Math.max(value.length, 8));
-
-export const AdminMyProfile = () => {
+export const AdminMyProfile = (): React.JSX.Element => {
+  const { t } = useTranslation('admin');
+  const toast = useToast();
+  const [profile, setProfile] = useState<AdminProfile | null>(null);
+  const [form, setForm] = useState<UpdateAdminProfilePayload | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [showPasswordValidation, setShowPasswordValidation] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [formData, setFormData] = useState(INITIAL_PROFILE_DATA);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const visibleData = useMemo(
-    () => ({
-      ...formData,
-      phone: isEditing ? formData.phone : maskValue(formData.phone),
-      address: isEditing ? formData.address : maskValue(formData.address),
-      rfc: isEditing ? formData.rfc : maskValue(formData.rfc),
-      password: isEditing ? formData.password : maskValue(formData.password)
-    }),
-    [formData, isEditing]
-  );
+  useEffect(() => {
+    const loadProfile = async (): Promise<void> => {
+      setIsLoading(true);
+      try {
+        const data = await AdminProfileService.getMe();
+        setProfile(data);
+        setForm(toEditablePayload(data));
+      } catch {
+        toast.error(t('adminProfile.errorLoad'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleChange = (field: keyof ProfileData, value: string) => {
-    setFormData((previous) => ({
-      ...previous,
-      [field]: value
-    }));
+    loadProfile();
+  }, [t, toast]);
+
+  const updateField = (field: keyof UpdateAdminProfilePayload, value: string): void => {
+    setForm((current) => current ? { ...current, [field]: value } : current);
   };
 
-  const handleValidatePassword = () => {
-    if (currentPassword !== INITIAL_PROFILE_DATA.password) {
-      window.alert('La contraseña actual no es correcta.');
-      return;
+  const cancelEdit = (): void => {
+    if (profile) {
+      setForm(toEditablePayload(profile));
     }
-
-    setIsEditing(true);
-    setShowPasswordValidation(false);
-    setCurrentPassword('');
+    setIsEditing(false);
   };
+
+  const saveProfile = async (): Promise<void> => {
+    if (!form) return;
+    setIsSaving(true);
+    try {
+      const updated = await AdminProfileService.updateMe(form);
+      setProfile(updated);
+      setForm(toEditablePayload(updated));
+      setIsEditing(false);
+      toast.success(t('adminProfile.successSave'));
+    } catch {
+      toast.error(t('adminProfile.errorSave'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return <p className={styles.state}>{t('adminProfile.loading')}</p>;
+  }
+
+  if (!profile || !form) {
+    return <p className={styles.state}>{t('adminProfile.errorLoad')}</p>;
+  }
 
   return (
     <article className={styles.page}>
-      <header className={styles.profileHeader}>
-        <div className={styles.avatar} aria-hidden="true" />
-
-        <div className={styles.profileIdentity}>
-          <p className={styles.roleBadge}>{visibleData.role}</p>
-          <h1>{visibleData.fullName}</h1>
+      <header className={styles.header}>
+        <div>
+          <p className={styles.role}>{profile.role}</p>
+          <h1>{t('adminProfile.title')}</h1>
+          <p>{t('adminProfile.subtitle')}</p>
         </div>
-
-        <div className={styles.editArea}>
-          {!isEditing && !showPasswordValidation && (
-            <button
-              type="button"
-              className={styles.actionButton}
-              onClick={() => setShowPasswordValidation(true)}
-            >
-              Editar perfil
+        <div className={styles.actions}>
+          {isEditing ? (
+            <>
+              <button type="button" className={styles.secondaryButton} onClick={cancelEdit} disabled={isSaving}>
+                {t('adminProfile.cancel')}
+              </button>
+              <button type="button" className={styles.primaryButton} onClick={saveProfile} disabled={isSaving}>
+                {t('adminProfile.save')}
+              </button>
+            </>
+          ) : (
+            <button type="button" className={styles.primaryButton} onClick={() => setIsEditing(true)}>
+              {t('adminProfile.edit')}
             </button>
-          )}
-
-          {!isEditing && showPasswordValidation && (
-            <div className={styles.passwordBox}>
-              <p>Contraseña actual</p>
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={(event) => setCurrentPassword(event.target.value)}
-              />
-
-              <div className={styles.buttonRow}>
-                <button
-                  type="button"
-                  className={styles.secondaryButton}
-                  onClick={() => {
-                    setShowPasswordValidation(false);
-                    setCurrentPassword('');
-                  }}
-                >
-                  Cancelar
-                </button>
-
-                <button
-                  type="button"
-                  className={styles.actionButton}
-                  onClick={handleValidatePassword}
-                >
-                  Validar
-                </button>
-              </div>
-            </div>
           )}
         </div>
       </header>
 
-      <section className={styles.dataGrid}>
-        <div className={styles.dataItem}>
-          <p className={styles.dataLabel}>Correo</p>
-          {isEditing ? (
-            <input
-              value={formData.email}
-              onChange={(event) => handleChange('email', event.target.value)}
-            />
-          ) : (
-            <p>{visibleData.email}</p>
-          )}
+      <section className={styles.card}>
+        <div className={styles.avatar}>
+          {profile.profilePicture ? <img src={profile.profilePicture} alt="" /> : <span>{profile.username.slice(0, 2).toUpperCase()}</span>}
         </div>
-
-        <div className={styles.dataItem}>
-          <p className={styles.dataLabel}>Teléfono</p>
-          {isEditing ? (
-            <input
-              value={formData.phone}
-              onChange={(event) => handleChange('phone', event.target.value)}
-            />
-          ) : (
-            <p>{visibleData.phone}</p>
-          )}
-        </div>
-
-        <div className={styles.dataItem}>
-          <p className={styles.dataLabel}>Dirección</p>
-          {isEditing ? (
-            <input
-              value={formData.address}
-              onChange={(event) => handleChange('address', event.target.value)}
-            />
-          ) : (
-            <p>{visibleData.address}</p>
-          )}
-        </div>
-
-        <div className={styles.dataItem}>
-          <p className={styles.dataLabel}>RFC</p>
-          {isEditing ? (
-            <input
-              value={formData.rfc}
-              onChange={(event) => handleChange('rfc', event.target.value)}
-            />
-          ) : (
-            <p>{visibleData.rfc}</p>
-          )}
-        </div>
-
-        <div className={styles.dataItem}>
-          <p className={styles.dataLabel}>Contraseña</p>
-          {isEditing ? (
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(event) => handleChange('password', event.target.value)}
-            />
-          ) : (
-            <p>{visibleData.password}</p>
-          )}
+        <div className={styles.formGrid}>
+          <label>
+            {t('adminProfile.fields.username')}
+            <input value={form.username} disabled={!isEditing} onChange={(event) => updateField('username', event.target.value)} />
+          </label>
+          <label>
+            {t('adminProfile.fields.email')}
+            <input value={profile.email} disabled title={t('adminProfile.readOnly')} />
+          </label>
+          <label>
+            {t('adminProfile.fields.firstName')}
+            <input value={form.firstName} disabled={!isEditing} onChange={(event) => updateField('firstName', event.target.value)} />
+          </label>
+          <label>
+            {t('adminProfile.fields.lastName')}
+            <input value={form.lastName} disabled={!isEditing} onChange={(event) => updateField('lastName', event.target.value)} />
+          </label>
+          <label>
+            {t('adminProfile.fields.phoneNumber')}
+            <input value={form.phoneNumber} disabled={!isEditing} onChange={(event) => updateField('phoneNumber', event.target.value)} />
+          </label>
+          <label>
+            {t('adminProfile.fields.rfc')}
+            <input value={profile.rfc} disabled title={t('adminProfile.readOnly')} />
+          </label>
+          <label className={styles.wide}>
+            {t('adminProfile.fields.address')}
+            <input value={form.address} disabled={!isEditing} onChange={(event) => updateField('address', event.target.value)} />
+          </label>
         </div>
       </section>
     </article>

@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './ManageEvents.module.css';
 import { DropsService } from '../../../services/drops.service';
 import { DropEvent, DropEventPayload } from '../../../types/drops.types';
 import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
+import { Game, getGames } from '../../../services/games.service';
+import { useToast } from '../../../components/ui/Toast';
 
 const toLocalInput = (date: Date): string => {
   const offset = date.getTimezoneOffset() * 60000;
@@ -23,6 +26,7 @@ const createEmptyForm = (): DropEventPayload => {
     endAt: toLocalInput(new Date(now.getTime() + 4 * 60 * 60 * 1000)),
     totalSlots: 100,
     publicChallengeCode: '',
+    accessKeys: [],
     publishNow: false
   };
 };
@@ -34,7 +38,9 @@ const toPayload = (form: DropEventPayload): DropEventPayload => ({
   startAt: new Date(form.startAt).toISOString(),
   joinDeadlineAt: new Date(form.joinDeadlineAt).toISOString(),
   revealAt: new Date(form.revealAt).toISOString(),
-  endAt: new Date(form.endAt).toISOString()
+  endAt: new Date(form.endAt).toISOString(),
+  publicChallengeCode: '',
+  accessKeys: form.accessKeys.map((code) => code.trim()).filter(Boolean)
 });
 
 const fromEvent = (event: DropEvent): DropEventPayload => ({
@@ -49,31 +55,31 @@ const fromEvent = (event: DropEvent): DropEventPayload => ({
   revealAt: toLocalInput(new Date(event.revealAt)),
   endAt: toLocalInput(new Date(event.endAt)),
   totalSlots: event.totalSlots,
-  publicChallengeCode: event.publicChallengeCode,
+  publicChallengeCode: '',
+  accessKeys: [],
   publishNow: false
 });
 
 export const AdminManageEvents = (): React.JSX.Element => {
+  const { t } = useTranslation('admin');
+  const toast = useToast();
   const [scope, setScope] = useState('CURRENT');
   const [events, setEvents] = useState<DropEvent[]>([]);
   const [form, setForm] = useState<DropEventPayload>(createEmptyForm);
+  const [accessKeysText, setAccessKeysText] = useState('');
+  const [gameSuggestions, setGameSuggestions] = useState<Game[]>([]);
+  const [isSearchingGames, setIsSearchingGames] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [rewardEventId, setRewardEventId] = useState<string | null>(null);
-  const [rewardCode, setRewardCode] = useState('');
   const [finishEventId, setFinishEventId] = useState<string | null>(null);
-  const [isRewardConfirmOpen, setIsRewardConfirmOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const loadEvents = async (): Promise<void> => {
     setIsLoading(true);
-    setError(null);
     try {
       const result = await DropsService.listAdmin(scope, 1, 20);
       setEvents(result.items);
     } catch {
-      setError('No se pudieron cargar los sorteos.');
+      toast.error(t('manageEvents.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -83,24 +89,67 @@ export const AdminManageEvents = (): React.JSX.Element => {
     loadEvents();
   }, [scope]);
 
+  useEffect(() => {
+    const query = form.gameTitle.trim();
+    if (query.length < 2) {
+      setGameSuggestions([]);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(async () => {
+      setIsSearchingGames(true);
+      try {
+        const response = await getGames(query, 1, 'name_asc');
+        setGameSuggestions(response.items.slice(0, 6));
+      } catch {
+        setGameSuggestions([]);
+      } finally {
+        setIsSearchingGames(false);
+      }
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [form.gameTitle]);
+
   const updateField = (field: keyof DropEventPayload, value: string | number | boolean): void => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
+  const selectGame = (game: Game): void => {
+    const rawgId = Number(game.id);
+    setForm((current) => ({
+      ...current,
+      gameTitle: game.title,
+      rawgGameId: Number.isFinite(rawgId) ? rawgId : null,
+      imageUrl: game.imageUrl || game.coverImageUrl || ''
+    }));
+    setGameSuggestions([]);
+  };
+
+  const parseAccessKeys = (): string[] =>
+    accessKeysText.split(/\r?\n|,/).map((code) => code.trim()).filter(Boolean);
+
   const validateForm = (): string | null => {
+    const accessKeys = parseAccessKeys();
     if (!form.title.trim() || !form.gameTitle.trim() || !form.platform.trim()) {
-      return 'Titulo, juego y plataforma son obligatorios.';
+      return t('manageEvents.validation.required');
     }
-    if (!form.publicChallengeCode.trim() || form.publicChallengeCode.length > 50) {
-      return 'El codigo publico es obligatorio y maximo de 50 caracteres.';
+    if (!editingId && accessKeys.length === 0) {
+      return t('manageEvents.validation.codesRequired');
+    }
+    if (accessKeys.some((code) => code.length > 50)) {
+      return t('manageEvents.validation.codeLength');
+    }
+    if (new Set(accessKeys.map((code) => code.toLowerCase())).size !== accessKeys.length) {
+      return t('manageEvents.validation.duplicateCodes');
     }
     if (Number(form.totalSlots) <= 0) {
-      return 'Los lugares totales deben ser mayores a cero.';
+      return t('manageEvents.validation.slots');
     }
     if (!(new Date(form.startAt) < new Date(form.joinDeadlineAt) &&
       new Date(form.joinDeadlineAt) <= new Date(form.revealAt) &&
       new Date(form.revealAt) < new Date(form.endAt))) {
-      return 'Las fechas deben seguir inicio, cierre, revelacion y fin.';
+      return t('manageEvents.validation.dates');
     }
     return null;
   };
@@ -108,45 +157,26 @@ export const AdminManageEvents = (): React.JSX.Element => {
   const handleSubmit = async (): Promise<void> => {
     const validation = validateForm();
     if (validation) {
-      setError(validation);
+      toast.warning(validation);
       return;
     }
 
     setIsLoading(true);
-    setError(null);
+    const payload = toPayload({ ...form, accessKeys: parseAccessKeys() });
     try {
       if (editingId) {
-        await DropsService.update(editingId, toPayload(form));
-        setMessage('Sorteo actualizado.');
+        await DropsService.update(editingId, payload);
+        toast.success(t('manageEvents.updated'));
       } else {
-        await DropsService.create(toPayload(form));
-        setMessage('Sorteo creado.');
+        await DropsService.create(payload);
+        toast.success(t('manageEvents.created'));
       }
       setForm(createEmptyForm());
+      setAccessKeysText('');
       setEditingId(null);
       await loadEvents();
     } catch {
-      setError('No se pudo guardar el sorteo.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleReward = async (): Promise<void> => {
-    if (!rewardEventId || !rewardCode.trim()) return;
-    if (rewardCode.length > 50) {
-      setError('El codigo real no debe superar 50 caracteres.');
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await DropsService.sendReward(rewardEventId, rewardCode.trim());
-      setRewardCode('');
-      setRewardEventId(null);
-      setMessage('Recompensa marcada como enviada.');
-      await loadEvents();
-    } catch {
-      setError('No se pudo enviar la recompensa.');
+      toast.error(t('manageEvents.saveError'));
     } finally {
       setIsLoading(false);
     }
@@ -154,13 +184,12 @@ export const AdminManageEvents = (): React.JSX.Element => {
 
   const runAction = async (action: () => Promise<unknown>, success: string): Promise<void> => {
     setIsLoading(true);
-    setError(null);
     try {
       await action();
-      setMessage(success);
+      toast.success(success);
       await loadEvents();
     } catch {
-      setError('No se pudo completar la accion.');
+      toast.error(t('manageEvents.actionError'));
     } finally {
       setIsLoading(false);
     }
@@ -170,48 +199,61 @@ export const AdminManageEvents = (): React.JSX.Element => {
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
-          <h1>Gestionar sorteos</h1>
-          <p>Eventos de codigos de juego con reto publico, ganador unico y entrega trazable.</p>
+          <h1>{t('manageEvents.title')}</h1>
+          <p>{t('manageEvents.subtitle')}</p>
         </div>
         <select value={scope} onChange={(event) => setScope(event.target.value)}>
-          <option value="CURRENT">Actuales</option>
-          <option value="UPCOMING">Proximos</option>
-          <option value="PAST">Pasados</option>
-          <option value="ALL">Todos</option>
+          <option value="CURRENT">{t('manageEvents.current')}</option>
+          <option value="UPCOMING">{t('manageEvents.upcoming')}</option>
+          <option value="PAST">{t('manageEvents.past')}</option>
+          <option value="ALL">{t('manageEvents.all')}</option>
         </select>
       </header>
 
-      {message && <p className={styles.success}>{message}</p>}
-      {error && <p className={styles.error}>{error}</p>}
-
       <section className={styles.formPanel}>
-        <h2>{editingId ? 'Editar sorteo' : 'Crear sorteo'}</h2>
+        <h2>{editingId ? t('manageEvents.editTitle') : t('manageEvents.createTitle')}</h2>
         <div className={styles.formGrid}>
-          <input placeholder="Titulo" value={form.title} onChange={(event) => updateField('title', event.target.value)} />
-          <input placeholder="Juego" value={form.gameTitle} onChange={(event) => updateField('gameTitle', event.target.value)} />
-          <input placeholder="Plataforma" value={form.platform} onChange={(event) => updateField('platform', event.target.value)} />
-          <input placeholder="RAWG ID" type="number" value={form.rawgGameId ?? ''} onChange={(event) => updateField('rawgGameId', event.target.value)} />
-          <input placeholder="Imagen URL" value={form.imageUrl} onChange={(event) => updateField('imageUrl', event.target.value)} />
-          <input placeholder="Codigo publico" maxLength={50} value={form.publicChallengeCode} onChange={(event) => updateField('publicChallengeCode', event.target.value)} />
-          <textarea placeholder="Descripcion" value={form.description} onChange={(event) => updateField('description', event.target.value)} />
-          <input type="number" min="1" value={form.totalSlots} onChange={(event) => updateField('totalSlots', Number(event.target.value))} />
-          <label>Inicio<input type="datetime-local" value={form.startAt} onChange={(event) => updateField('startAt', event.target.value)} /></label>
-          <label>Cierre union<input type="datetime-local" value={form.joinDeadlineAt} onChange={(event) => updateField('joinDeadlineAt', event.target.value)} /></label>
-          <label>Revelacion<input type="datetime-local" value={form.revealAt} onChange={(event) => updateField('revealAt', event.target.value)} /></label>
-          <label>Fin<input type="datetime-local" value={form.endAt} onChange={(event) => updateField('endAt', event.target.value)} /></label>
+          <input placeholder={t('manageEvents.labels.title')} maxLength={120} value={form.title} onChange={(event) => updateField('title', event.target.value)} />
+          <div className={styles.autocomplete}>
+            <input placeholder={t('manageEvents.labels.game')} value={form.gameTitle} onChange={(event) => updateField('gameTitle', event.target.value)} />
+            {(gameSuggestions.length > 0 || isSearchingGames) && (
+              <div className={styles.suggestions}>
+                {isSearchingGames && <span>{t('manageEvents.searching')}</span>}
+                {gameSuggestions.map((game) => (
+                  <button key={game.id} type="button" onClick={() => selectGame(game)}>
+                    {game.imageUrl && <img src={game.imageUrl} alt="" loading="lazy" />}
+                    <span>{game.title}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <select value={form.platform} onChange={(event) => updateField('platform', event.target.value)}>
+            <option value="PC">PC</option>
+            <option value="Xbox">Xbox</option>
+            <option value="Nintendo">Nintendo</option>
+            <option value="Celular">Celular</option>
+          </select>
+          <textarea placeholder={t('manageEvents.labels.description')} maxLength={500} value={form.description} onChange={(event) => updateField('description', event.target.value)} />
+          <textarea placeholder={t('manageEvents.labels.codes')} maxLength={2000} value={accessKeysText} onChange={(event) => setAccessKeysText(event.target.value)} />
+          <input aria-label={t('manageEvents.labels.totalSlots')} type="number" min="1" value={form.totalSlots} onChange={(event) => updateField('totalSlots', Number(event.target.value))} />
+          <label>{t('manageEvents.labels.startAt')}<input type="datetime-local" value={form.startAt} onChange={(event) => updateField('startAt', event.target.value)} /></label>
+          <label>{t('manageEvents.labels.joinDeadlineAt')}<input type="datetime-local" value={form.joinDeadlineAt} onChange={(event) => updateField('joinDeadlineAt', event.target.value)} /></label>
+          <label>{t('manageEvents.labels.revealAt')}<input type="datetime-local" value={form.revealAt} onChange={(event) => updateField('revealAt', event.target.value)} /></label>
+          <label>{t('manageEvents.labels.endAt')}<input type="datetime-local" value={form.endAt} onChange={(event) => updateField('endAt', event.target.value)} /></label>
           <label className={styles.checkbox}>
             <input type="checkbox" checked={Boolean(form.publishNow)} onChange={(event) => updateField('publishNow', event.target.checked)} />
-            Publicar al guardar
+            {t('manageEvents.publishNow')}
           </label>
         </div>
         <div className={styles.actions}>
-          <button onClick={handleSubmit} disabled={isLoading}>{editingId ? 'Guardar cambios' : 'Crear sorteo'}</button>
-          {editingId && <button onClick={() => { setEditingId(null); setForm(createEmptyForm()); }}>Cancelar edicion</button>}
+          <button onClick={handleSubmit} disabled={isLoading}>{editingId ? t('manageEvents.saveChanges') : t('manageEvents.create')}</button>
+          {editingId && <button onClick={() => { setEditingId(null); setForm(createEmptyForm()); setAccessKeysText(''); }}>{t('manageEvents.cancelEdit')}</button>}
         </div>
       </section>
 
-      {isLoading && <p className={styles.loading}>Cargando...</p>}
-      {!isLoading && events.length === 0 && <p className={styles.empty}>No hay sorteos para este filtro.</p>}
+      {isLoading && <p className={styles.loading}>{t('manageEvents.loading')}</p>}
+      {!isLoading && events.length === 0 && <p className={styles.empty}>{t('manageEvents.empty')}</p>}
 
       <section className={styles.eventGrid}>
         {events.map((event) => (
@@ -224,63 +266,35 @@ export const AdminManageEvents = (): React.JSX.Element => {
               </div>
               <p>{event.description}</p>
               <dl>
-                <div><dt>Juego</dt><dd>{event.gameTitle}</dd></div>
-                <div><dt>Plataforma</dt><dd>{event.platform}</dd></div>
-                <div><dt>Lugares</dt><dd>{event.availableSlots}/{event.totalSlots}</dd></div>
-                <div><dt>Ganador</dt><dd>{event.winnerUsername || 'Pendiente'}</dd></div>
+                <div><dt>{t('manageEvents.labels.gameLabel')}</dt><dd>{event.gameTitle}</dd></div>
+                <div><dt>{t('manageEvents.labels.platform')}</dt><dd>{event.platform}</dd></div>
+                <div><dt>{t('manageEvents.labels.slots')}</dt><dd>{event.availableSlots}/{event.totalSlots}</dd></div>
+                <div><dt>{t('manageEvents.labels.codesCount')}</dt><dd>{event.rewardCodesAvailable ?? event.keysAvailable}/{event.rewardCodesTotal ?? event.keysTotal}</dd></div>
+                <div><dt>{t('manageEvents.labels.winners')}</dt><dd>{event.winners?.map((winner) => winner.username).join(', ') || event.winnerUsername || t('manageEvents.pending')}</dd></div>
               </dl>
               <div className={styles.cardActions}>
-                <button onClick={() => { setEditingId(event.eventId); setForm(fromEvent(event)); }}>Editar</button>
-                <button onClick={() => runAction(() => DropsService.publish(event.eventId), 'Sorteo publicado.')}>Publicar</button>
-                <button onClick={() => setFinishEventId(event.eventId)}>Finalizar</button>
-                {event.status === 'FINISHED' && event.winnerUserId && event.rewardDeliveryStatus !== 'SENT' && (
-                  <button onClick={() => setRewardEventId(event.eventId)}>Enviar recompensa</button>
-                )}
+                <button onClick={() => { setEditingId(event.eventId); setForm(fromEvent(event)); }}>{t('manageEvents.edit')}</button>
+                <button onClick={() => runAction(() => DropsService.publish(event.eventId), t('manageEvents.published'))}>{t('manageEvents.publish')}</button>
+                <button onClick={() => setFinishEventId(event.eventId)}>{t('manageEvents.finish')}</button>
               </div>
             </div>
           </article>
         ))}
       </section>
 
-      {rewardEventId && (
-        <section className={styles.rewardPanel}>
-          <h2>Enviar recompensa</h2>
-          <input
-            maxLength={50}
-            value={rewardCode}
-            onChange={(event) => setRewardCode(event.target.value)}
-            placeholder="Codigo real del juego o suscripcion"
-          />
-          <button onClick={() => setIsRewardConfirmOpen(true)} disabled={isLoading}>Confirmar envio</button>
-          <button onClick={() => setRewardEventId(null)}>Cancelar</button>
-        </section>
-      )}
-
       <ConfirmationModal
         isOpen={Boolean(finishEventId)}
-        title="Finalizar sorteo"
-        message="El sorteo dejara de admitir uniones y reclamos. Deseas continuar?"
-        confirmLabel="Finalizar"
+        title={t('manageEvents.finishTitle')}
+        message={t('manageEvents.finishMessage')}
+        confirmLabel={t('manageEvents.finish')}
         variant="danger"
         onConfirm={() => {
           if (!finishEventId) return;
           const eventId = finishEventId;
           setFinishEventId(null);
-          runAction(() => DropsService.finish(eventId), 'Sorteo finalizado.');
+          runAction(() => DropsService.finish(eventId), t('manageEvents.finished'));
         }}
         onCancel={() => setFinishEventId(null)}
-      />
-
-      <ConfirmationModal
-        isOpen={isRewardConfirmOpen}
-        title="Enviar recompensa"
-        message="Se enviara el codigo real por correo al ganador y no se mostrara nuevamente. Confirmas el envio?"
-        confirmLabel="Enviar"
-        onConfirm={() => {
-          setIsRewardConfirmOpen(false);
-          handleReward();
-        }}
-        onCancel={() => setIsRewardConfirmOpen(false)}
       />
     </div>
   );

@@ -14,7 +14,6 @@ export const MainLayout = ({ children, isScrollable = true, hideNavigation = fal
     <div className={styles.layoutContainer}>
       {showNavbar && (
         <Navbar
-          onProfileClick={() => {}}
           hideNavigation={hideNavigation}
         />
       )}

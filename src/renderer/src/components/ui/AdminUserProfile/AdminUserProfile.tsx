@@ -5,6 +5,7 @@ import { AdminUserDetailDto } from '../../../types/admin.types';
 import { getUserDetail, deleteUser, toggleUserSuspension } from '../../../services/adminUsers.service';
 import { ActionButton } from '../../../components/ui/ActionButton';
 import { ProfileImageMedium } from '../../../components/ui/ProfileImageMedium';
+import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 
 interface AdminUserProfileProps {
   userId: string;
@@ -15,6 +16,8 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
   const { t } = useTranslation('admin');
   const [profile, setProfile] = useState<AdminUserDetailDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState<string | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -25,7 +28,7 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
       const data = await getUserDetail(userId);
       setProfile(data);
     } catch (error) {
-      alert(t('manageUsers.errorLoad'));
+      setMessage(t('manageUsers.errorLoad'));
       onBack();
     } finally {
       setIsLoading(false);
@@ -38,19 +41,19 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
       await toggleUserSuspension(profile.id, !profile.isSuspended);
       setProfile({ ...profile, isSuspended: !profile.isSuspended });
     } catch (error: any) {
-      alert(error.response?.data?.title || t('manageUsers.errorToggle'));
+      setMessage(error.response?.data?.title || t('manageUsers.errorToggle'));
     }
   };
 
   const handleDeleteUser = async () => {
     if (!profile) return;
-    if (window.confirm(t('manageUsers.profile.actions.confirmDelete'))) {
-      try {
-        await deleteUser(profile.id);
-        onBack();
-      } catch (error: any) {
-        alert(error.response?.data?.title || 'Error al eliminar usuario');
-      }
+    try {
+      await deleteUser(profile.id);
+      onBack();
+    } catch (error: any) {
+      setMessage(error.response?.data?.title || 'No se pudo desactivar la cuenta del usuario.');
+    } finally {
+      setIsDeleteConfirmOpen(false);
     }
   };
 
@@ -62,6 +65,8 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
       <button className={styles.backButton} onClick={onBack}>
         {t('manageUsers.profile.back')}
       </button>
+
+      {message && <p className={styles.loadingText}>{message}</p>}
 
       <div className={styles.headerCard}>
         <ProfileImageMedium
@@ -105,12 +110,22 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
 
           <ActionButton
             variant="deleteProfile"
-            onClick={handleDeleteUser}
+            onClick={() => setIsDeleteConfirmOpen(true)}
           >
             {t('manageUsers.profile.actions.delete')}
           </ActionButton>
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={isDeleteConfirmOpen}
+        title="Desactivar cuenta"
+        message="Esta acción desactivará la cuenta del usuario. ¿Deseas continuar?"
+        confirmLabel="Desactivar"
+        variant="danger"
+        onConfirm={handleDeleteUser}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+      />
     </div>
   );
 };

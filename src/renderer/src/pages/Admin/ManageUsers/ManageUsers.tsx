@@ -51,7 +51,7 @@ export const ManageUsers = () => {
         u.id === userId ? { ...u, isSuspended: !currentStatus } : u
       ));
     } catch (err: any) {
-      alert(err.response?.data?.title || t('manageUsers.errorToggle'));
+      setError(err.response?.data?.title || t('manageUsers.errorToggle'));
     }
   };
 

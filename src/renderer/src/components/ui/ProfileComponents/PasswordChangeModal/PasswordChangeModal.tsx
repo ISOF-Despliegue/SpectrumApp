@@ -118,8 +118,10 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen
     <div className={styles.modalOverlay}>
       <GlassContainer className={styles.modalContent}>
         <header className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>{t('labels.security')}</h2>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">×</button>
+          <h2 className={styles.modalTitle}>
+            {step === 'request' ? 'Verificación de seguridad para cambiar contraseña' : 'Cambiar contraseña'}
+          </h2>
+          <button className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">×</button>
         </header>
 
         <div className={styles.modalBody}>

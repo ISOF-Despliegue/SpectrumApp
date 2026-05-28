@@ -1,12 +1,45 @@
 {
+  "navigation": {
+    "myProfile": "My profile",
+    "globalMetrics": "Global metrics",
+    "manageUsers": "Manage users",
+    "manageReviews": "Manage reviews",
+    "manageEvents": "Manage giveaways",
+    "manageAdmins": "Manage admins",
+    "manageReports": "Manage reports",
+    "logout": "Log out"
+  },
+  "adminProfile": {
+    "title": "My admin profile",
+    "subtitle": "Real data for the authenticated admin account.",
+    "loading": "Loading admin profile...",
+    "errorLoad": "Could not load the admin profile.",
+    "errorSave": "Could not save the profile.",
+    "successSave": "Profile updated successfully.",
+    "edit": "Edit profile",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "readOnly": "This field is managed through the secure admin flow.",
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phoneNumber": "Phone",
+      "address": "Address",
+      "rfc": "RFC",
+      "role": "Role"
+    }
+  },
   "manageUsers": {
-    "title": "User Moderation",
+    "title": "User moderation",
     "searchPlaceholder": "Search by name or email...",
     "searchButton": "Search",
     "loading": "Loading users...",
     "empty": "No users found.",
-    "errorLoad": "Error loading users",
-    "errorToggle": "Error toggling user status",
+    "errorLoad": "Error loading users.",
+    "errorToggle": "Error changing user status.",
+    "statusChanged": "User status updated.",
     "table": {
       "user": "User",
       "email": "Email",
@@ -21,55 +54,59 @@
     "actions": {
       "reactivate": "Reactivate",
       "suspend": "Suspend",
-      "viewProfile": "View Profile"
+      "viewProfile": "View profile"
     },
     "profile": {
-      "back": "← Back to list",
+      "back": "Back to list",
       "memberSince": "Member since",
       "metrics": {
         "reviews": "Reviews posted",
         "clips": "Clips uploaded"
       },
       "actions": {
-        "delete": "Delete Account",
-        "confirmDelete": "Are you sure you want to permanently delete this user? This action cannot be undone."
+        "delete": "Delete account",
+        "confirmDelete": "This action will deactivate the user account. Do you want to continue?"
       }
     }
   },
-  "navigation": {
-    "myProfile": "My Profile",
-    "globalMetrics": "Global Metrics",
-    "manageUsers": "Manage Users",
-    "manageReviews": "Manage Reviews",
-    "manageEvents": "Manage Events",
-    "manageAdmins": "Manage Admins",
-    "manageReports": "Manage Reports",
-    "logout": "Logout"
-  },
   "manageReports": {
-    "title": "Report Management",
+    "title": "Report management",
     "filterStatus": "Status",
-    "filterType": "Content Type",
+    "filterType": "Content type",
     "loading": "Loading reports...",
-    "empty": "No reports found matching the filters.",
+    "empty": "No reports match the filters.",
     "errorLoad": "Error loading reports.",
     "errorAction": "Error processing moderation action.",
+    "statusUpdated": "Report marked as {{status}}.",
+    "userSuspended": "User suspended preventively.",
+    "contentDeleted": "The content was removed from the platform.",
+    "confirmSuspendTitle": "Suspend user",
+    "confirmSuspendMessage": "Do you want to immediately suspend the user associated with this report?",
+    "confirmDeleteTitle": "Delete content",
+    "confirmDeleteMessage": "Are you sure you want to delete this {{type}} content?",
+    "confirm": "Confirm",
     "table": {
       "reason": "Reason",
       "targetType": "Type",
       "status": "Status",
       "date": "Date",
-      "actions": "Actions"
+      "actions": "Actions",
+      "viewDetail": "View detail"
     },
     "details": {
-      "back": "← Back to list",
-      "subtitle": "Report Details",
+      "back": "Back to list",
+      "subtitle": "Report details",
       "reporter": "Reported by",
-      "targetId": "Entity ID",
-      "description": "Reporter's Description",
-      "adminNotesPlaceholder": "Write internal moderation notes or justification here...",
-      "statusActions": "Change Report Status",
-      "contentActions": "Corrective Actions on the Entity",
+      "targetId": "Target ID",
+      "description": "Reporter description",
+      "noDescription": "No additional description.",
+      "adminNotesPlaceholder": "Write internal moderation notes or justification...",
+      "statusActions": "Change report status",
+      "contentActions": "Corrective actions for the target",
+      "resolve": "Resolve ticket",
+      "dismiss": "Dismiss report",
+      "suspendAuthor": "Suspend author",
+      "deleteContent": "Delete content",
       "states": {
         "PENDING": "Pending",
         "RESOLVED": "Resolved",
@@ -83,5 +120,59 @@
         "OTHER": "Other reason"
       }
     }
+  },
+  "manageEvents": {
+    "title": "Manage giveaways",
+    "subtitle": "Giveaways with multiple real codes, traceable winners, and automatic delivery.",
+    "current": "Current",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "all": "All",
+    "createTitle": "Create giveaway",
+    "editTitle": "Edit giveaway",
+    "loading": "Loading...",
+    "empty": "No giveaways match this filter.",
+    "created": "Giveaway created.",
+    "updated": "Giveaway updated.",
+    "published": "Giveaway published.",
+    "finished": "Giveaway finished.",
+    "saveError": "Could not save the giveaway.",
+    "loadError": "Could not load giveaways.",
+    "actionError": "Could not complete the action.",
+    "searching": "Searching...",
+    "publishNow": "Publish on save",
+    "saveChanges": "Save changes",
+    "create": "Create giveaway",
+    "cancelEdit": "Cancel editing",
+    "edit": "Edit",
+    "publish": "Publish",
+    "finish": "Finish",
+    "finishTitle": "Finish giveaway",
+    "finishMessage": "This giveaway will stop accepting joins and claims. Do you want to continue?",
+    "labels": {
+      "title": "Title",
+      "game": "Search game",
+      "platform": "Platform",
+      "description": "Description",
+      "codes": "Real codes, one per line",
+      "totalSlots": "Total slots",
+      "startAt": "Start",
+      "joinDeadlineAt": "Join deadline",
+      "revealAt": "Reveal",
+      "endAt": "End",
+      "gameLabel": "Game",
+      "slots": "Slots",
+      "codesCount": "Codes",
+      "winners": "Winners"
+    },
+    "validation": {
+      "required": "Title, game, and platform are required.",
+      "codesRequired": "Add at least one real reward code.",
+      "codeLength": "Each real code must be at most 50 characters.",
+      "duplicateCodes": "Real codes cannot be duplicated.",
+      "slots": "Total slots must be greater than zero.",
+      "dates": "Dates must follow start, join deadline, reveal, and end."
+    },
+    "pending": "Pending"
   }
 }

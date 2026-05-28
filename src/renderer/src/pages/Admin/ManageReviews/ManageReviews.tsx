@@ -112,8 +112,8 @@ export const AdminManageReviews = (): React.JSX.Element => {
 
       <ConfirmationModal
         isOpen={Boolean(reviewToDelete)}
-        title="Borrar resena"
-        message="La resena se ocultara con borrado logico. Deseas continuar?"
+        title="Borrar reseña"
+        message="La reseña se va a borrar. ¿Deseas continuar?"
         confirmLabel="Borrar"
         variant="danger"
         onConfirm={() => reviewToDelete && deleteReview(reviewToDelete)}

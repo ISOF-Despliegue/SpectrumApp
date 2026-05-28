@@ -28,6 +28,7 @@
 
 .header select,
 .formGrid input,
+.formGrid select,
 .formGrid textarea,
 .formGrid label input,
 .rewardPanel input {
@@ -63,6 +64,56 @@
   display: grid;
   gap: 0.35rem;
   color: #cbd5e0;
+}
+
+.autocomplete {
+  position: relative;
+}
+
+.autocomplete input {
+  width: 100%;
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 0.25rem;
+  max-height: 260px;
+  overflow: auto;
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  border-radius: 8px;
+  background: #111827;
+  padding: 0.35rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.suggestions button {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #ffffff;
+  padding: 0.35rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestions button:hover {
+  background: rgba(37, 99, 235, 0.24);
+}
+
+.suggestions img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .checkbox {

@@ -25,7 +25,7 @@ export const DropsService = {
     return response.data;
   },
 
-  claim: async (eventId: string, challengeCode: string): Promise<ClaimDropResult> => {
+  claim: async (eventId: string, challengeCode = ''): Promise<ClaimDropResult> => {
     const response = await api.post<ClaimDropResult>(`/drops/claim/${eventId}`, { challengeCode });
     return response.data;
   },

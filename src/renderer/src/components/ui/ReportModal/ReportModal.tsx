@@ -26,6 +26,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const { t } = useTranslation('report');
 
   if (!isOpen) return null;
@@ -46,6 +47,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
   const handleSubmit = async () => {
     setError(null);
+    setSuccess(null);
     if (description.trim().length < 10) {
       setError(t('reportModal.lengthError'));
       return;
@@ -59,9 +61,9 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         reason,
         description: description.trim()
       });
-      alert(t('reportModal.successMessage'));
+      setSuccess(t('reportModal.successMessage'));
       setDescription('');
-      onClose();
+      window.setTimeout(onClose, 900);
     } catch (err: any) {
       if (err.response?.status === 429) {
         setError(t('reportModal.tooManyReports'));
@@ -102,6 +104,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
           />
 
           {error && <p className={styles.errorText}>{error}</p>}
+          {success && <p className={styles.successText}>{success}</p>}
 
           <div className={styles.actions}>
             <button type="button" onClick={onClose} className={styles.cancelBtn}>{t('reportModal.cancelButton')}</button>

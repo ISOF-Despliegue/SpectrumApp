@@ -8,12 +8,12 @@ import HappyGhostIncomplete from '../../../../assets/images/character/happyGhost
 import styles from './Navbar.module.css';
 import { ProfileService, UserProfile } from '../../../../services/profile.service';
 import defaultPhoto from '../../../../assets/images/common/defaultPhotoProfile.png';
-import { AuthService } from '../../../../services/auth.service';
+import { AuthService, ROLES } from '../../../../services/auth.service';
 
 
 interface NavbarProps {
   hideNavigation?: boolean;
-  onProfileClick: () => void;
+  onProfileClick?: () => void;
 }
 
 export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps): React.JSX.Element => {
@@ -39,6 +39,12 @@ export const Navbar = ({ hideNavigation = false, onProfileClick }: NavbarProps):
   const handleInternalProfileClick = (): void => {
     if (onProfileClick) {
       onProfileClick();
+      return;
+    }
+    const currentUser = AuthService.getCurrentUser();
+    if (currentUser?.role === ROLES.ADMIN) {
+      navigate('/admin/my-profile');
+      return;
     }
     navigate('/profile');
   };

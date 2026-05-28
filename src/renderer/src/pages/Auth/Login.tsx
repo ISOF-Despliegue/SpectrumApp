@@ -7,10 +7,12 @@ import spectrumLogo from "../../assets/images/common/SpectrumLogo.png";
 import styles from "./Auth.module.css";
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { getApiErrorKey, routeUserByRole } from './auth-flow.utils';
+import { useToast } from '../../components/ui/Toast';
 
 export const Login: React.FC = () => {
   const { t } = useTranslation('auth');
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +23,7 @@ export const Login: React.FC = () => {
     e.preventDefault();
     if (!email || !password) {
       setError(t('errorEmptyFields'));
+      toast.warning(t('errorEmptyFields'));
       return;
     }
 
@@ -30,7 +33,9 @@ export const Login: React.FC = () => {
       const response = await AuthService.login({ email, password });
       routeUserByRole(response.role, navigate);
     } catch (err: unknown) {
-      setError(t(getApiErrorKey(err, 'loginError')));
+      const message = t(getApiErrorKey(err, 'loginError'));
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -38,7 +43,9 @@ export const Login: React.FC = () => {
 
   const handleGoogleSuccess = async (credentialResponse: CredentialResponse): Promise<void> => {
     if (!credentialResponse.credential) {
-      setError(t('googleLoginError') || t('loginError'));
+      const message = t('googleLoginError') || t('loginError');
+      setError(message);
+      toast.error(message);
       return;
     }
 
@@ -52,7 +59,9 @@ export const Login: React.FC = () => {
 
       routeUserByRole(response.role, navigate);
     } catch {
-      setError(t('googleLoginError') || t('loginError'));
+      const message = t('googleLoginError') || t('loginError');
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +109,11 @@ export const Login: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
-              onError={() => setError(t('googleLoginError') || t('loginError'))}
+              onError={() => {
+                const message = t('googleLoginError') || t('loginError');
+                setError(message);
+                toast.error(message);
+              }}
               useOneTap
               theme="filled_blue"
               shape="pill"

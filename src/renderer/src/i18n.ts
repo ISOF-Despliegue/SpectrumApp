@@ -14,6 +14,9 @@ import esImageUpload from './languages/es/imageUpload.json';
 import esVideoUpload from './languages/es/videoUpload.json';
 import esAdmin from './languages/es/admin.json';
 import esReport from './languages/es/report.json';
+import esTrends from './languages/es/trends.json';
+import esCrypt from './languages/es/crypt.json';
+import esWeeklyClips from './languages/es/weeklyClips.json';
 
 // English modules
 import enCommon from './languages/en/common.json';
@@ -22,11 +25,14 @@ import enNavbar from './languages/en/navbar.json';
 import enAuth from './languages/en/auth.json';
 import enGames from './languages/en/games.json';
 import enFooter from './languages/en/footer.json';
-import enProfile from './languages/es/profile.json';
+import enProfile from './languages/en/profile.json';
 import enImageUpload from './languages/en/imageUpload.json';
 import enVideoUpload from './languages/en/videoUpload.json';
 import enAdmin from './languages/en/admin.json';
 import enReport from './languages/en/report.json';
+import enTrends from './languages/en/trends.json';
+import enCrypt from './languages/en/crypt.json';
+import enWeeklyClips from './languages/en/weeklyClips.json';
 
 i18n
   .use(LanguageDetector)
@@ -44,7 +50,10 @@ i18n
         imageUpload: esImageUpload,
         videoUpload: esVideoUpload,
         admin: esAdmin,
-        report: esReport
+        report: esReport,
+        trends: esTrends,
+        crypt: esCrypt,
+        weeklyClips: esWeeklyClips
       },
       en: {
         common: enCommon,
@@ -57,7 +66,10 @@ i18n
         imageUpload: enImageUpload,
         videoUpload: enVideoUpload,
         admin: enAdmin,
-        report: enReport
+        report: enReport,
+        trends: enTrends,
+        crypt: enCrypt,
+        weeklyClips: enWeeklyClips
       }
     },
     fallbackLng: 'es',

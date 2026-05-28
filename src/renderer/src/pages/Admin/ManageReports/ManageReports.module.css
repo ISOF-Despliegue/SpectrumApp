@@ -197,6 +197,10 @@
   color: #ef4444;
 }
 
+.successText {
+  color: #22c55e;
+}
+
 .loadingText, .emptyText {
   text-align: center;
   color: #a0aec0;

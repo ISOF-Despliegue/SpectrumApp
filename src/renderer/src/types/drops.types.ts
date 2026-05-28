@@ -6,7 +6,11 @@ export type DropStatus =
   | 'ACTIVE'
   | 'JOIN_CLOSED'
   | 'REVEALED'
+  | 'UPCOMING'
+  | 'ACTIVE_JOIN'
+  | 'REVEAL_ACTIVE'
   | 'FINISHED'
+  | 'EXHAUSTED'
   | 'CANCELLED';
 
 export interface DropEvent {
@@ -31,6 +35,18 @@ export interface DropEvent {
   rewardSentAt?: string | null;
   rewardDeliveryStatus: 'PENDING' | 'SENT';
   participantsCount: number;
+  rewardCodesAvailable: number;
+  rewardCodesTotal: number;
+  keysAvailable: number;
+  keysTotal: number;
+  winners: DropWinner[];
+}
+
+export interface DropWinner {
+  userId: string;
+  username: string;
+  claimedAt?: string | null;
+  deliveryStatus: 'PENDING' | 'SENT';
 }
 
 export interface DropActionResult {
@@ -60,7 +76,8 @@ export interface DropEventPayload {
   revealAt: string;
   endAt: string;
   totalSlots: number;
-  publicChallengeCode: string;
+  publicChallengeCode?: string;
+  accessKeys: string[];
   publishNow?: boolean;
 }
 

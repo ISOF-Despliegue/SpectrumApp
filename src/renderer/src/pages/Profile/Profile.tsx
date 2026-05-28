@@ -108,6 +108,8 @@ export const Profile: React.FC = () => {
       };
 
       await ProfileService.updateMyProfile(updateData);
+      const refreshedProfile = await ProfileService.getMe();
+      setProfile(refreshedProfile);
 
       setStatus({ type: 'success', message: t('messages.profileUpdated') });
       setIsEditing(false);
@@ -215,6 +217,7 @@ export const Profile: React.FC = () => {
               <input
                 className={styles.usernameInput}
                 value={profile.username}
+                maxLength={50}
                 onChange={(e) => setProfile({...profile, username: e.target.value})}
               />
             ) : (
@@ -238,6 +241,7 @@ export const Profile: React.FC = () => {
                 className={styles.bioEditor}
                 placeholder={t('placeholders.bio')}
                 value={profile.biography || ''}
+                maxLength={500}
                 onChange={(e) => setProfile({...profile, biography: e.target.value})}
               />
             ) : (

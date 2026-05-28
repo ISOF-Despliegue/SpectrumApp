@@ -10,7 +10,6 @@ export const Home = (): React.JSX.Element => {
   const navigate = useNavigate();
   const [dashboard, setDashboard] = useState<HomeDashboard | null>(null);
   const [selectedDrop, setSelectedDrop] = useState<DropEvent | null>(null);
-  const [claimCode, setClaimCode] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState<GlobalSearchItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +58,7 @@ export const Home = (): React.JSX.Element => {
   const countdownText = useMemo(() => {
     if (!selectedDrop) return '';
     const startsInMs = new Date(selectedDrop.startAt).getTime() - Date.now();
-    if (startsInMs <= 0) return 'El sorteo esta por comenzar.';
+    if (startsInMs <= 0) return 'El sorteo está por comenzar.';
     const minutes = Math.ceil(startsInMs / 60000);
     return `Faltan ${minutes} min para que empiece.`;
   }, [selectedDrop]);
@@ -92,15 +91,14 @@ export const Home = (): React.JSX.Element => {
     setMessage(null);
     setError(null);
     try {
-      const result = await DropsService.claim(selectedDrop.eventId, claimCode);
+      const result = await DropsService.claim(selectedDrop.eventId);
       if (result.success) {
-        setMessage('Ganaste. Tu recompensa llegara a tu correo en las proximas 24 horas.');
+        setMessage('Ganaste. Tu recompensa llegará a tu correo en las próximas 24 horas.');
       } else if (result.winnerUsername) {
         setMessage(`Sorteo finalizado. Ganador: ${result.winnerUsername}.`);
       } else {
-        setMessage('El codigo no coincide o el sorteo ya no admite reclamos.');
+        setMessage('El sorteo ya no admite reclamos o no hay códigos disponibles.');
       }
-      setClaimCode('');
       await loadDashboard();
     } catch {
       setError('No fue posible reclamar este sorteo.');
@@ -205,19 +203,13 @@ export const Home = (): React.JSX.Element => {
             <p>{new Date(selectedDrop.startAt).toLocaleString()} - {new Date(selectedDrop.endAt).toLocaleString()}</p>
             <strong>{countdownText}</strong>
 
-            {selectedDrop.publicChallengeCode ? (
+            {selectedDrop.status === 'REVEAL_ACTIVE' ? (
               <div className={styles.claimBox}>
-                <p>Escribe en el cuadro de abajo:</p>
-                <code>{selectedDrop.publicChallengeCode}</code>
-                <input
-                  value={claimCode}
-                  onPaste={(event) => event.preventDefault()}
-                  onChange={(event) => setClaimCode(event.target.value)}
-                />
-                <button type="button" onClick={claimDrop}>Reclamar</button>
+                <p>La revelación está activa. Presiona reclamar para intentar obtener un código disponible.</p>
+                <button type="button" onClick={claimDrop}>Canjear código</button>
               </div>
             ) : (
-              <p>El codigo publico aparecera cuando llegue la hora de revelacion.</p>
+              <p>La reclamación se habilitará cuando llegue la hora de revelación.</p>
             )}
           </section>
         </div>

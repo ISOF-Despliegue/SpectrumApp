@@ -113,3 +113,11 @@
   font-weight: 500;
   animation: modalFadeIn 0.2s ease-out;
 }
+
+.successText {
+  color: #22c55e;
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 500;
+  animation: modalFadeIn 0.2s ease-out;
+}
