@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import styles from './profile.module.css';
+import styles from './Profile.module.css';
 import { ProfileService, UserProfile, ProfileGame } from '../../services/profile.service';
 
 import { ActionButton } from '../../components/ui/ActionButton';
