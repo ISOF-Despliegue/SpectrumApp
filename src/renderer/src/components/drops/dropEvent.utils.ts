@@ -69,10 +69,18 @@ export const getDropPollingInterval = (status?: DropStatus): number | null => {
   }
 };
 
-export const canJoinDrop = (drop: DropEvent, isAdmin: boolean): boolean =>
-  !isAdmin &&
-  !isJoinedToDrop(drop) &&
-  Boolean(drop.canJoin ?? (JOIN_OPEN_STATUSES.has(drop.status) && getRemainingSlots(drop) > 0));
+export const canJoinDrop = (drop: DropEvent, now: number, isAdmin: boolean): boolean => {
+  const startAt = new Date(drop.startAt).getTime();
+  const closeAt = new Date(drop.closeAt ?? drop.joinDeadlineAt).getTime();
+  const registrationWindowOpen = now >= startAt && now < closeAt;
+
+  return (
+    !isAdmin &&
+    !isJoinedToDrop(drop) &&
+    registrationWindowOpen &&
+    Boolean(drop.canJoin ?? (JOIN_OPEN_STATUSES.has(drop.status) && getRemainingSlots(drop) > 0))
+  );
+};
 
 export const canClaimDrop = (drop: DropEvent, now: number, isAdmin: boolean): boolean => {
   const revealAt = new Date(drop.revealAt).getTime();
@@ -93,12 +101,16 @@ export const canClaimDrop = (drop: DropEvent, now: number, isAdmin: boolean): bo
 };
 
 export const getDropStatusMessageKey = (drop: DropEvent, now: number): string => {
+  const startAt = new Date(drop.startAt).getTime();
   const closeAt = new Date(drop.closeAt ?? drop.joinDeadlineAt).getTime();
   const revealAt = new Date(drop.revealAt).getTime();
   const endAt = new Date(drop.endAt).getTime();
 
   if (getRemainingCodes(drop) <= 0 || drop.status === 'EXHAUSTED') return 'drops.state.exhausted';
-  if (now <= closeAt && JOIN_OPEN_STATUSES.has(drop.status)) return 'drops.state.registrationOpen';
+  if (now < startAt || drop.status === 'UPCOMING' || drop.status === 'SCHEDULED' || drop.status === 'DRAFT') {
+    return 'drops.state.upcoming';
+  }
+  if ((now >= startAt && now < closeAt) || JOIN_OPEN_STATUSES.has(drop.status)) return 'drops.state.registrationOpen';
   if (now < revealAt || drop.status === 'REGISTRATION_CLOSED') return 'drops.state.waitingReveal';
   if (now <= endAt && getRemainingCodes(drop) > 0) return 'drops.state.revealActive';
   if (FINISHED_STATUSES.has(drop.status)) return 'drops.state.finished';
@@ -106,6 +118,7 @@ export const getDropStatusMessageKey = (drop: DropEvent, now: number): string =>
 };
 
 export const getDropStatusMessageParams = (drop: DropEvent): Record<string, string> => ({
+  startTime: formatClock(drop.startAt),
   closeTime: formatClock(drop.closeAt ?? drop.joinDeadlineAt),
   revealTime: formatClock(drop.revealAt)
 });

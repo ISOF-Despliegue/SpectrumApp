@@ -69,7 +69,7 @@
     "loadingDetail": "Cargando sorteo...",
     "detailLoadError": "No se pudo cargar el sorteo.",
     "state": {
-      "upcoming": "Este sorteo comenzará pronto.",
+      "upcoming": "El sorteo aún no inicia. El registro abrirá a las {{startTime}}.",
       "registrationOpen": "El registro está abierto. Cierra a las {{closeTime}}.",
       "waitingReveal": "El registro ha finalizado. La revelación comenzará a las {{revealTime}}.",
       "revealActive": "La revelación está activa. Reclama una recompensa antes de que se agoten.",

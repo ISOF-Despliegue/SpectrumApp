@@ -111,7 +111,7 @@ export const DropEventPanel = ({
       </div>
 
       <div className={styles.actions}>
-        {canJoinDrop(drop, isAdmin) && (
+        {canJoinDrop(drop, now, isAdmin) && (
           <button className={styles.primaryButton} type="button" disabled={isBusy} onClick={onJoin}>
             {t('drops.join')}
           </button>

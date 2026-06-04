@@ -69,7 +69,7 @@
     "loadingDetail": "Loading giveaway...",
     "detailLoadError": "The giveaway could not be loaded.",
     "state": {
-      "upcoming": "This giveaway will start soon.",
+      "upcoming": "This giveaway has not started yet. Registration opens at {{startTime}}.",
       "registrationOpen": "Registration is open. It closes at {{closeTime}}.",
       "waitingReveal": "Registration has ended. Reveal starts at {{revealTime}}.",
       "revealActive": "Reveal is active. Claim a reward before they run out.",
