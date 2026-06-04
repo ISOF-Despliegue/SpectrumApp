@@ -6,6 +6,7 @@ import { DropEvent, DropEventPayload } from '../../../types/drops.types';
 import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 import { Game, getGames } from '../../../services/games.service';
 import { useToast } from '../../../components/ui/Toast';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
 
 const toLocalInput = (date: Date): string => {
   const offset = date.getTimezoneOffset() * 60000;
@@ -206,7 +207,7 @@ export const AdminManageEvents = (): React.JSX.Element => {
           <h1>{t('manageEvents.title')}</h1>
           <p>{t('manageEvents.subtitle')}</p>
         </div>
-        <select value={scope} onChange={(event) => setScope(event.target.value)}>
+        <select className={styles.selectField} value={scope} onChange={(event) => setScope(event.target.value)}>
           <option value="CURRENT">{t('manageEvents.current')}</option>
           <option value="UPCOMING">{t('manageEvents.upcoming')}</option>
           <option value="PAST">{t('manageEvents.past')}</option>
@@ -217,9 +218,9 @@ export const AdminManageEvents = (): React.JSX.Element => {
       <section className={styles.formPanel}>
         <h2>{editingId ? t('manageEvents.editTitle') : t('manageEvents.createTitle')}</h2>
         <div className={styles.formGrid}>
-          <input placeholder={t('manageEvents.labels.title')} maxLength={120} value={form.title} onChange={(event) => updateField('title', event.target.value)} />
+          <input placeholder={t('manageEvents.labels.title')} maxLength={FIELD_LIMITS.shortText} value={form.title} onChange={(event) => updateField('title', event.target.value)} />
           <div className={styles.autocomplete}>
-            <input placeholder={t('manageEvents.labels.game')} value={form.gameTitle} onChange={(event) => updateField('gameTitle', event.target.value)} />
+            <input placeholder={t('manageEvents.labels.game')} maxLength={FIELD_LIMITS.shortText} value={form.gameTitle} onChange={(event) => updateField('gameTitle', event.target.value)} />
             {(gameSuggestions.length > 0 || isSearchingGames) && (
               <div className={styles.suggestions}>
                 {isSearchingGames && <span>{t('manageEvents.searching')}</span>}
@@ -232,14 +233,14 @@ export const AdminManageEvents = (): React.JSX.Element => {
               </div>
             )}
           </div>
-          <select value={form.platform} onChange={(event) => updateField('platform', event.target.value)}>
+          <select className={styles.selectField} value={form.platform} onChange={(event) => updateField('platform', event.target.value)}>
             <option value="PC">PC</option>
             <option value="Xbox">Xbox</option>
             <option value="Nintendo">Nintendo</option>
             <option value="Celular">Celular</option>
           </select>
-          <textarea placeholder={t('manageEvents.labels.description')} maxLength={500} value={form.description} onChange={(event) => updateField('description', event.target.value)} />
-          <textarea placeholder={t('manageEvents.labels.codes')} maxLength={2000} value={accessKeysText} onChange={(event) => setAccessKeysText(event.target.value)} />
+          <textarea placeholder={t('manageEvents.labels.description')} maxLength={FIELD_LIMITS.longText} value={form.description} onChange={(event) => updateField('description', event.target.value)} />
+          <textarea placeholder={t('manageEvents.labels.codes')} maxLength={FIELD_LIMITS.dropCodes} value={accessKeysText} onChange={(event) => setAccessKeysText(event.target.value)} />
           <input aria-label={t('manageEvents.labels.totalSlots')} type="number" min="1" value={form.totalSlots} onChange={(event) => updateField('totalSlots', Number(event.target.value))} />
           <label>{t('manageEvents.labels.startAt')}<input type="datetime-local" value={form.startAt} onChange={(event) => updateField('startAt', event.target.value)} /></label>
           <label>{t('manageEvents.labels.joinDeadlineAt')}<input type="datetime-local" value={form.joinDeadlineAt} onChange={(event) => updateField('joinDeadlineAt', event.target.value)} /></label>

@@ -1,16 +1,14 @@
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   padding: 16px;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 2200;
+  overflow-y: auto;
 }
 
 .modalContent {
@@ -20,6 +18,7 @@
   padding: 24px;
   width: 90%;
   max-width: 500px;
+  min-width: 0;
   color: var(--text-color, #ffffff);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   animation: modalFadeIn 0.3s ease-out;
@@ -68,10 +67,16 @@
   min-height: 120px;
 }
 
-.textarea:focus {
+.textarea:hover,
+.selectInput:hover {
+  border-color: rgba(217, 70, 239, 0.55);
+}
+
+.textarea:focus,
+.selectInput:focus {
   outline: none;
-  border-color: #ff4757;
-  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.2);
+  border-color: #d946ef;
+  box-shadow: 0 0 0 2px rgba(217, 70, 239, 0.22);
 }
 
 .actions {
@@ -79,6 +84,7 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 
 .cancelBtn {
@@ -109,10 +115,10 @@
   appearance: none;
 }
 
-.selectInput:focus {
-  outline: none;
-  border-color: #ff4757;
-  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.2);
+.selectInput:disabled,
+.textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
 }
 
 .selectInput option {
@@ -134,4 +140,22 @@
   margin: 0;
   font-weight: 500;
   animation: modalFadeIn 0.2s ease-out;
+}
+
+@media (max-width: 520px) {
+  .overlay {
+    align-items: stretch;
+    padding: 10px;
+  }
+
+  .modalContent {
+    width: 100%;
+    max-height: calc(100vh - 20px);
+    padding: 18px;
+  }
+
+  .actions > *,
+  .cancelBtn {
+    width: 100%;
+  }
 }

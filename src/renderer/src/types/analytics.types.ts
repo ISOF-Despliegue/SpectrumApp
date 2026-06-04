@@ -62,6 +62,12 @@ export interface NamedMetric {
   count: number;
   score: number;
   imageUrl?: string | null;
+  coverImageUrl?: string | null;
+  profileImageUrl?: string | null;
+  iconUrl?: string | null;
+  gameId?: number | string | null;
+  userId?: string | null;
+  username?: string | null;
 }
 
 export interface TrendsDashboard {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getGames, Game } from '../../../../services/games.service';
 import { validateVideoMetadata } from '../../../../utilities/videoValidation';
+import { FIELD_LIMITS } from '../../../../utilities/validationRules';
 import { VideoUploadModal } from './VideoUploadModal';
 import { ActionButton } from '../../ActionButton';
 import { GameCardMedium } from '../../GameCardMedium/GameCardMedium';
@@ -57,10 +58,6 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
   const [fileError, setFileError] = useState<string>('');
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, sortBy]);
-
-  useEffect(() => {
     if (gameId) return;
 
     const delayDebounce = setTimeout(async () => {
@@ -95,9 +92,10 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
       setFileError('');
       validateVideoMetadata(file);
       setSelectedFile(file);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : t('videoUpload:form.validationFile');
       setSelectedFile(null);
-      setFileError(error.message || t('videoUpload:form.validationFile'));
+      setFileError(message);
     }
   };
 
@@ -153,7 +151,10 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                   className={styles.formInput}
                   placeholder={t('common:searchers.searchByName')}
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 />
               </div>
 
@@ -162,7 +163,10 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                 <select
                   className={styles.formSelect}
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => {
+                    setSortBy(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
                   <option value="none">{t('common:filters.options.default')}</option>
                   <option value="name_asc">{t('common:filters.options.nameAsc')}</option>
@@ -232,6 +236,7 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                     className={styles.formInput}
                     placeholder={t('videoUpload:form.titlePlaceholder')}
                     value={clipTitle}
+                    maxLength={FIELD_LIMITS.clipTitle}
                     onChange={(e) => setClipTitle(e.target.value)}
                   />
                   {titleError && <span className={styles.inlineErrorLabel}>{titleError}</span>}
@@ -243,6 +248,7 @@ export const ClipUploadFlowModal: React.FC<ClipUploadFlowModalProps> = ({
                     className={styles.formTextarea}
                     placeholder={t('videoUpload:form.descriptionPlaceholder')}
                     value={clipDescription}
+                    maxLength={FIELD_LIMITS.clipDescription}
                     onChange={(e) => setClipDescription(e.target.value)}
                   />
                 </div>

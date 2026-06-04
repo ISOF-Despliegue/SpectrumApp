@@ -8,6 +8,8 @@ import { ActionButton } from '../../../components/ui/ActionButton';
 import { Pagination } from '../../../components/ui/Pagination';
 import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 import { useToast } from '../../../components/ui/Toast';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
+import { asApiError } from '../../../utilities/apiError';
 
 const PAGE_SIZE = 10;
 
@@ -87,8 +89,9 @@ export const ManageReports = (): React.JSX.Element => {
         try {
           await toggleUserSuspension(userId, true);
           toast.success(t('manageReports.userSuspended'));
-        } catch (err: any) {
-          toast.error(err.response?.data?.title || t('manageReports.errorAction'));
+        } catch (err: unknown) {
+          const apiError = asApiError(err);
+          toast.error(apiError.response?.data?.title || t('manageReports.errorAction'));
         } finally {
           setIsProcessingAction(false);
         }
@@ -155,6 +158,7 @@ export const ManageReports = (): React.JSX.Element => {
             className={styles.textarea}
             placeholder={t('manageReports.details.adminNotesPlaceholder')}
             value={adminNotes}
+            maxLength={FIELD_LIMITS.longText}
             onChange={(event) => setAdminNotes(event.target.value)}
             rows={4}
           />

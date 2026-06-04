@@ -4,6 +4,7 @@ import styles from './MyProfile.module.css';
 import { AdminProfile, AdminProfileService, UpdateAdminProfilePayload } from '../../../services/adminProfile.service';
 import { useToast } from '../../../components/ui/Toast';
 import { EditableProfileImage } from '../../../components/ui/ProfileComponents/EditableProfileImage';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
 
 const toEditablePayload = (profile: AdminProfile): UpdateAdminProfilePayload => ({
   username: profile.username,
@@ -118,31 +119,31 @@ export const AdminMyProfile = (): React.JSX.Element => {
         <div className={styles.formGrid}>
           <label>
             {t('adminProfile.fields.username')}
-            <input value={form.username} disabled={!isEditing} onChange={(event) => updateField('username', event.target.value)} />
+            <input value={form.username} maxLength={FIELD_LIMITS.username} disabled={!isEditing} onChange={(event) => updateField('username', event.target.value)} />
           </label>
           <label>
             {t('adminProfile.fields.email')}
-            <input value={profile.email} disabled title={t('adminProfile.readOnly')} />
+            <input value={profile.email} maxLength={FIELD_LIMITS.email} disabled title={t('adminProfile.readOnly')} />
           </label>
           <label>
             {t('adminProfile.fields.firstName')}
-            <input value={form.firstName} disabled={!isEditing} onChange={(event) => updateField('firstName', event.target.value)} />
+            <input value={form.firstName} maxLength={FIELD_LIMITS.username} disabled={!isEditing} onChange={(event) => updateField('firstName', event.target.value)} />
           </label>
           <label>
             {t('adminProfile.fields.lastName')}
-            <input value={form.lastName} disabled={!isEditing} onChange={(event) => updateField('lastName', event.target.value)} />
+            <input value={form.lastName} maxLength={FIELD_LIMITS.username} disabled={!isEditing} onChange={(event) => updateField('lastName', event.target.value)} />
           </label>
           <label>
             {t('adminProfile.fields.phoneNumber')}
-            <input value={form.phoneNumber} disabled={!isEditing} onChange={(event) => updateField('phoneNumber', event.target.value)} />
+            <input value={form.phoneNumber} maxLength={FIELD_LIMITS.phone} disabled={!isEditing} onChange={(event) => updateField('phoneNumber', event.target.value)} />
           </label>
           <label>
             {t('adminProfile.fields.rfc')}
-            <input value={profile.rfc} disabled title={t('adminProfile.readOnly')} />
+            <input value={profile.rfc} maxLength={FIELD_LIMITS.rfc} disabled title={t('adminProfile.readOnly')} />
           </label>
           <label className={styles.wide}>
             {t('adminProfile.fields.address')}
-            <input value={form.address} disabled={!isEditing} onChange={(event) => updateField('address', event.target.value)} />
+            <input value={form.address} maxLength={FIELD_LIMITS.address} disabled={!isEditing} onChange={(event) => updateField('address', event.target.value)} />
           </label>
         </div>
       </section>

@@ -1,11 +1,13 @@
+import type React from 'react';
 import styles from './GameCardMedium.module.css';
 
 interface GameCardMediumProps {
   imageUrl?: string;
+  alt?: string;
   onClick?: () => void;
 }
 
-export const GameCardMedium = ({ imageUrl, onClick }: GameCardMediumProps) => {
+export const GameCardMedium = ({ imageUrl, alt = 'Game', onClick }: GameCardMediumProps): React.JSX.Element => {
   const defaultImage = "https://via.placeholder.com/150";
 
   return (
@@ -15,8 +17,9 @@ export const GameCardMedium = ({ imageUrl, onClick }: GameCardMediumProps) => {
     >
       <img
         src={imageUrl || defaultImage}
-        alt="Game"
+        alt={alt}
         className={styles.gameCardImage}
+        loading="lazy"
       />
     </button>
   );

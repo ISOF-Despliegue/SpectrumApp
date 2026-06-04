@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { validateVideoMetadata, validateVideoDuration } from '../../../../utilities/videoValidation';
 import { startVideoUpload, uploadVideoChunk, completeVideoUpload } from '../../../../services/clips.service';
 import { PartEtag } from '../../../../types/media.types';
 import { ActionButton } from '../../ActionButton';
+import { asApiError, ApiErrorLike } from '../../../../utilities/apiError';
 import styles from './VideoUploadModal.module.css';
 
 /**
@@ -38,8 +39,21 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
   const [phase, setPhase] = useState<UploadPhase>('validating');
   const [progressPercent, setProgressPercent] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const didFinishRef = useRef(false);
 
   const chunkLimitSize = 5 * 1024 * 1024;
+
+  const getFriendlyUploadError = (error: ApiErrorLike): string => {
+    if (error.response?.status === 503) {
+      return 'El servicio de clips no esta disponible. Intentalo de nuevo en unos minutos.';
+    }
+
+    if (error.message?.includes('metadata') || error.message?.includes('duration')) {
+      return t('form.validationFile');
+    }
+
+    return error.response?.data?.title || 'No se pudo subir el clip. Revisa el archivo e intentalo de nuevo.';
+  };
 
   useEffect(() => {
     let isCancelled = false;
@@ -100,16 +114,18 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
         setPhase('success');
 
         setTimeout(() => {
-          if (!isCancelled) {
+          if (!isCancelled && !didFinishRef.current) {
+            didFinishRef.current = true;
             onSuccess(finalVideoUrl);
             onClose();
           }
         }, 1500);
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (!isCancelled) {
+          const apiError = asApiError(error);
           setPhase('error');
-          setErrorMessage(error.response?.data?.detail || error.message || 'Unknown upload error.');
+          setErrorMessage(getFriendlyUploadError(apiError));
         }
       }
     };
@@ -148,9 +164,7 @@ export const VideoUploadModal: React.FC<VideoUploadModalProps> = ({
                 {t('messages.error')}
               </span>
               <span className={styles.errorDetail}>
-                {errorMessage.includes('metadata') || errorMessage.includes('duration')
-                  ? t('form.validationFile')
-                  : errorMessage}
+                {errorMessage}
               </span>
               <strong className={styles.errorRetry}>
                 {t('messages.retry')}

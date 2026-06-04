@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { validateImageFile } from '../../../../utilities/imageValidation';
 import { ProfileService } from '../../../../services/profile.service';
+import { asApiError } from '../../../../utilities/apiError';
 import defaultPhoto from '../../../../assets/images/common/defaultPhotoProfile.png';
 import styles from './EditableProfileImage.module.css';
 
@@ -54,8 +55,9 @@ export const EditableProfileImage: React.FC<EditableProfileImageProps> = ({
       const uploadedUrl = await ProfileService.updateAvatar(file);
 
       onAvatarUpdated(uploadedUrl);
-    } catch (error: any) {
-      const message = error.response?.data?.detail || error.message || t('messages.error');
+    } catch (error: unknown) {
+      const apiError = asApiError(error);
+      const message = apiError.response?.data?.detail || apiError.message || t('messages.error');
       setValidationError(message);
     } finally {
       setIsUploading(false);
@@ -81,6 +83,7 @@ export const EditableProfileImage: React.FC<EditableProfileImageProps> = ({
           src={imageUrl || defaultPhoto}
           alt="Profile"
           className={styles.profileImage}
+          loading="lazy"
         />
 
         {isEditing && !isUploading && (

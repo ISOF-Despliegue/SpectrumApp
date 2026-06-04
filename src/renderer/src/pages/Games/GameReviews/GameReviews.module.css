@@ -331,6 +331,56 @@
   font-family: var(--font-global);
 }
 
+.fileInputHidden {
+  position: absolute;
+  width: 1px !important;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.filePickerRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.fileButton {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(217, 70, 239, 0.42);
+  border-radius: 8px;
+  background: rgba(217, 70, 239, 0.12);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0.65rem 0.9rem;
+}
+
+.field:focus-within .fileButton,
+.fileButton:hover {
+  border-color: rgba(217, 70, 239, 0.8);
+  background: rgba(217, 70, 239, 0.22);
+}
+
+.fileName {
+  min-width: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.72);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fieldError {
+  color: #fecaca;
+  font-size: 0.85rem;
+}
+
 .field textarea {
   resize: vertical;
 }
@@ -455,8 +505,13 @@
 
   .formActions .primaryButton,
   .secondaryButton,
-  .actionButton {
+  .actionButton,
+  .fileButton {
     width: 100%;
     justify-content: center;
+  }
+
+  .filePickerRow {
+    grid-template-columns: 1fr;
   }
 }

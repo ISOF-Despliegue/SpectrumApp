@@ -5,6 +5,7 @@ import { ActionButton } from '../../ActionButton/ActionButton';
 import { ProfileService } from '../../../../services/profile.service';
 import styles from './PasswordChangeModal.module.css';
 import { isStrongPassword } from '../../../../pages/Auth/auth-flow.utils';
+import { FIELD_LIMITS } from '../../../../utilities/validationRules';
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
@@ -138,6 +139,7 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen
                 type="text"
                 className={styles.passwordInput}
                 value={data.code}
+                maxLength={6}
                 onChange={(e) => setData({ ...data, code: e.target.value.replace(/\D/g, '').slice(0, 6) })}
               />
             </div>
@@ -151,6 +153,7 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen
                   type="password"
                   className={styles.passwordInput}
                   value={data.newPassword}
+                  maxLength={FIELD_LIMITS.password}
                   onChange={(e) => setData({ ...data, newPassword: e.target.value })}
                 />
               </div>
@@ -161,6 +164,7 @@ export const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({ isOpen
                   type="password"
                   className={styles.passwordInput}
                   value={data.confirmPassword}
+                  maxLength={FIELD_LIMITS.password}
                   onChange={(e) => setData({ ...data, confirmPassword: e.target.value })}
                 />
               </div>

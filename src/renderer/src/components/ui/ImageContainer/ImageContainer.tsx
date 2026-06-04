@@ -34,6 +34,7 @@ export const ImageContainer: React.FC<ImageContainerProps> = ({
           src={src}
           alt={alt}
           className={styles.image}
+          loading="lazy"
         />
       )}
     </div>
