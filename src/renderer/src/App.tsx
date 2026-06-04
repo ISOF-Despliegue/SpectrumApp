@@ -7,6 +7,7 @@ import { VerifyRegistration } from './pages/Auth/VerifyRegistration';
 import { ForgotPassword } from './pages/Auth/ForgotPassword';
 import { ResetPassword } from './pages/Auth/ResetPassword';
 import { Games } from './pages/Games';
+import { DropEventDetail } from './pages/Drops';
 import { MainLayout } from './components/ui/MainLayout';
 import { Admin } from './pages/Admin';
 import { AdminMyProfile } from './pages/Admin/MyProfile';
@@ -42,6 +43,7 @@ function AppContent(): React.JSX.Element {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/drops/:eventId" element={<ProtectedRoute><DropEventDetail /></ProtectedRoute>} />
         <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
         <Route path="/games/:gameId/reviews" element={<ProtectedRoute><GameReviews /></ProtectedRoute>} />
         <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />

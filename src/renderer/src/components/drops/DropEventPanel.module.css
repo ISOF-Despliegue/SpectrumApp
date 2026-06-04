@@ -1,0 +1,219 @@
+.panel {
+  display: grid;
+  gap: 1rem;
+  color: #f8fafc;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.heroImage {
+  width: 100%;
+  min-height: 230px;
+  max-height: 360px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #172033;
+}
+
+.summary {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+}
+
+.summary h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+}
+
+.summary h2,
+.summary p {
+  margin: 0;
+}
+
+.summary h2 {
+  font-size: 1.05rem;
+  color: #dbeafe;
+}
+
+.description {
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.statusPill {
+  width: fit-content;
+  border: 1px solid rgba(253, 224, 71, 0.4);
+  border-radius: 999px;
+  background: rgba(253, 224, 71, 0.12);
+  padding: 0.35rem 0.65rem;
+  color: #fef3c7;
+  font-weight: 800;
+}
+
+.statusMessage,
+.winnerMessage {
+  border-radius: 8px;
+  padding: 0.8rem 0.9rem;
+  line-height: 1.45;
+}
+
+.statusMessage {
+  border: 1px solid rgba(96, 165, 250, 0.32);
+  background: rgba(30, 64, 175, 0.18);
+}
+
+.winnerMessage {
+  border: 1px solid rgba(74, 222, 128, 0.38);
+  background: rgba(21, 128, 61, 0.18);
+  color: #dcfce7;
+  font-weight: 800;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.metaItem,
+.progressCard,
+.winnerPanel {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.64);
+  padding: 0.85rem;
+}
+
+.metaItem {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.metaItem span,
+.progressHeader span {
+  color: #94a3b8;
+  font-size: 0.82rem;
+}
+
+.metaItem strong {
+  font-size: 0.95rem;
+}
+
+.progressGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.progressCard {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.progressHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.progressBar {
+  overflow: hidden;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.22);
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #38bdf8, #fde047);
+  transition: width 220ms ease;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.primaryButton,
+.claimButton {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.72rem 1rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.claimButton {
+  background: #fde047;
+  color: #111827;
+}
+
+.primaryButton:disabled,
+.claimButton:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.joinedNote,
+.quietNote {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.joinedNote {
+  color: #bbf7d0;
+  font-weight: 700;
+}
+
+.winnerPanel {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.winnerPanel h3 {
+  margin: 0;
+}
+
+.winnerList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.winnerChip {
+  border: 1px solid rgba(253, 224, 71, 0.38);
+  border-radius: 999px;
+  background: rgba(253, 224, 71, 0.12);
+  padding: 0.38rem 0.65rem;
+  color: #fef3c7;
+  font-weight: 800;
+}
+
+@media (max-width: 860px) {
+  .hero,
+  .metaGrid,
+  .progressGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroImage {
+    min-height: 190px;
+  }
+}

@@ -16,8 +16,7 @@
   width: min(420px, 100%);
 }
 
-.searchBox input,
-.claimBox input {
+.searchBox input {
   width: 100%;
   min-height: 40px;
   border: 1px solid rgba(110, 168, 255, 0.55);
@@ -240,8 +239,7 @@
   object-fit: cover;
 }
 
-.dropCard button,
-.claimBox button {
+.dropCard button {
   min-height: 36px;
   border: 0;
   border-radius: 8px;
@@ -249,64 +247,6 @@
   color: #111827;
   font-weight: 800;
   cursor: pointer;
-}
-
-.dropMeta {
-  display: grid;
-  gap: 0.35rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.7rem;
-  color: #dbeafe;
-  text-align: left;
-}
-
-.statusNote {
-  display: block;
-  border-radius: 8px;
-  background: rgba(139, 92, 246, 0.18);
-  padding: 0.75rem;
-  color: #f8fafc;
-}
-
-.joinButton,
-.claimButton {
-  min-height: 42px;
-  border: 0;
-  border-radius: 8px;
-  font-weight: 900;
-  letter-spacing: 0;
-  cursor: pointer;
-}
-
-.joinButton {
-  background: #22c55e;
-  color: #052e16;
-}
-
-.claimButton {
-  background: #fde047;
-  color: #111827;
-}
-
-.winnerList {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.45rem;
-}
-
-.winnerList strong {
-  flex-basis: 100%;
-}
-
-.winnerList span {
-  border: 1px solid rgba(253, 224, 71, 0.35);
-  border-radius: 999px;
-  background: rgba(253, 224, 71, 0.1);
-  padding: 0.35rem 0.6rem;
-  color: #fef3c7;
 }
 
 .empty,
@@ -320,66 +260,6 @@
 
 .error {
   color: #fca5a5;
-}
-
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 70;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.dropModal {
-  position: relative;
-  width: min(620px, 100%);
-  display: grid;
-  gap: 0.75rem;
-  border: 1px solid rgba(110, 168, 255, 0.65);
-  border-radius: 8px;
-  background: #101827;
-  padding: 1rem;
-  text-align: center;
-}
-
-.dropModal img {
-  width: 100%;
-  max-height: 250px;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-.dropModal h2,
-.dropModal h3,
-.dropModal p {
-  margin: 0;
-}
-
-.closeButton {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  cursor: pointer;
-}
-
-.claimBox {
-  display: grid;
-  gap: 0.55rem;
-}
-
-.claimBox code {
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0.65rem;
-  font-weight: 800;
 }
 
 @media (max-width: 1050px) {
