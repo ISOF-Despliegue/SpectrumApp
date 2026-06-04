@@ -4,6 +4,7 @@
   "loading": "Loading trends...",
   "loadError": "Trends could not be loaded.",
   "empty": "There is not enough activity to chart yet.",
+  "emptyStatistic": "There is not enough data for this statistic yet.",
   "sections": {
     "weeklyTrend": "Weekly trend",
     "weeklyDiscussions": "Discussions of the week",

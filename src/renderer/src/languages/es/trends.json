@@ -4,6 +4,7 @@
   "loading": "Cargando tendencias...",
   "loadError": "No se pudieron cargar las tendencias.",
   "empty": "Aún no hay actividad suficiente para graficar.",
+  "emptyStatistic": "Aún no hay datos suficientes para esta estadística.",
   "sections": {
     "weeklyTrend": "Tendencia semanal",
     "weeklyDiscussions": "Discusiones de la semana",

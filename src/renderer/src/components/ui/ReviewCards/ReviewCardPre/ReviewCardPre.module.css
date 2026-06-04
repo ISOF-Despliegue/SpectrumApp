@@ -155,3 +155,101 @@
 .actionsCol, .interactions, .topActions {
   pointer-events: auto;
 }
+
+.profileVariant {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) minmax(120px, 150px) 76px minmax(132px, auto);
+  gap: 18px;
+  align-items: stretch;
+  padding: 18px;
+  min-height: 172px;
+}
+
+.profileVariant .gameCol {
+  transform: none;
+  display: flex;
+  align-items: stretch;
+}
+
+.profileVariant .gameCol :global(button) {
+  width: 96px;
+  min-width: 96px;
+  min-height: 136px;
+  pointer-events: none;
+}
+
+.profileVariant .userText {
+  min-width: 0;
+}
+
+.profileVariant .reviewTitle {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.profileVariant .reviewSummary {
+  -webkit-line-clamp: 4;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.profileVariant .imageCol {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.profileVariant .imageCol :global(img),
+.profileVariant .imageCol :global(video) {
+  max-height: 112px;
+}
+
+.profileVariant .actionsCol {
+  min-width: 132px;
+  gap: 12px;
+  align-self: stretch;
+}
+
+.profileVariant .interactions {
+  justify-content: flex-start;
+}
+
+@media (max-width: 1180px) {
+  .profileVariant {
+    grid-template-columns: 92px minmax(0, 1fr) 74px;
+  }
+
+  .profileVariant .imageCol,
+  .profileVariant .actionsCol {
+    grid-column: 2 / -1;
+  }
+
+  .profileVariant .actionsCol {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 680px) {
+  .profileVariant {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .profileVariant .gameCol,
+  .profileVariant .infoCol,
+  .profileVariant .imageCol,
+  .profileVariant .scoreCol,
+  .profileVariant .actionsCol {
+    grid-column: 1;
+  }
+
+  .profileVariant .gameCol :global(button) {
+    width: 100%;
+    min-width: 0;
+    min-height: 180px;
+  }
+}

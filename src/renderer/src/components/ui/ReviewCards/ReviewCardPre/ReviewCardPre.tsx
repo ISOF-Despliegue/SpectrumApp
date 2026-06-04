@@ -21,6 +21,7 @@ interface ReviewCardPreProps {
   dislikes: number;
   isOwnReview?: boolean;
   userVote?: 'like' | 'dislike' | null;
+  context?: 'default' | 'profile';
   onClick?: () => void;
 }
 
@@ -38,6 +39,7 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
   reviewImage,
   isOwnReview = false,
   userVote,
+  context = 'default',
   onClick
 }) => {
   const { t } = useTranslation('gameReviews');
@@ -48,7 +50,7 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
 
   return (
     <article
-      className={styles.containerPre}
+      className={`${styles.containerPre} ${context === 'profile' ? styles.profileVariant : ''}`}
       onClick={onClick}
       role="button"
       tabIndex={0}

@@ -7,6 +7,8 @@ import { HomeService } from '../../services/home.service';
 import { DropEvent } from '../../types/drops.types';
 import { GlobalSearchItem, HomeDashboard } from '../../types/home.types';
 import { useToast } from '../../components/ui/Toast';
+import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
+import { asApiError } from '../../utilities/apiError';
 import bannerOne from '../../assets/images/Banner1.gif';
 import bannerTwo from '../../assets/images/Banner2.png';
 
@@ -103,8 +105,9 @@ export const Home = (): React.JSX.Element => {
       setMessage(t('drops.joined'));
       toast.success(t('drops.joined'));
       await loadDashboard();
-    } catch (err: any) {
-      const friendlyMessage = err.response?.data?.title || t('drops.joinError');
+    } catch (err: unknown) {
+      const apiError = asApiError(err);
+      const friendlyMessage = apiError.response?.data?.title || t('drops.joinError');
       toast.error(friendlyMessage);
       setError(friendlyMessage);
     }
@@ -125,8 +128,9 @@ export const Home = (): React.JSX.Element => {
         setMessage(t('drops.claimUnavailable'));
       }
       await loadDashboard();
-    } catch (err: any) {
-      const friendlyMessage = err.response?.data?.title || t('drops.claimError');
+    } catch (err: unknown) {
+      const apiError = asApiError(err);
+      const friendlyMessage = apiError.response?.data?.title || t('drops.claimError');
       toast.error(friendlyMessage);
       setError(friendlyMessage);
     }
@@ -200,14 +204,19 @@ export const Home = (): React.JSX.Element => {
           <h2>{t('sections.popularReviews')}</h2>
           <div className={styles.reviewList}>
             {(dashboard?.popularReviewsToday || []).map((review) => (
-              <button key={review.reviewId} type="button" className={styles.reviewCard} onClick={() => navigate(`/games/${review.gameId}/reviews`)}>
-                {review.gameCoverUrl && <img src={review.gameCoverUrl} alt="" loading="lazy" />}
-                <span>
-                  <strong>{review.title}</strong>
-                  <small>{review.username} - {review.gameTitle}</small>
-                  <em>{t('reviews.likes', { count: review.likesCount })} - {t('reviews.comments', { count: review.commentsCount })}</em>
-                </span>
-              </button>
+              <ReviewCardPre
+                key={review.reviewId}
+                reviewId={review.reviewId}
+                gameCover={review.gameCoverUrl}
+                username={review.username}
+                reviewTitle={review.title}
+                reviewContent={review.content}
+                reviewDate={new Date(review.createdAt).toLocaleDateString()}
+                likes={review.likesCount}
+                dislikes={review.dislikesCount}
+                score={review.rating}
+                onClick={() => navigate(`/games/${review.gameId}/reviews`)}
+              />
             ))}
           </div>
           {!isLoading && dashboard?.popularReviewsToday.length === 0 && <p className={styles.empty}>{t('empty.popularReviews')}</p>}

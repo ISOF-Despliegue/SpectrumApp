@@ -11,30 +11,53 @@ import { ReviewVoteControls } from '../../components/ui/ReviewVoteControls';
 
 const PAGE_SIZE = 6;
 
+const getClipKey = (item: WeeklyReview): string =>
+  `${item.sourceType || 'CLIP'}-${item.reviewId || item.attachmentUrl}`;
+
 const dedupeClips = (items: WeeklyReview[]): WeeklyReview[] => {
   const seen = new Set<string>();
   return items.filter((item) => {
-    if (seen.has(item.reviewId)) {
+    const key = getClipKey(item);
+    if (!key || seen.has(key)) {
       return false;
     }
-    seen.add(item.reviewId);
+    seen.add(key);
     return true;
   });
+};
+
+const getTopWeeklyClips = (items: WeeklyReview[]): WeeklyReview[] =>
+  [...dedupeClips(items)]
+    .sort((first, second) =>
+      (second.likesCount - second.dislikesCount) - (first.likesCount - first.dislikesCount) ||
+      second.likesCount - first.likesCount
+    )
+    .slice(0, 3);
+
+const withoutClips = (items: WeeklyReview[], excluded: WeeklyReview[]): WeeklyReview[] => {
+  const excludedKeys = new Set(excluded.map(getClipKey));
+  return dedupeClips(items).filter((item) => !excludedKeys.has(getClipKey(item)));
 };
 
 const ClipCard = ({
   clip,
   playing,
-  onPlay
+  onPlay,
+  rank,
+  featured = false
 }: {
   clip: WeeklyReview;
   playing: string | null;
   onPlay: (reviewId: string) => void;
+  rank?: number;
+  featured?: boolean;
 }): React.JSX.Element => {
   const { t } = useTranslation('weeklyClips');
+  const vote = clip.userVote ?? clip.currentUserVote ?? clip.myVote ?? null;
 
   return (
-    <article className={styles.clipCard}>
+    <article className={`${styles.clipCard} ${featured ? styles.featuredClip : ''} ${rank ? styles[`rank${rank}`] : ''}`}>
+      {rank && <span className={styles.rankBadge}>#{rank}</span>}
       <div className={styles.videoShell}>
         {playing === clip.reviewId ? (
           <video src={clip.attachmentUrl} controls preload="metadata" />
@@ -44,15 +67,16 @@ const ClipCard = ({
       </div>
       <div className={styles.cardBody}>
         <h2>{clip.title}</h2>
-        <p>{clip.gameTitle} - {clip.username}</p>
+        <p className={styles.clipMeta}>{clip.gameTitle} - {clip.username}</p>
+        {clip.content && <p className={styles.clipDescription}>{clip.content}</p>}
         {clip.sourceType === 'GAME_CLIP' ? (
           <ClipVoteControls
             clipId={clip.reviewId}
             likes={clip.likesCount}
             dislikes={clip.dislikesCount}
-            userVote={clip.userVote ?? null}
+            userVote={vote}
             isOwnClip={clip.isOwnContent}
-            size="small"
+            size={featured ? 'medium' : 'small'}
           />
         ) : (
           <ReviewVoteControls
@@ -60,7 +84,10 @@ const ClipCard = ({
             likes={clip.likesCount}
             dislikes={clip.dislikesCount}
             isOwnReview={clip.isOwnContent}
-            size="small"
+            userVote={vote}
+            currentUserVote={clip.currentUserVote}
+            myVote={clip.myVote}
+            size={featured ? 'medium' : 'small'}
           />
         )}
       </div>
@@ -82,12 +109,13 @@ export const WeeklyClips = (): React.JSX.Element => {
   const loadClips = async (nextPage = page): Promise<void> => {
     setIsLoading(true);
     try {
-      const [result, monthlyTop] = await Promise.all([
+      const [result, topSource] = await Promise.all([
         AnalyticsService.getWeeklyClips(nextPage, PAGE_SIZE),
-        AnalyticsService.getMonthlyTopClips()
+        AnalyticsService.getWeeklyClips(1, PAGE_SIZE)
       ]);
-      setClips(dedupeClips(result.items));
-      setTopClips(dedupeClips(monthlyTop));
+      const resolvedTopClips = getTopWeeklyClips(topSource.items);
+      setTopClips(resolvedTopClips);
+      setClips(withoutClips(result.items, nextPage === 1 ? resolvedTopClips : []));
       setTotalCount(result.totalCount);
       setPage(nextPage);
     } catch {
@@ -112,21 +140,31 @@ export const WeeklyClips = (): React.JSX.Element => {
       </header>
 
       {isLoading && <p className={styles.loading}>{t('loading')}</p>}
-      {!isLoading && clips.length === 0 && <p className={styles.empty}>{t('empty')}</p>}
+      {!isLoading && clips.length === 0 && topClips.length === 0 && <p className={styles.empty}>{t('empty')}</p>}
 
       <section className={styles.topSection}>
-        <h2>{t('topMonth')}</h2>
-        <div className={styles.grid}>
-          {topClips.map((clip) => (
-            <ClipCard key={`top-${clip.reviewId}`} clip={clip} playing={playing} onPlay={setPlaying} />
+        <h2>{t('topWeek')}</h2>
+        <div className={styles.podiumGrid}>
+          {topClips.map((clip, index) => (
+            <ClipCard
+              key={`top-${getClipKey(clip)}`}
+              clip={clip}
+              playing={playing}
+              onPlay={setPlaying}
+              rank={index + 1}
+              featured
+            />
           ))}
         </div>
       </section>
 
-      <section className={styles.grid}>
+      <section className={styles.restSection}>
+        <h2>{t('rest')}</h2>
+        <div className={styles.grid}>
         {clips.map((clip) => (
-          <ClipCard key={clip.reviewId} clip={clip} playing={playing} onPlay={setPlaying} />
+          <ClipCard key={getClipKey(clip)} clip={clip} playing={playing} onPlay={setPlaying} />
         ))}
+        </div>
       </section>
 
       {totalCount > PAGE_SIZE && (

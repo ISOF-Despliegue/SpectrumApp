@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { voteClip } from '../../../services/clips.service';
 import { DislikeCard } from '../DislikeCard/DislikeCard';
 import { LikeCard } from '../LikeCard/LikeCard';
 import { useToast } from '../Toast';
+import { asApiError } from '../../../utilities/apiError';
 import styles from '../ReviewVoteControls/ReviewVoteControls.module.css';
 
 type Vote = 'like' | 'dislike' | null;
@@ -32,6 +33,15 @@ export const ClipVoteControls = ({
   const [currentVote, setCurrentVote] = useState<Vote>(userVote);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    setCurrentLikes(likes);
+    setCurrentDislikes(dislikes);
+  }, [likes, dislikes]);
+
+  useEffect(() => {
+    setCurrentVote(userVote);
+  }, [userVote]);
+
   const castVote = async (isPositive: boolean): Promise<void> => {
     if (isOwnClip) {
       toast.warning(t('clips.vote.ownClip'));
@@ -45,8 +55,9 @@ export const ClipVoteControls = ({
       setCurrentLikes(result.updatedLikes);
       setCurrentDislikes(result.updatedDislikes);
       setCurrentVote((previous) => (previous === nextVote ? null : nextVote));
-    } catch (error: any) {
-      toast.error(error.response?.data?.title || t('clips.vote.error'));
+    } catch (error: unknown) {
+      const apiError = asApiError(error);
+      toast.error(apiError.response?.data?.title || t('clips.vote.error'));
     } finally {
       setIsSubmitting(false);
     }

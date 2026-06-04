@@ -17,25 +17,12 @@ import { ProfileClipsSection } from '@renderer/components/ui/ProfileComponents/P
 import { ClipUploadFlowModal } from '@renderer/components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 import { ReviewDetailModal } from '../../components/ui/ReviewDetailModal';
-import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
 import { ReviewService } from '../../services/reviews.service';
 import type { Review } from '../../types/reviews.types';
 import { FIELD_LIMITS } from '../../utilities/validationRules';
 import { useToast } from '../../components/ui/Toast';
-
-import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
-import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
-import phoneLogo from '../../assets/images/platforms/phoneLogo.png';
-import playstationLogo from '../../assets/images/platforms/playstationLogo.png';
-import xboxLogo from '../../assets/images/platforms/xboxLogo.png';
-
-const PLATFORM_LOGOS: Record<string, string> = {
-  'Nintendo': nintendoLogo,
-  'PC': pcLogo,
-  'Phone': phoneLogo,
-  'PlayStation': playstationLogo,
-  'Xbox': xboxLogo
-};
+import { resolvePlatformIcon } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
+import { ProfileReviewPreviewCard } from '../../components/ui/ProfileComponents/ProfileReviewPreviewCard';
 
 /**
  * Main profile page component.
@@ -209,15 +196,22 @@ export const Profile: React.FC = () => {
           <div className={styles.platformGroup}>
             <h3 className={styles.label}>{t('labels.platforms')}</h3>
             <div className={styles.platformLogos}>
-              {profile.platforms.map(p => (
-                <div key={p.id} className={styles.logoWrapper} title={p.name}>
-                  <img
-                    src={PLATFORM_LOGOS[p.name]}
-                    alt={p.name}
-                    className={styles.platformIcon}
-                  />
-                </div>
-              ))}
+              {profile.platforms.map(p => {
+                const platformIcon = resolvePlatformIcon(p.name);
+                return (
+                  <div key={p.id} className={styles.logoWrapper} title={p.name}>
+                    {platformIcon ? (
+                      <img
+                        src={platformIcon}
+                        alt={p.name}
+                        className={styles.platformIcon}
+                      />
+                    ) : (
+                      <span className={styles.platformFallback}>{p.name.charAt(0).toUpperCase()}</span>
+                    )}
+                  </div>
+                );
+              })}
               {isEditing && (
                 <button
                   className={styles.addPlatformBtn}
@@ -272,21 +266,14 @@ export const Profile: React.FC = () => {
           <ProfileSection title={t('sections.reviews')} showSeeMore={true}>
             <div className={styles.reviewsList}>
               {reviews.map((review) => (
-                <ReviewCardPre
+                <ProfileReviewPreviewCard
                   key={review.id}
-                  reviewId={review.id}
                   gameCover={review.gameCoverUrl}
+                  gameTitle={review.gameTitle}
                   username={review.username}
                   userImage={review.userProfileImageUrl || review.profilePicture}
-                  reviewTitle={review.title}
-                  reviewContent={review.content}
-                  reviewDate={new Date(review.createdAt).toLocaleDateString()}
-                  reviewImage={review.attachmentType === 'image' ? review.attachmentUrl || review.imageUrl : undefined}
-                  likes={review.likesCount}
+                  content={review.content}
                   score={review.rating}
-                  dislikes={review.dislikesCount}
-                  isOwnReview={review.isOwnReview}
-                  userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
                   onClick={() => setSelectedReview(review)}
                 />
               ))}

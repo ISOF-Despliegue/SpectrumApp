@@ -62,6 +62,11 @@
   filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
 }
 
+.platformFallback {
+  color: #f5d0fe;
+  font-weight: 900;
+}
+
 .addPlatformBtn {
   width: 45px;
   height: 45px;
@@ -334,5 +339,25 @@
   }
   .rightColumn {
     grid-column: span 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .profileContainer {
+    padding: 24px 16px;
+  }
+
+  .profileLayout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .rightColumn {
+    grid-column: auto;
+  }
+
+  .usernameText,
+  .usernameInput {
+    font-size: 2.2rem;
   }
 }
