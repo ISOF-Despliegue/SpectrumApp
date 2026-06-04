@@ -19,6 +19,11 @@ export interface HomeReview {
   rating: number;
   likesCount: number;
   dislikesCount: number;
+  currentUserVote?: 'like' | 'dislike' | null;
+  userVote?: 'like' | 'dislike' | null;
+  myVote?: 'like' | 'dislike' | null;
+  isOwnReview?: boolean;
+  canVote?: boolean | null;
   commentsCount: number;
   createdAt: string;
 }

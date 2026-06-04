@@ -3,12 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { GlassContainer } from '../../GlassContainer/GlassContainer';
 import { ActionButton } from '../../ActionButton/ActionButton';
 import styles from './PlatformSelectionModal.module.css';
-
-import nintendoLogo from '../../../../assets/images/platforms/nintendoLogo.png';
-import pcLogo from '../../../../assets/images/platforms/pcgamerLogo.png';
-import phoneLogo from '../../../../assets/images/platforms/phoneLogo.png';
-import playstationLogo from '../../../../assets/images/platforms/playstationLogo.png';
-import xboxLogo from '../../../../assets/images/platforms/xboxLogo.png';
+import { AVAILABLE_PLATFORMS } from './platformAssets';
 
 interface ProfilePlatform {
   id: number;
@@ -21,17 +16,6 @@ interface PlatformSelectionModalProps {
   onSave: (selectedPlatforms: ProfilePlatform[]) => void;
   initialPlatforms: ProfilePlatform[];
 }
-
-/// <summary>
-/// Data structure for the local display of available platforms.
-/// </summary>
-const AVAILABLE_PLATFORMS = [
-  { id: 1, name: 'PC', icon: pcLogo },
-  { id: 2, name: 'PlayStation', icon: playstationLogo },
-  { id: 3, name: 'Xbox', icon: xboxLogo },
-  { id: 4, name: 'Nintendo', icon: nintendoLogo },
-  { id: 5, name: 'Phone', icon: phoneLogo },
-];
 
 /// <summary>
 /// Modal component that allows users to toggle their preferred gaming platforms.
@@ -51,7 +35,7 @@ export const PlatformSelectionModal: React.FC<PlatformSelectionModalProps> = ({
   /// <summary>
   /// Toggles the selection status of a platform in the local modal state.
   /// </summary>
-  const togglePlatform = (platform: ProfilePlatform) => {
+  const togglePlatform = (platform: ProfilePlatform): void => {
     const isAlreadySelected = selected.some(p => p.id === platform.id);
     if (isAlreadySelected) {
       setSelected(selected.filter(p => p.id !== platform.id));

@@ -6,6 +6,7 @@ import { ImageContainer } from '../../ImageContainer/ImageContainer';
 import { GameCard } from '../../GameCard/GameCard';
 import { ScoreDisplay } from '../../ScoreDisplay/ScoreDisplay';
 import { ReviewVoteControls } from '../../ReviewVoteControls';
+import { getReviewVotePermission } from '../../../../utilities/reviewVotePermissions';
 
 interface ReviewCardPreProps {
   reviewId?: string;
@@ -20,7 +21,9 @@ interface ReviewCardPreProps {
   score?: number;
   dislikes: number;
   isOwnReview?: boolean;
+  canVote?: boolean | null;
   userVote?: 'like' | 'dislike' | null;
+  context?: 'default' | 'home' | 'profile';
   onClick?: () => void;
 }
 
@@ -37,10 +40,13 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
   dislikes,
   reviewImage,
   isOwnReview = false,
+  canVote,
   userVote,
+  context = 'default',
   onClick
 }) => {
   const { t } = useTranslation('gameReviews');
+  const votePermission = getReviewVotePermission({ isOwnReview, canVote });
 
   const handleInternalClick = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -48,7 +54,7 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
 
   return (
     <article
-      className={styles.containerPre}
+      className={`${styles.containerPre} ${context === 'profile' ? styles.profileVariant : ''} ${context === 'home' ? styles.homeVariant : ''}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -78,7 +84,7 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
         </section>
       )}
 
-      {Number.isFinite(score) && (
+      {Number.isFinite(score) && context !== 'home' && (
         <section className={styles.scoreCol}>
           <ScoreDisplay score={score as number} size="small" />
         </section>
@@ -89,6 +95,12 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
           <time className={styles.date}>{reviewDate}</time>
         </div>
 
+        {Number.isFinite(score) && context === 'home' && (
+          <div className={styles.compactScore}>
+            <ScoreDisplay score={score as number} size="small" />
+          </div>
+        )}
+
         <div className={styles.interactions}>
           {reviewId && (
             <ReviewVoteControls
@@ -97,7 +109,8 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
               dislikes={dislikes}
               isOwnReview={isOwnReview}
               userVote={userVote}
-              size="small"
+              disabled={votePermission.disabled}
+              size={context === 'home' ? 'compact' : 'small'}
             />
           )}
         </div>

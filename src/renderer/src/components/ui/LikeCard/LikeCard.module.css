@@ -21,18 +21,26 @@
 }
 
 .medium {
-  --icon-size: 30px;
-  --grid-columns: 40px 1fr;
-  --padding-size: 8px 16px;
-  --font-size: 1.1rem;
+  --icon-size: 38px;
+  --grid-columns: 48px 1fr;
+  --padding-size: 10px 18px;
+  --font-size: 1.18rem;
   border-radius: 12px;
 }
 
 .small {
-  --icon-size: 18px;
-  --grid-columns: 25px 1fr;
-  --padding-size: 4px 10px;
-  --font-size: 0.85rem;
+  --icon-size: 24px;
+  --grid-columns: 32px 1fr;
+  --padding-size: 6px 12px;
+  --font-size: 0.95rem;
+  border-radius: 8px;
+}
+
+.compact {
+  --icon-size: 20px;
+  --grid-columns: 26px 1fr;
+  --padding-size: 5px 9px;
+  --font-size: 0.82rem;
   border-radius: 8px;
 }
 
@@ -55,7 +63,7 @@
 .activeState {
   background: rgba(0, 255, 136, 0.15);
   border-color: #00ff88;
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.36), inset 0 0 0 1px rgba(0, 255, 136, 0.28);
 }
 
 .iconWrapper {

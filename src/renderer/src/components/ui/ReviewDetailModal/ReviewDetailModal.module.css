@@ -4,20 +4,21 @@
   z-index: 1200;
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: 1.25rem;
   background: rgba(0, 0, 0, 0.72);
   overflow-y: auto;
 }
 
 .dialog {
   position: relative;
-  width: min(980px, 100%);
-  max-height: min(88vh, 900px);
+  width: min(1240px, 100%);
+  max-height: min(92vh, 940px);
   overflow: auto;
   border: 1px solid rgba(110, 168, 255, 0.6);
   border-radius: 8px;
   background: #0f172a;
-  padding: 1rem;
+  padding: 1.15rem;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.58);
 }
 
 .header {

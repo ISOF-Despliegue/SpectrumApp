@@ -37,6 +37,8 @@ export interface WeeklyReview {
   commentsCount: number;
   sourceType: 'REVIEW' | 'GAME_CLIP';
   userVote?: 'like' | 'dislike' | null;
+  currentUserVote?: 'like' | 'dislike' | null;
+  myVote?: 'like' | 'dislike' | null;
   isOwnContent: boolean;
   createdAt: string;
 }
@@ -65,9 +67,13 @@ export interface NamedMetric {
   coverImageUrl?: string | null;
   profileImageUrl?: string | null;
   iconUrl?: string | null;
+  platformIconUrl?: string | null;
+  platformName?: string | null;
+  consoleName?: string | null;
   gameId?: number | string | null;
   userId?: string | null;
   username?: string | null;
+  gameTitle?: string | null;
 }
 
 export interface TrendsDashboard {

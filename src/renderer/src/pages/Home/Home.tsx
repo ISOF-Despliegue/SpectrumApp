@@ -7,10 +7,32 @@ import { HomeService } from '../../services/home.service';
 import { DropEvent } from '../../types/drops.types';
 import { GlobalSearchItem, HomeDashboard } from '../../types/home.types';
 import { useToast } from '../../components/ui/Toast';
+import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
+import { asApiError } from '../../utilities/apiError';
 import bannerOne from '../../assets/images/Banner1.gif';
 import bannerTwo from '../../assets/images/Banner2.png';
 
 const HERO_IMAGES = [bannerOne, bannerTwo];
+const JOIN_OPEN_STATUSES = new Set(['REGISTRATION_OPEN', 'ACTIVE_JOIN']);
+const REVEAL_STATUSES = new Set(['REVEAL_READY', 'REVEAL_ACTIVE']);
+const FINISHED_DROP_STATUSES = new Set(['EXHAUSTED', 'FINISHED', 'EXPIRED', 'ARCHIVED']);
+
+const isJoinedToDrop = (drop: DropEvent): boolean => Boolean(drop.currentUserJoined ?? drop.isJoined);
+const getRemainingSlots = (drop: DropEvent): number => Math.max(0, drop.remainingSlots ?? drop.availableSlots ?? 0);
+const getWinnerNames = (drop: DropEvent): string[] => {
+  const winners = drop.winners?.map((winner) => winner.username).filter(Boolean) ?? [];
+  return winners.length > 0 ? winners : drop.winnerUsername ? [drop.winnerUsername] : [];
+};
+
+const formatDuration = (milliseconds: number): string => {
+  const totalMinutes = Math.max(1, Math.ceil(milliseconds / 60000));
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  return `${minutes}m`;
+};
 
 export const Home = (): React.JSX.Element => {
   const { t } = useTranslation('home');
@@ -25,6 +47,7 @@ export const Home = (): React.JSX.Element => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [bannerIndex, setBannerIndex] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
 
   const loadDashboard = async (): Promise<void> => {
     setIsLoading(true);
@@ -47,6 +70,11 @@ export const Home = (): React.JSX.Element => {
       setBannerIndex((current) => (current + 1) % HERO_IMAGES.length);
     }, 10000);
 
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => setNow(Date.now()), 30000);
     return () => window.clearInterval(intervalId);
   }, []);
 
@@ -74,11 +102,17 @@ export const Home = (): React.JSX.Element => {
 
   const countdownText = useMemo(() => {
     if (!selectedDrop) return '';
-    const startsInMs = new Date(selectedDrop.startAt).getTime() - Date.now();
-    if (startsInMs <= 0) return t('drops.aboutToStart');
-    const minutes = Math.ceil(startsInMs / 60000);
-    return t('drops.startsIn', { minutes });
-  }, [selectedDrop, t]);
+    const startAt = new Date(selectedDrop.startAt).getTime();
+    const closeAt = new Date(selectedDrop.closeAt ?? selectedDrop.joinDeadlineAt).getTime();
+    const revealAt = new Date(selectedDrop.revealAt).getTime();
+    if (now < startAt) return t('drops.startsIn', { time: formatDuration(startAt - now) });
+    if (JOIN_OPEN_STATUSES.has(selectedDrop.status) && now <= closeAt) {
+      return t('drops.closesIn', { time: formatDuration(closeAt - now) });
+    }
+    if (now < revealAt) return t('drops.waitingReveal');
+    if (REVEAL_STATUSES.has(selectedDrop.status)) return t('drops.revealActive');
+    return t('drops.finished');
+  }, [now, selectedDrop, t]);
 
   const changeBanner = (direction: number): void => {
     setBannerIndex((current) => (current + direction + HERO_IMAGES.length) % HERO_IMAGES.length);
@@ -94,17 +128,29 @@ export const Home = (): React.JSX.Element => {
     navigate(`/users/${item.id}`);
   };
 
+  const refreshSelectedDrop = async (eventId: string): Promise<DropEvent | null> => {
+    try {
+      const updatedDrop = await DropsService.getPublic(eventId);
+      setSelectedDrop(updatedDrop);
+      return updatedDrop;
+    } catch {
+      await loadDashboard();
+      return null;
+    }
+  };
+
   const joinDrop = async (drop: DropEvent): Promise<void> => {
     setMessage(null);
     setError(null);
     try {
       await DropsService.join(drop.eventId);
-      setSelectedDrop(drop);
+      await refreshSelectedDrop(drop.eventId);
       setMessage(t('drops.joined'));
       toast.success(t('drops.joined'));
       await loadDashboard();
-    } catch (err: any) {
-      const friendlyMessage = err.response?.data?.title || t('drops.joinError');
+    } catch (err: unknown) {
+      const apiError = asApiError(err);
+      const friendlyMessage = apiError.response?.data?.title || t('drops.joinError');
       toast.error(friendlyMessage);
       setError(friendlyMessage);
     }
@@ -124,9 +170,11 @@ export const Home = (): React.JSX.Element => {
       } else {
         setMessage(t('drops.claimUnavailable'));
       }
+      await refreshSelectedDrop(selectedDrop.eventId);
       await loadDashboard();
-    } catch (err: any) {
-      const friendlyMessage = err.response?.data?.title || t('drops.claimError');
+    } catch (err: unknown) {
+      const apiError = asApiError(err);
+      const friendlyMessage = apiError.response?.data?.title || t('drops.claimError');
       toast.error(friendlyMessage);
       setError(friendlyMessage);
     }
@@ -200,14 +248,23 @@ export const Home = (): React.JSX.Element => {
           <h2>{t('sections.popularReviews')}</h2>
           <div className={styles.reviewList}>
             {(dashboard?.popularReviewsToday || []).map((review) => (
-              <button key={review.reviewId} type="button" className={styles.reviewCard} onClick={() => navigate(`/games/${review.gameId}/reviews`)}>
-                {review.gameCoverUrl && <img src={review.gameCoverUrl} alt="" loading="lazy" />}
-                <span>
-                  <strong>{review.title}</strong>
-                  <small>{review.username} - {review.gameTitle}</small>
-                  <em>{t('reviews.likes', { count: review.likesCount })} - {t('reviews.comments', { count: review.commentsCount })}</em>
-                </span>
-              </button>
+              <ReviewCardPre
+                key={review.reviewId}
+                reviewId={review.reviewId}
+                gameCover={review.gameCoverUrl}
+                username={review.username}
+                reviewTitle={review.title}
+                reviewContent={review.content}
+                reviewDate={new Date(review.createdAt).toLocaleDateString()}
+                likes={review.likesCount}
+                dislikes={review.dislikesCount}
+                score={review.rating}
+                isOwnReview={Boolean(review.isOwnReview)}
+                canVote={review.canVote}
+                userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
+                context="home"
+                onClick={() => navigate(`/games/${review.gameId}/reviews`)}
+              />
             ))}
           </div>
           {!isLoading && dashboard?.popularReviewsToday.length === 0 && <p className={styles.empty}>{t('empty.popularReviews')}</p>}
@@ -222,13 +279,9 @@ export const Home = (): React.JSX.Element => {
                 <strong>{drop.title}</strong>
                 <span>{drop.gameTitle} - {drop.platform}</span>
                 <small>{new Date(drop.startAt).toLocaleDateString()} - {drop.status}</small>
-                {drop.winnerUsername ? (
-                  <p>{t('drops.winner', { username: drop.winnerUsername })}</p>
-                ) : drop.status === 'ACTIVE_JOIN' ? (
-                  <button type="button" onClick={() => joinDrop(drop)}>{t('drops.join')}</button>
-                ) : (
-                  <button type="button" onClick={() => setSelectedDrop(drop)}>{t('drops.details')}</button>
-                )}
+                <small>{t('drops.slots', { taken: drop.participantCount ?? drop.participantsCount, total: drop.maxParticipants ?? drop.totalSlots })}</small>
+                {getWinnerNames(drop).length > 0 && <p>{t('drops.winners', { winners: getWinnerNames(drop).join(', ') })}</p>}
+                <button type="button" onClick={() => setSelectedDrop(drop)}>{t('drops.details')}</button>
               </article>
             ))}
           </div>
@@ -243,17 +296,36 @@ export const Home = (): React.JSX.Element => {
             <h2>{t('drops.modalTitle')}</h2>
             {selectedDrop.imageUrl && <img src={selectedDrop.imageUrl} alt="" />}
             <h3>{selectedDrop.gameTitle}</h3>
-            <p>{new Date(selectedDrop.startAt).toLocaleString()} - {new Date(selectedDrop.endAt).toLocaleString()}</p>
-            <strong>{countdownText}</strong>
+            <p>{selectedDrop.title}</p>
+            <div className={styles.dropMeta}>
+              <span>{t('drops.registration')}: {new Date(selectedDrop.startAt).toLocaleString()} - {new Date(selectedDrop.closeAt ?? selectedDrop.joinDeadlineAt).toLocaleString()}</span>
+              <span>{t('drops.reveal')}: {new Date(selectedDrop.revealAt).toLocaleString()}</span>
+              <span>{t('drops.slots', { taken: selectedDrop.participantCount ?? selectedDrop.participantsCount, total: selectedDrop.maxParticipants ?? selectedDrop.totalSlots })}</span>
+              <span>{t('drops.codes', { claimed: selectedDrop.claimedRewardCount ?? selectedDrop.rewardCodesTotal - selectedDrop.rewardCodesAvailable, total: selectedDrop.rewardCodesTotal ?? selectedDrop.keysTotal })}</span>
+            </div>
+            <strong className={styles.statusNote}>{countdownText}</strong>
 
-            {selectedDrop.status === 'REVEAL_ACTIVE' ? (
+            {isJoinedToDrop(selectedDrop) && <p className={styles.success}>{t('drops.joinedStatus')}</p>}
+            {!isJoinedToDrop(selectedDrop) && (selectedDrop.canJoin ?? (JOIN_OPEN_STATUSES.has(selectedDrop.status) && getRemainingSlots(selectedDrop) > 0)) && (
+              <button className={styles.joinButton} type="button" onClick={() => joinDrop(selectedDrop)}>{t('drops.join')}</button>
+            )}
+            {!isJoinedToDrop(selectedDrop) && selectedDrop.status === 'FULL' && <p>{t('drops.full')}</p>}
+            {selectedDrop.status === 'REGISTRATION_CLOSED' && <p>{t('drops.waitingReveal')}</p>}
+
+            {(selectedDrop.canClaim ?? (isJoinedToDrop(selectedDrop) && REVEAL_STATUSES.has(selectedDrop.status) && !selectedDrop.hasClaimed)) ? (
               <div className={styles.claimBox}>
                 <p>{t('drops.revealActive')}</p>
-                <button type="button" onClick={claimDrop}>{t('drops.claim')}</button>
+                <button className={styles.claimButton} type="button" onClick={claimDrop}>{t('drops.claim')}</button>
               </div>
-            ) : (
-              <p>{t('drops.claimSoon')}</p>
+            ) : !FINISHED_DROP_STATUSES.has(selectedDrop.status) && <p>{t('drops.claimSoon')}</p>}
+
+            {getWinnerNames(selectedDrop).length > 0 && (
+              <div className={styles.winnerList}>
+                <strong>{t('drops.winnersTitle')}</strong>
+                {getWinnerNames(selectedDrop).map((winner) => <span key={winner}>{winner}</span>)}
+              </div>
             )}
+            {FINISHED_DROP_STATUSES.has(selectedDrop.status) && getWinnerNames(selectedDrop).length === 0 && <p>{t('drops.finished')}</p>}
           </section>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PiXBold } from 'react-icons/pi';
 import type { Review, ReviewComment } from '../../../types/reviews.types';
 import { AuthService, ROLES } from '../../../services/auth.service';
@@ -34,6 +34,7 @@ export const ReviewDetailModal = ({
   const [internalComments, setInternalComments] = useState<ReviewComment[]>([]);
   const [internalCommentsVisible, setInternalCommentsVisible] = useState(false);
   const [commentsError, setCommentsError] = useState('');
+  const autoOpenedReviewRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!review || onToggleComments) {
@@ -61,6 +62,25 @@ export const ReviewDetailModal = ({
       isMounted = false;
     };
   }, [review, onToggleComments]);
+
+  useEffect(() => {
+    if (!review || !onToggleComments || commentsVisible) {
+      return;
+    }
+
+    if (autoOpenedReviewRef.current === review.id) {
+      return;
+    }
+
+    autoOpenedReviewRef.current = review.id;
+    onToggleComments(review.id);
+  }, [review, commentsVisible, onToggleComments]);
+
+  useEffect(() => {
+    if (!review) {
+      autoOpenedReviewRef.current = null;
+    }
+  }, [review]);
 
   useEffect(() => {
     if (!review) {

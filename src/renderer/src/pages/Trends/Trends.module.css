@@ -13,9 +13,7 @@
 
 .header p,
 .empty,
-.loading,
-.discussionList span,
-.discussionList small {
+.loading {
   color: #cbd5e1;
 }
 
@@ -42,123 +40,6 @@
   grid-column: 1 / -1;
 }
 
-.bars {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.barRow {
-  display: grid;
-  grid-template-columns: minmax(90px, 160px) 1fr 56px;
-  gap: 0.6rem;
-  align-items: center;
-}
-
-.barRow span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.barRow div {
-  height: 32px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.barRow i {
-  display: block;
-  height: 100%;
-  border-radius: 6px;
-  background: #3b82f6;
-}
-
-.barRow strong {
-  text-align: right;
-  color: #93c5fd;
-}
-
-.discussionList {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.visualList {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.visualCard {
-  width: 100%;
-  min-height: 92px;
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 0.85rem;
-  align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  padding: 0.7rem;
-  background: rgba(255, 255, 255, 0.04);
-  color: inherit;
-  text-align: left;
-}
-
-.visualCardInteractive {
-  cursor: pointer;
-}
-
-.visualCardInteractive:hover,
-.visualCardInteractive:focus-visible {
-  outline: none;
-  border-color: rgba(110, 168, 255, 0.65);
-  background: rgba(59, 130, 246, 0.14);
-}
-
-.visualMedia {
-  width: 72px;
-  height: 72px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.visualMedia :global(button) {
-  pointer-events: none;
-}
-
-.visualText {
-  min-width: 0;
-  display: grid;
-  gap: 0.25rem;
-}
-
-.visualText strong {
-  overflow: hidden;
-  color: #ffffff;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.visualText small {
-  color: #93c5fd;
-  font-weight: 800;
-}
-
-.metricFallback {
-  width: 72px;
-  height: 72px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(217, 70, 239, 0.42);
-  border-radius: 8px;
-  background: rgba(217, 70, 239, 0.16);
-  color: #f5d0fe;
-  font-size: 1.6rem;
-  font-weight: 900;
-}
-
 .error {
   color: #fca5a5;
 }
@@ -168,11 +49,4 @@
     grid-template-columns: 1fr;
   }
 
-  .barRow {
-    grid-template-columns: 1fr;
-  }
-
-  .barRow strong {
-    text-align: left;
-  }
 }

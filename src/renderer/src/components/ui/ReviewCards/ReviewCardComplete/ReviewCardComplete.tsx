@@ -109,7 +109,7 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
     <article className={styles.container}>
       <div className={styles.filmOverlay}></div>
 
-      <div className={styles.mainContent}>
+      <div className={`${styles.mainContent} ${!reviewImage ? styles.withoutMedia : ''}`}>
         <section className={styles.gameColumn}>
           <GameCardMedium imageUrl={gameCover} />
         </section>

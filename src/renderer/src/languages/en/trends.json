@@ -1,9 +1,10 @@
 {
   "title": "Trends",
-  "subtitle": "Charts calculated from weekly and monthly backend windows.",
+  "subtitle": "Find the best, the worst, and the most active community conversations this week.",
   "loading": "Loading trends...",
   "loadError": "Trends could not be loaded.",
   "empty": "There is not enough activity to chart yet.",
+  "emptyStatistic": "There is not enough data for this statistic yet.",
   "sections": {
     "weeklyTrend": "Weekly trend",
     "weeklyDiscussions": "Discussions of the week",

@@ -4,6 +4,8 @@
   "upload": "Subir clip",
   "play": "Reproducir clip",
   "topMonth": "Top 3 del mes",
+  "topWeek": "Top 3 clips mas virales de la semana",
+  "rest": "Resto de clips",
   "loadError": "No se pudieron cargar los clips semanales.",
   "loading": "Cargando clips...",
   "empty": "No hay clips destacados esta semana.",

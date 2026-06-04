@@ -1,0 +1,104 @@
+.card {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr) 72px;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(59, 130, 246, 0.06)),
+    rgba(30, 15, 35, 0.82);
+  color: #ffffff;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  outline: none;
+  border-color: rgba(217, 70, 239, 0.72);
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.18);
+  transform: translateY(-2px);
+}
+
+.cover {
+  width: 86px;
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.body {
+  min-width: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.userRow {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.userRow div {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.userRow strong,
+.userRow small,
+.body p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userRow strong {
+  color: #ffffff;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.userRow small {
+  color: #93c5fd;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.body p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  display: -webkit-box;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.score {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .cover {
+    width: 72px;
+  }
+
+  .score {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+}

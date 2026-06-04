@@ -7,11 +7,17 @@ export type DropStatus =
   | 'JOIN_CLOSED'
   | 'REVEALED'
   | 'UPCOMING'
+  | 'REGISTRATION_OPEN'
+  | 'FULL'
+  | 'REGISTRATION_CLOSED'
+  | 'REVEAL_READY'
   | 'ACTIVE_JOIN'
   | 'REVEAL_ACTIVE'
   | 'FINISHED'
   | 'EXHAUSTED'
-  | 'CANCELLED';
+  | 'CANCELLED'
+  | 'ARCHIVED'
+  | 'EXPIRED';
 
 export interface DropEvent {
   eventId: string;
@@ -23,20 +29,31 @@ export interface DropEvent {
   platform: string;
   startAt: string;
   joinDeadlineAt: string;
+  closeAt?: string;
   revealAt: string;
   endAt: string;
   totalSlots: number;
+  maxParticipants?: number;
   availableSlots: number;
+  remainingSlots?: number;
   status: DropStatus;
   publicChallengeCode: string;
+  currentUserJoined?: boolean;
+  isJoined?: boolean;
+  canJoin?: boolean;
+  canClaim?: boolean;
+  hasClaimed?: boolean;
   winnerUserId?: string | null;
   winnerUsername?: string | null;
   finishedAt?: string | null;
+  visibleUntil?: string | null;
   rewardSentAt?: string | null;
   rewardDeliveryStatus: 'PENDING' | 'SENT';
   participantsCount: number;
+  participantCount?: number;
   rewardCodesAvailable: number;
   rewardCodesTotal: number;
+  claimedRewardCount?: number;
   keysAvailable: number;
   keysTotal: number;
   winners: DropWinner[];

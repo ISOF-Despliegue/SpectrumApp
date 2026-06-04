@@ -4,6 +4,8 @@
   "upload": "Upload clip",
   "play": "Play clip",
   "topMonth": "Top 3 this month",
+  "topWeek": "Top 3 most viral clips this week",
+  "rest": "More clips",
   "loadError": "Weekly clips could not be loaded.",
   "loading": "Loading clips...",
   "empty": "There are no highlighted clips this week.",

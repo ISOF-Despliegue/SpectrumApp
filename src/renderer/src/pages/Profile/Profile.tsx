@@ -17,25 +17,14 @@ import { ProfileClipsSection } from '@renderer/components/ui/ProfileComponents/P
 import { ClipUploadFlowModal } from '@renderer/components/ui/VideoComponents/VideoUploadModal/ClipUploadFlowModal';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 import { ReviewDetailModal } from '../../components/ui/ReviewDetailModal';
-import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
 import { ReviewService } from '../../services/reviews.service';
-import type { Review } from '../../types/reviews.types';
+import type { Review, ReviewFormValues, UploadedReviewAttachment } from '../../types/reviews.types';
 import { FIELD_LIMITS } from '../../utilities/validationRules';
 import { useToast } from '../../components/ui/Toast';
-
-import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
-import pcLogo from '../../assets/images/platforms/pcgamerLogo.png';
-import phoneLogo from '../../assets/images/platforms/phoneLogo.png';
-import playstationLogo from '../../assets/images/platforms/playstationLogo.png';
-import xboxLogo from '../../assets/images/platforms/xboxLogo.png';
-
-const PLATFORM_LOGOS: Record<string, string> = {
-  'Nintendo': nintendoLogo,
-  'PC': pcLogo,
-  'Phone': phoneLogo,
-  'PlayStation': playstationLogo,
-  'Xbox': xboxLogo
-};
+import { resolvePlatformIcon } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
+import { ProfileReviewPreviewCard } from '../../components/ui/ProfileComponents/ProfileReviewPreviewCard';
+import { ReviewForm } from '../Games/GameReviews/ReviewForm';
+import { validateReviewForm } from '../../utilities/reviewValidation';
 
 /**
  * Main profile page component.
@@ -61,6 +50,8 @@ export const Profile: React.FC = () => {
   const [isClipWizardOpen, setIsClipWizardOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [isReviewBusy, setIsReviewBusy] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfirmOpen] = useState(false);
 
   const currentUser = AuthService.getCurrentUser();
@@ -181,6 +172,65 @@ export const Profile: React.FC = () => {
     }
   };
 
+  const uploadAttachment = async (file?: File | null): Promise<UploadedReviewAttachment | null> => {
+    if (!file) {
+      return null;
+    }
+
+    return ReviewService.uploadAttachment(file);
+  };
+
+  const handleEditReview = (review: Review): void => {
+    setSelectedReview(null);
+    setEditingReview(review);
+  };
+
+  const handleSubmitReviewEdit = async (values: ReviewFormValues): Promise<void> => {
+    if (!editingReview) {
+      return;
+    }
+
+    const validationMessage = validateReviewForm(values);
+    if (validationMessage) {
+      toast.warning(validationMessage);
+      return;
+    }
+
+    try {
+      setIsReviewBusy(true);
+      const attachment = await uploadAttachment(values.file);
+      await ReviewService.update(editingReview.id, {
+        title: values.title.trim(),
+        content: values.content.trim(),
+        rating: values.rating,
+        imageUrl: attachment?.url ?? editingReview.attachmentUrl ?? editingReview.imageUrl,
+        mediaType: attachment?.mediaType ?? editingReview.attachmentType
+      });
+      toast.success(t('messages.reviewUpdated', { defaultValue: 'Reseña actualizada.' }));
+      setEditingReview(null);
+      await fetchData();
+    } catch {
+      toast.error(t('messages.profileUpdateError'));
+    } finally {
+      setIsReviewBusy(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string): Promise<void> => {
+    try {
+      setIsReviewBusy(true);
+      await ReviewService.delete(reviewId);
+      toast.success(t('messages.reviewDeleted', { defaultValue: 'Reseña eliminada.' }));
+      setSelectedReview(null);
+      await fetchData();
+    } catch {
+      toast.error(t('messages.profileUpdateError'));
+      throw new Error('reviewDeleteFailed');
+    } finally {
+      setIsReviewBusy(false);
+    }
+  };
+
   if (loading) return <div className={styles.statusScreen}>{t('loading')}</div>;
   if (!profile) return <div className={styles.statusScreen}>{t('notFound')}</div>;
 
@@ -209,15 +259,22 @@ export const Profile: React.FC = () => {
           <div className={styles.platformGroup}>
             <h3 className={styles.label}>{t('labels.platforms')}</h3>
             <div className={styles.platformLogos}>
-              {profile.platforms.map(p => (
-                <div key={p.id} className={styles.logoWrapper} title={p.name}>
-                  <img
-                    src={PLATFORM_LOGOS[p.name]}
-                    alt={p.name}
-                    className={styles.platformIcon}
-                  />
-                </div>
-              ))}
+              {profile.platforms.map(p => {
+                const platformIcon = resolvePlatformIcon(p.name);
+                return (
+                  <div key={p.id} className={styles.logoWrapper} title={p.name}>
+                    {platformIcon ? (
+                      <img
+                        src={platformIcon}
+                        alt={p.name}
+                        className={styles.platformIcon}
+                      />
+                    ) : (
+                      <span className={styles.platformFallback}>{p.name.charAt(0).toUpperCase()}</span>
+                    )}
+                  </div>
+                );
+              })}
               {isEditing && (
                 <button
                   className={styles.addPlatformBtn}
@@ -272,21 +329,14 @@ export const Profile: React.FC = () => {
           <ProfileSection title={t('sections.reviews')} showSeeMore={true}>
             <div className={styles.reviewsList}>
               {reviews.map((review) => (
-                <ReviewCardPre
+                <ProfileReviewPreviewCard
                   key={review.id}
-                  reviewId={review.id}
                   gameCover={review.gameCoverUrl}
+                  gameTitle={review.gameTitle}
                   username={review.username}
                   userImage={review.userProfileImageUrl || review.profilePicture}
-                  reviewTitle={review.title}
-                  reviewContent={review.content}
-                  reviewDate={new Date(review.createdAt).toLocaleDateString()}
-                  reviewImage={review.attachmentType === 'image' ? review.attachmentUrl || review.imageUrl : undefined}
-                  likes={review.likesCount}
+                  content={review.content}
                   score={review.rating}
-                  dislikes={review.dislikesCount}
-                  isOwnReview={review.isOwnReview}
-                  userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
                   onClick={() => setSelectedReview(review)}
                 />
               ))}
@@ -401,9 +451,31 @@ export const Profile: React.FC = () => {
         />
       )}
 
+      {editingReview && (
+        <div className={styles.reviewEditOverlay} role="presentation" onMouseDown={() => setEditingReview(null)}>
+          <section
+            className={styles.reviewEditDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('sections.reviews')}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <ReviewForm
+              initialReview={editingReview}
+              isSubmitting={isReviewBusy}
+              onCancel={() => setEditingReview(null)}
+              onSubmit={handleSubmitReviewEdit}
+            />
+          </section>
+        </div>
+      )}
+
       <ReviewDetailModal
         review={selectedReview}
         isAuthenticated={AuthService.isAuthenticated()}
+        isBusy={isReviewBusy}
+        onEdit={handleEditReview}
+        onDelete={handleDeleteReview}
         onClose={() => setSelectedReview(null)}
       />
       <ConfirmationModal

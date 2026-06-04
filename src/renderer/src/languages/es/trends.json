@@ -1,9 +1,10 @@
 {
   "title": "Tendencia",
-  "subtitle": "Gráficas calculadas por ventanas de semana y mes desde el backend.",
+  "subtitle": "Aquí encontrarás lo mejor, lo peor y las conversaciones más activas de la comunidad esta semana.",
   "loading": "Cargando tendencias...",
   "loadError": "No se pudieron cargar las tendencias.",
   "empty": "Aún no hay actividad suficiente para graficar.",
+  "emptyStatistic": "Aún no hay datos suficientes para esta estadística.",
   "sections": {
     "weeklyTrend": "Tendencia semanal",
     "weeklyDiscussions": "Discusiones de la semana",
