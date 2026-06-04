@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styles from './Profile.module.css';
 import { ProfileService, UserProfile, ProfileGame } from '../../services/profile.service';
+import { AuthService, ROLES } from '../../services/auth.service';
 
 import { ActionButton } from '../../components/ui/ActionButton';
 import { EditableProfileImage } from '../../components/ui/ProfileComponents/EditableProfileImage';
@@ -19,6 +20,7 @@ import { ReviewDetailModal } from '../../components/ui/ReviewDetailModal';
 import { ReviewCardPre } from '../../components/ui/ReviewCards/ReviewCardPre';
 import { ReviewService } from '../../services/reviews.service';
 import type { Review } from '../../types/reviews.types';
+import { FIELD_LIMITS } from '../../utilities/validationRules';
 import { useToast } from '../../components/ui/Toast';
 
 import nintendoLogo from '../../assets/images/platforms/nintendoLogo.png';
@@ -61,13 +63,26 @@ export const Profile: React.FC = () => {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isBlockConfirmOpen, setIsBlockConfirmOpen] = useState(false);
 
-  const userRole: "user" | "admin" = "user";
-  const isOwner = !userId || (profile ? userId === profile.id : false);
-  const isAdmin = (userRole as string) === 'admin';
+  const currentUser = AuthService.getCurrentUser();
+  const isOwner = !userId;
+  const isAdmin = currentUser?.role === ROLES.ADMIN;
 
   useEffect(() => {
     fetchData();
   }, [userId]);
+
+  useEffect(() => {
+    if (isOwner) {
+      return;
+    }
+
+    setIsEditing(false);
+    setIsPasswordModalOpen(false);
+    setIsPlatformModalOpen(false);
+    setIsInterestedModalOpen(false);
+    setIsGameSelectorOpen(false);
+    setIsClipWizardOpen(false);
+  }, [isOwner, userId]);
 
   /**
    * Fetches profile data from the server.
@@ -222,7 +237,7 @@ export const Profile: React.FC = () => {
               <input
                 className={styles.usernameInput}
                 value={profile.username}
-                maxLength={50}
+                maxLength={FIELD_LIMITS.username}
                 onChange={(e) => setProfile({...profile, username: e.target.value})}
               />
             ) : (
@@ -246,7 +261,7 @@ export const Profile: React.FC = () => {
                 className={styles.bioEditor}
                 placeholder={t('placeholders.bio')}
                 value={profile.biography || ''}
-                maxLength={500}
+                maxLength={FIELD_LIMITS.longText}
                 onChange={(e) => setProfile({...profile, biography: e.target.value})}
               />
             ) : (
@@ -271,6 +286,7 @@ export const Profile: React.FC = () => {
                   score={review.rating}
                   dislikes={review.dislikesCount}
                   isOwnReview={review.isOwnReview}
+                  userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
                   onClick={() => setSelectedReview(review)}
                 />
               ))}
@@ -385,7 +401,11 @@ export const Profile: React.FC = () => {
         />
       )}
 
-      <ReviewDetailModal review={selectedReview} onClose={() => setSelectedReview(null)} />
+      <ReviewDetailModal
+        review={selectedReview}
+        isAuthenticated={AuthService.isAuthenticated()}
+        onClose={() => setSelectedReview(null)}
+      />
       <ConfirmationModal
         isOpen={isBlockConfirmOpen}
         title={t('block.title')}

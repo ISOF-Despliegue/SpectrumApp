@@ -17,9 +17,10 @@ interface ReviewCardPreProps {
   reviewDate: string;
   reviewImage?: string;
   likes: number;
-  score: number;
+  score?: number;
   dislikes: number;
   isOwnReview?: boolean;
+  userVote?: 'like' | 'dislike' | null;
   onClick?: () => void;
 }
 
@@ -36,11 +37,12 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
   dislikes,
   reviewImage,
   isOwnReview = false,
+  userVote,
   onClick
 }) => {
   const { t } = useTranslation('gameReviews');
 
-  const handleInternalClick = (e: React.MouseEvent) => {
+  const handleInternalClick = (e: React.MouseEvent): void => {
     e.stopPropagation();
   };
 
@@ -76,9 +78,11 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
         </section>
       )}
 
-      <section className={styles.scoreCol}>
-        <ScoreDisplay score={score} size="small" />
-      </section>
+      {Number.isFinite(score) && (
+        <section className={styles.scoreCol}>
+          <ScoreDisplay score={score as number} size="small" />
+        </section>
+      )}
 
       <section className={styles.actionsCol} onClick={handleInternalClick}>
         <div className={styles.topActions}>
@@ -92,6 +96,7 @@ export const ReviewCardPre: React.FC<ReviewCardPreProps> = ({
               likes={likes}
               dislikes={dislikes}
               isOwnReview={isOwnReview}
+              userVote={userVote}
               size="small"
             />
           )}

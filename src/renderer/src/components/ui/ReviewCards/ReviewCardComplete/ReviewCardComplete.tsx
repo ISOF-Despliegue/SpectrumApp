@@ -12,6 +12,7 @@ import { ConfirmationModal } from '../../ConfirmationModal';
 import { useToast } from '../../Toast';
 import { ReviewComments } from '../../../../pages/Games/GameReviews/ReviewComments';
 import type { Review, ReviewComment } from '../../../../types/reviews.types';
+import { asApiError } from '../../../../utilities/apiError';
 
 interface ReviewCardCompleteProps {
   reviewId: string;
@@ -34,6 +35,7 @@ interface ReviewCardCompleteProps {
   isAuthenticated?: boolean;
   ownerUserId?: string;
   currentUserId?: string;
+  votingDisabled?: boolean;
   onEdit?: (review: Review) => void;
   onDelete?: (reviewId: string) => Promise<void> | void;
   onToggleComments?: (reviewId: string) => void;
@@ -61,6 +63,7 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
   isAuthenticated = false,
   ownerUserId,
   currentUserId,
+  votingDisabled = false,
   onEdit,
   onDelete,
   onToggleComments,
@@ -71,8 +74,10 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
   const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [isOwnerMenuOpen, setIsOwnerMenuOpen] = React.useState(false);
+  const [shouldFocusComposer, setShouldFocusComposer] = React.useState(false);
   const canEditReview = isOwnReview && review && onEdit;
   const canDeleteReview = isOwnReview && canDelete && onDelete;
+  const canVote = !isOwnReview && !votingDisabled;
 
   const confirmDelete = async (): Promise<void> => {
     if (!onDelete) {
@@ -83,9 +88,21 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
       await onDelete(reviewId);
       toast.success(t('gameReviews:messages.deleted'));
       setIsDeleteModalOpen(false);
-    } catch (error: any) {
-      toast.error(error.response?.data?.title || t('gameReviews:errors.generic'));
+    } catch (error: unknown) {
+      const apiError = asApiError(error);
+      toast.error(apiError.response?.data?.title || t('gameReviews:errors.generic'));
     }
+  };
+
+  /**
+   * Replying is a composer intent: open comments if needed, then focus the
+   * existing ReviewComments form without overloading the visibility toggle.
+   */
+  const handleReply = (): void => {
+    if (!commentsVisible) {
+      onToggleComments?.(reviewId);
+    }
+    setShouldFocusComposer(true);
   };
 
   return (
@@ -112,12 +129,16 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
           </div>
 
           <div className={styles.interactionsRow}>
-            {!isOwnReview && (
+            {canVote && (
               <ReviewVoteControls
                 reviewId={reviewId}
                 likes={likes}
                 dislikes={dislikes}
                 isOwnReview={isOwnReview}
+                userVote={review?.userVote}
+                currentUserVote={review?.currentUserVote}
+                myVote={review?.myVote}
+                disabled={votingDisabled}
               />
             )}
             {onToggleComments && (
@@ -135,7 +156,7 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
                 className={styles.actionButton}
                 type="button"
                 disabled={isBusy}
-                onClick={() => onToggleComments(reviewId)}
+                onClick={handleReply}
               >
                 {t('gameReviews:reviewCard.reply')}
               </button>
@@ -207,6 +228,8 @@ export const ReviewCardComplete: React.FC<ReviewCardCompleteProps> = ({
             isAuthenticated={isAuthenticated}
             onMessage={(message) => toast.info(message)}
             onCommentsChanged={(nextComments) => onCommentsChanged(reviewId, nextComments)}
+            autoFocusComposer={shouldFocusComposer}
+            onComposerFocused={() => setShouldFocusComposer(false)}
           />
         </div>
       )}

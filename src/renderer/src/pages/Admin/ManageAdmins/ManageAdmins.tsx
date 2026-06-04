@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from './ManageAdmins.module.css';
 import { AdminAdminsService, CreateAdminPayload } from '../../../services/adminAdmins.service';
 import { useToast } from '../../../components/ui/Toast';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
 
 const emptyForm: CreateAdminPayload = {
   username: '',
@@ -66,14 +67,14 @@ export const AdminManageAdmins = (): React.JSX.Element => {
       </header>
 
       <section className={styles.formGrid}>
-        <input placeholder="Usuario" value={form.username} onChange={(event) => updateField('username', event.target.value)} />
-        <input placeholder="Nombre" value={form.firstName} onChange={(event) => updateField('firstName', event.target.value)} />
-        <input placeholder="Apellidos" value={form.lastName} onChange={(event) => updateField('lastName', event.target.value)} />
-        <input placeholder="Correo" value={form.email} onChange={(event) => updateField('email', event.target.value)} />
-        <input placeholder="Teléfono" value={form.phoneNumber} onChange={(event) => updateField('phoneNumber', event.target.value)} />
-        <input placeholder="RFC" value={form.rfc} onChange={(event) => updateField('rfc', event.target.value.toUpperCase())} />
-        <input placeholder="Dirección" value={form.address} onChange={(event) => updateField('address', event.target.value)} />
-        <input placeholder="Contraseña" type="password" value={form.password} onChange={(event) => updateField('password', event.target.value)} />
+        <input placeholder="Usuario" maxLength={FIELD_LIMITS.username} value={form.username} onChange={(event) => updateField('username', event.target.value)} />
+        <input placeholder="Nombre" maxLength={FIELD_LIMITS.username} value={form.firstName} onChange={(event) => updateField('firstName', event.target.value)} />
+        <input placeholder="Apellidos" maxLength={FIELD_LIMITS.username} value={form.lastName} onChange={(event) => updateField('lastName', event.target.value)} />
+        <input placeholder="Correo" maxLength={FIELD_LIMITS.email} value={form.email} onChange={(event) => updateField('email', event.target.value)} />
+        <input placeholder="Teléfono" maxLength={FIELD_LIMITS.phone} value={form.phoneNumber} onChange={(event) => updateField('phoneNumber', event.target.value)} />
+        <input placeholder="RFC" maxLength={FIELD_LIMITS.rfc} value={form.rfc} onChange={(event) => updateField('rfc', event.target.value.toUpperCase())} />
+        <input placeholder="Dirección" maxLength={FIELD_LIMITS.address} value={form.address} onChange={(event) => updateField('address', event.target.value)} />
+        <input placeholder="Contraseña" type="password" maxLength={FIELD_LIMITS.password} value={form.password} onChange={(event) => updateField('password', event.target.value)} />
       </section>
 
       <button className={styles.submitButton} onClick={submit} disabled={isLoading}>

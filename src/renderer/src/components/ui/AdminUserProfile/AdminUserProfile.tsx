@@ -12,6 +12,7 @@ import { ProfileClipsSection } from '../ProfileComponents/ProfileClipsSection';
 import { ReviewService } from '../../../services/reviews.service';
 import { useToast } from '../Toast';
 import type { Review } from '../../../types/reviews.types';
+import { asApiError } from '../../../utilities/apiError';
 
 interface AdminUserProfileProps {
   userId: string;
@@ -53,9 +54,10 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
     try {
       await toggleUserSuspension(profile.id, !profile.isSuspended);
       setProfile({ ...profile, isSuspended: !profile.isSuspended });
-      toast.success(t('manageUsers.statusChanged'));
-    } catch (error: any) {
-      toast.error(error.response?.data?.title || t('manageUsers.errorToggle'));
+      toast.success(profile.isSuspended ? 'Usuario reactivado correctamente.' : 'Usuario desactivado correctamente.');
+    } catch (error: unknown) {
+      const apiError = asApiError(error);
+      toast.error(apiError.response?.data?.title || t('manageUsers.errorToggle'));
     } finally {
       setIsSuspendConfirmOpen(false);
     }
@@ -65,10 +67,11 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
     if (!profile) return;
     try {
       await deleteUser(profile.id);
-      toast.success(t('manageUsers.profile.actions.confirmDelete'));
+      toast.success('Usuario eliminado correctamente.');
       onBack();
-    } catch (error: any) {
-      toast.error(error.response?.data?.title || t('manageUsers.errorToggle'));
+    } catch (error: unknown) {
+      const apiError = asApiError(error);
+      toast.error(apiError.response?.data?.title || t('manageUsers.errorToggle'));
     } finally {
       setIsDeleteConfirmOpen(false);
     }
@@ -150,6 +153,7 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
               dislikes={review.dislikesCount}
               score={review.rating}
               isOwnReview={review.isOwnReview}
+              userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
               onClick={() => setSelectedReview(review)}
             />
           ))}

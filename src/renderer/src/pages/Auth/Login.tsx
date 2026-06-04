@@ -8,6 +8,7 @@ import styles from "./Auth.module.css";
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { getApiErrorKey, routeUserByRole } from './auth-flow.utils';
 import { useToast } from '../../components/ui/Toast';
+import { FIELD_LIMITS } from '../../utilities/validationRules';
 
 export const Login: React.FC = () => {
   const { t, i18n } = useTranslation('auth');
@@ -94,6 +95,7 @@ export const Login: React.FC = () => {
               type="email"
               placeholder={t('emailPlaceholder')}
               value={email}
+              maxLength={FIELD_LIMITS.email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
@@ -101,6 +103,7 @@ export const Login: React.FC = () => {
               type="password"
               placeholder={t('passwordPlaceholder')}
               value={password}
+              maxLength={FIELD_LIMITS.password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <button type="submit" className={styles.submitButton} disabled={isLoading}>

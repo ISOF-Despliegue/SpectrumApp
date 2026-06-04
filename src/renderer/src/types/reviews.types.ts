@@ -29,6 +29,9 @@ export interface Review {
   attachmentType?: string;
   likesCount: number;
   dislikesCount: number;
+  userVote?: 'like' | 'dislike' | null;
+  currentUserVote?: 'like' | 'dislike' | null;
+  myVote?: 'like' | 'dislike' | null;
   createdAt: string;
   updatedAt?: string | null;
   isOwnReview: boolean;

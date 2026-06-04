@@ -3,7 +3,7 @@
   /* Fondo opaco con tono morado Spectrum */
   background: rgba(30, 15, 35, 0.9);
   border: 1px solid rgba(138, 43, 226, 0.3);
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
   backdrop-filter: blur(16px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -40,6 +40,10 @@
   display: flex;
   align-items: center;
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+
+.gameColumn :global(button) {
+  cursor: default;
 }
 
 .reviewBodyColumn {
@@ -112,6 +116,13 @@
 .dangerButton:disabled {
   cursor: not-allowed;
   opacity: 0.55;
+}
+
+.actionButton:not(:disabled):hover,
+.dangerButton:not(:disabled):hover,
+.menuButton:hover {
+  border-color: rgba(217, 70, 239, 0.7);
+  background: rgba(217, 70, 239, 0.16);
 }
 
 .dangerButton {
@@ -192,4 +203,62 @@
 
 .ownerMenu button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 980px) {
+  .mainContent {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .imageColumn,
+  .reportColumn,
+  .ownerMenuColumn {
+    grid-column: 2 / -1;
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .imageColumn {
+    align-items: stretch;
+  }
+
+  .scoreColumn {
+    align-items: flex-start;
+    padding: 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .mainContent {
+    grid-template-columns: 1fr;
+  }
+
+  .gameColumn,
+  .scoreColumn,
+  .imageColumn,
+  .reportColumn,
+  .ownerMenuColumn {
+    grid-column: 1;
+  }
+
+  .userDateRow,
+  .interactionsRow {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .userDateRow {
+    flex-direction: column;
+  }
+
+  .reviewTitle {
+    font-size: 1.25rem;
+  }
+
+  .repliesSection {
+    padding: 0 18px 18px;
+  }
 }

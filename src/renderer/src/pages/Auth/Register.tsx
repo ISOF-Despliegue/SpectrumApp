@@ -6,6 +6,7 @@ import { AuthService } from "../../services/auth.service";
 import spectrumLogo from "../../assets/images/common/SpectrumLogo.png";
 import styles from "./Auth.module.css";
 import { getApiErrorKey, isStrongPassword } from './auth-flow.utils';
+import { FIELD_LIMITS } from '../../utilities/validationRules';
 
 export const Register: React.FC = () => {
   const { t } = useTranslation('auth');
@@ -55,6 +56,7 @@ export const Register: React.FC = () => {
               type="text"
               placeholder={t('usernamePlaceholder')}
               value={username}
+              maxLength={FIELD_LIMITS.username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <Input
@@ -62,6 +64,7 @@ export const Register: React.FC = () => {
               type="email"
               placeholder={t('emailPlaceholder')}
               value={email}
+              maxLength={FIELD_LIMITS.email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
@@ -69,6 +72,7 @@ export const Register: React.FC = () => {
               type="password"
               placeholder={t('passwordPlaceholder')}
               value={password}
+              maxLength={FIELD_LIMITS.password}
               onChange={(e) => setPassword(e.target.value)}
             />
 

@@ -9,8 +9,9 @@ import { Pagination } from '../../../components/ui/Pagination';
 import { AdminUserProfile } from '../../../components/ui/AdminUserProfile';
 import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
 import { useToast } from '../../../components/ui/Toast';
+import { asApiError } from '../../../utilities/apiError';
 
-export const ManageUsers = () => {
+export const ManageUsers = (): React.JSX.Element => {
   const { t } = useTranslation('admin');
   const toast = useToast();
 
@@ -25,15 +26,16 @@ export const ManageUsers = () => {
 
   const PAGE_SIZE = 10;
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
     try {
       const result = await getModeratedUsers(page, PAGE_SIZE, searchTerm);
       setUsers(result.items);
       setTotalCount(result.totalCount);
-    } catch (err: any) {
-      const message = err.response?.data?.title || t('manageUsers.errorLoad');
+    } catch (err: unknown) {
+      const apiError = asApiError(err);
+      const message = apiError.response?.data?.title || t('manageUsers.errorLoad');
       setError(message);
       toast.error(message);
     } finally {
@@ -45,20 +47,21 @@ export const ManageUsers = () => {
     fetchUsers();
   }, [page]);
 
-  const handleSearchClick = () => {
+  const handleSearchClick = (): void => {
     setPage(1);
     fetchUsers();
   };
 
-  const handleToggleSuspension = async (userId: string, currentStatus: boolean) => {
+  const handleToggleSuspension = async (userId: string, currentStatus: boolean): Promise<void> => {
     try {
       await toggleUserSuspension(userId, !currentStatus);
       setUsers(users.map(u =>
         u.id === userId ? { ...u, isSuspended: !currentStatus } : u
       ));
-      toast.success(t('manageUsers.statusChanged'));
-    } catch (err: any) {
-      toast.error(err.response?.data?.title || t('manageUsers.errorToggle'));
+      toast.success(currentStatus ? 'Usuario reactivado correctamente.' : 'Usuario desactivado correctamente.');
+    } catch (err: unknown) {
+      const apiError = asApiError(err);
+      toast.error(apiError.response?.data?.title || t('manageUsers.errorToggle'));
     } finally {
       setPendingSuspension(null);
     }

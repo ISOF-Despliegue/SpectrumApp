@@ -1,15 +1,18 @@
 import type React from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReviewService } from '../../../services/reviews.service';
 import type { ReviewComment } from '../../../types/reviews.types';
 import { validateComment } from '../../../utilities/reviewValidation';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
 import styles from './GameReviews.module.css';
 
 interface ReviewCommentsProps {
   reviewId: string;
   comments: ReviewComment[];
   isAuthenticated: boolean;
+  autoFocusComposer?: boolean;
+  onComposerFocused?: () => void;
   onCommentsChanged: (comments: ReviewComment[]) => void;
   onMessage: (message: string) => void;
 }
@@ -18,6 +21,8 @@ export const ReviewComments = ({
   reviewId,
   comments,
   isAuthenticated,
+  autoFocusComposer = false,
+  onComposerFocused,
   onCommentsChanged,
   onMessage
 }: ReviewCommentsProps): React.JSX.Element => {
@@ -25,6 +30,15 @@ export const ReviewComments = ({
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!autoFocusComposer) {
+      return;
+    }
+
+    inputRef.current?.focus();
+    onComposerFocused?.();
+  }, [autoFocusComposer, onComposerFocused]);
 
   const createComment = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -136,7 +150,7 @@ export const ReviewComments = ({
         <input
           ref={inputRef}
           value={content}
-          maxLength={500}
+          maxLength={FIELD_LIMITS.commentContent}
           onChange={(event) => setContent(event.target.value)}
           placeholder={t('comments.placeholder')}
         />

@@ -1,7 +1,9 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Review, ReviewFormValues } from '../../../types/reviews.types';
+import { validateReviewAttachment } from '../../../utilities/reviewValidation';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
 import styles from './GameReviews.module.css';
 
 interface ReviewFormProps {
@@ -26,14 +28,32 @@ export const ReviewForm = ({
 }: ReviewFormProps): React.JSX.Element => {
   const { t } = useTranslation('gameReviews');
   const [values, setValues] = useState<ReviewFormValues>(getInitialValues(initialReview));
-
-  useEffect(() => {
-    setValues(getInitialValues(initialReview));
-  }, [initialReview]);
+  const [fileError, setFileError] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     await onSubmit(values);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0] ?? null;
+
+    if (!file) {
+      setFileError('');
+      setValues((current) => ({ ...current, file: null }));
+      return;
+    }
+
+    const validationMessage = validateReviewAttachment(file);
+    if (validationMessage) {
+      setFileError(validationMessage);
+      setValues((current) => ({ ...current, file: null }));
+      event.target.value = '';
+      return;
+    }
+
+    setFileError('');
+    setValues((current) => ({ ...current, file }));
   };
 
   return (
@@ -49,7 +69,7 @@ export const ReviewForm = ({
         <span>{t('form.title')}</span>
         <input
           value={values.title}
-          maxLength={120}
+          maxLength={FIELD_LIMITS.shortText}
           onChange={(event) => setValues((current) => ({ ...current, title: event.target.value }))}
           placeholder={t('form.titlePlaceholder')}
         />
@@ -59,7 +79,7 @@ export const ReviewForm = ({
         <span>{t('form.content')}</span>
         <textarea
           value={values.content}
-          maxLength={2000}
+          maxLength={FIELD_LIMITS.reviewContent}
           rows={6}
           onChange={(event) => setValues((current) => ({ ...current, content: event.target.value }))}
           placeholder={t('form.contentPlaceholder')}
@@ -82,12 +102,17 @@ export const ReviewForm = ({
       <label className={styles.field}>
         <span>{t('form.attachment')}</span>
         <input
+          id="review-attachment-input"
+          className={styles.fileInputHidden}
           type="file"
           accept="image/jpeg,image/png,video/mp4,video/quicktime"
-          onChange={(event) =>
-            setValues((current) => ({ ...current, file: event.target.files?.[0] ?? null }))
-          }
+          onChange={handleFileChange}
         />
+        <span className={styles.filePickerRow}>
+          <span className={styles.fileButton}>{t('form.attachment')}</span>
+          <span className={styles.fileName}>{values.file?.name || 'Ningun archivo seleccionado'}</span>
+        </span>
+        {fileError && <span className={styles.fieldError}>{fileError}</span>}
       </label>
 
       <div className={styles.formActions}>

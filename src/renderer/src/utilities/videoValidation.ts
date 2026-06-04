@@ -1,30 +1,29 @@
-/**
- * Utility functions for validating video files before uploading to AWS S3.
- */
+import {
+  ALLOWED_VIDEO_EXTENSIONS,
+  ALLOWED_VIDEO_TYPES,
+  bytesToMegabytes,
+  FILE_LIMITS
+} from './validationRules';
 
-const MAX_VIDEO_SIZE = 61 * 1024 * 1024;
 const MAX_VIDEO_DURATION = 16;
-const ALLOWED_VIDEO_EXTENSIONS = ['.mp4', '.mov'];
-const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime'];
 
 /**
  * Validates the file size and extension of a video.
  * @param file The file object from the input.
  * @returns True if valid, otherwise throws an error.
  */
-export const validateVideoMetadata = (file: File, maxSizeBytes = MAX_VIDEO_SIZE): boolean => {
+export const validateVideoMetadata = (file: File, maxSizeBytes = FILE_LIMITS.videoBytes): boolean => {
   if (file.size > maxSizeBytes) {
-    const maxSizeMb = Math.floor(maxSizeBytes / (1024 * 1024));
-    throw new Error(`Video size exceeds the ${maxSizeMb}MB limit.`);
+    throw new Error(`El video no puede superar los ${bytesToMegabytes(maxSizeBytes)} MB.`);
   }
 
   if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
-    throw new Error('Invalid video format. Only .mp4 and .mov are allowed.');
+    throw new Error('Formato de video invalido. Usa MP4 o MOV.');
   }
 
   const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
   if (!ALLOWED_VIDEO_EXTENSIONS.includes(fileExtension)) {
-    throw new Error('Invalid video format. Only .mp4 and .mov are allowed.');
+    throw new Error('Formato de video invalido. Usa MP4 o MOV.');
   }
 
   return true;
@@ -44,14 +43,14 @@ export const validateVideoDuration = (file: File): Promise<boolean> => {
       window.URL.revokeObjectURL(videoElement.src);
 
       if (videoElement.duration > MAX_VIDEO_DURATION) {
-        reject(new Error('Video duration exceeds the 15-second limit.'));
+        reject(new Error('El video no puede superar los 15 segundos.'));
       }
       resolve(true);
     };
 
     videoElement.onerror = (): void => {
       window.URL.revokeObjectURL(videoElement.src);
-      reject(new Error('Could not read video file metadata.'));
+      reject(new Error('No se pudo leer la informacion del video.'));
     };
 
     videoElement.src = window.URL.createObjectURL(file);

@@ -11,6 +11,17 @@ import { ReviewVoteControls } from '../../components/ui/ReviewVoteControls';
 
 const PAGE_SIZE = 6;
 
+const dedupeClips = (items: WeeklyReview[]): WeeklyReview[] => {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (seen.has(item.reviewId)) {
+      return false;
+    }
+    seen.add(item.reviewId);
+    return true;
+  });
+};
+
 const ClipCard = ({
   clip,
   playing,
@@ -75,8 +86,8 @@ export const WeeklyClips = (): React.JSX.Element => {
         AnalyticsService.getWeeklyClips(nextPage, PAGE_SIZE),
         AnalyticsService.getMonthlyTopClips()
       ]);
-      setClips(result.items);
-      setTopClips(monthlyTop);
+      setClips(dedupeClips(result.items));
+      setTopClips(dedupeClips(monthlyTop));
       setTotalCount(result.totalCount);
       setPage(nextPage);
     } catch {

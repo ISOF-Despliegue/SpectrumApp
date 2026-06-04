@@ -1,10 +1,7 @@
 import type { ReviewFormValues } from '../types/reviews.types';
 import { validateImageFile } from './imageValidation';
 import { validateVideoMetadata } from './videoValidation';
-
-const MAX_REVIEW_CONTENT_LENGTH = 2000;
-const MAX_COMMENT_LENGTH = 500;
-const MAX_VIDEO_SIZE = 20 * 1024 * 1024;
+import { FIELD_LIMITS, FILE_LIMITS } from './validationRules';
 
 export const validateReviewForm = (values: ReviewFormValues): string | null => {
   if (!values.title.trim()) {
@@ -15,7 +12,7 @@ export const validateReviewForm = (values: ReviewFormValues): string | null => {
     return 'El contenido de la resena es obligatorio.';
   }
 
-  if (values.content.trim().length > MAX_REVIEW_CONTENT_LENGTH) {
+  if (values.content.trim().length > FIELD_LIMITS.reviewContent) {
     return 'La resena no puede superar los 2000 caracteres.';
   }
 
@@ -35,7 +32,7 @@ export const validateComment = (content: string): string | null => {
     return 'El comentario es obligatorio.';
   }
 
-  if (content.trim().length > MAX_COMMENT_LENGTH) {
+  if (content.trim().length > FIELD_LIMITS.commentContent) {
     return 'El comentario no puede superar los 500 caracteres.';
   }
 
@@ -50,7 +47,7 @@ export const validateReviewAttachment = (file: File): string | null => {
     }
 
     if (file.type.startsWith('video/')) {
-      validateVideoMetadata(file, MAX_VIDEO_SIZE);
+      validateVideoMetadata(file, FILE_LIMITS.videoBytes);
       return null;
     }
 

@@ -6,12 +6,14 @@ import { AuthService } from '../../services/auth.service';
 import spectrumLogo from '../../assets/images/common/SpectrumLogo.png';
 import styles from './Auth.module.css';
 import { getApiErrorKey, routeUserByRole } from './auth-flow.utils';
+import { FIELD_LIMITS } from '../../utilities/validationRules';
 
 export const VerifyRegistration: React.FC = () => {
   const { t } = useTranslation('auth');
   const navigate = useNavigate();
   const location = useLocation();
   const initialEmail = (location.state as { email?: string } | null)?.email || '';
+  const hasLockedEmail = Boolean(initialEmail);
 
   const [email, setEmail] = useState(initialEmail);
   const [code, setCode] = useState('');
@@ -73,6 +75,8 @@ export const VerifyRegistration: React.FC = () => {
               type="email"
               placeholder={t('emailPlaceholder')}
               value={email}
+              readOnly={hasLockedEmail}
+              maxLength={FIELD_LIMITS.email}
               onChange={(event) => setEmail(event.target.value)}
             />
             <Input
@@ -80,6 +84,7 @@ export const VerifyRegistration: React.FC = () => {
               type="text"
               placeholder="123456"
               value={code}
+              maxLength={6}
               onChange={(event) => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
             />
             <button type="submit" className={styles.submitButton} disabled={isLoading}>
@@ -90,6 +95,16 @@ export const VerifyRegistration: React.FC = () => {
           <button type="button" className={styles.secondaryButton} onClick={handleResend} disabled={isResending}>
             {isResending ? '...' : t('buttonResendCode')}
           </button>
+
+          {hasLockedEmail && (
+            <button
+              type="button"
+              className={styles.linkButton}
+              onClick={() => navigate('/register', { replace: true })}
+            >
+              Editar correo
+            </button>
+          )}
 
           <p className={styles.switchLink}>
             <span className={styles.accentText} onClick={() => navigate('/login')}>

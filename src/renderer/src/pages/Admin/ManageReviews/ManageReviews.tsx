@@ -8,6 +8,7 @@ import { Pagination } from '../../../components/ui/Pagination';
 import { ReviewCardPre } from '../../../components/ui/ReviewCards/ReviewCardPre';
 import { ReviewDetailModal } from '../../../components/ui/ReviewDetailModal';
 import { useToast } from '../../../components/ui/Toast';
+import { FIELD_LIMITS } from '../../../utilities/validationRules';
 
 const PAGE_SIZE = 10;
 
@@ -115,6 +116,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
           <input
             placeholder={t('manageReviews.gamePlaceholder')}
             value={gameQuery}
+            maxLength={FIELD_LIMITS.shortText}
             onChange={(event) => {
               setGameQuery(event.target.value);
               setSelectedGame(null);
@@ -132,7 +134,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
             </div>
           )}
         </div>
-        <input placeholder={t('manageReviews.reviewPlaceholder')} value={reviewSearch} onChange={(event) => setReviewSearch(event.target.value)} />
+        <input placeholder={t('manageReviews.reviewPlaceholder')} maxLength={FIELD_LIMITS.shortText} value={reviewSearch} onChange={(event) => setReviewSearch(event.target.value)} />
         <select value={sort} onChange={(event) => setSort(event.target.value)}>
           <option value="date_desc">{t('manageReviews.sort.dateDesc')}</option>
           <option value="date_asc">{t('manageReviews.sort.dateAsc')}</option>
@@ -162,6 +164,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
               score={review.rating}
               dislikes={review.dislikesCount}
               isOwnReview={review.isOwnReview}
+              userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
               onClick={() => setSelectedReview(review)}
             />
             <button
@@ -197,7 +200,7 @@ export const AdminManageReviews = (): React.JSX.Element => {
               <span>{t('manageReviews.deleteReasonLabel')}</span>
               <textarea
                 value={deleteReason}
-                maxLength={300}
+                maxLength={FIELD_LIMITS.mediumText}
                 minLength={10}
                 rows={4}
                 onChange={(event) => setDeleteReason(event.target.value)}

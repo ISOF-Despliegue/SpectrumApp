@@ -41,6 +41,7 @@ export const ReviewList = ({
           dislikes={review.dislikesCount}
           score={review.rating}
           isOwnReview={review.isOwnReview}
+          userVote={review.userVote ?? review.currentUserVote ?? review.myVote ?? null}
           onClick={() => onOpenReview(review)}
         />
       ))}

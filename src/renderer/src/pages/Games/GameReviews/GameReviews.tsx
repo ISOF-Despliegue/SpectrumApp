@@ -221,6 +221,7 @@ export const GameReviews = (): React.JSX.Element => {
         <main className={styles.centerColumn}>
           {isFormOpen && (
             <ReviewForm
+              key={editingReview?.id ?? 'create-review'}
               initialReview={editingReview}
               isSubmitting={isBusy}
               onCancel={() => {
