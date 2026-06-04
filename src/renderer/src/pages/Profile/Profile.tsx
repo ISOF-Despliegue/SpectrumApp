@@ -18,11 +18,13 @@ import { ClipUploadFlowModal } from '@renderer/components/ui/VideoComponents/Vid
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 import { ReviewDetailModal } from '../../components/ui/ReviewDetailModal';
 import { ReviewService } from '../../services/reviews.service';
-import type { Review } from '../../types/reviews.types';
+import type { Review, ReviewFormValues, UploadedReviewAttachment } from '../../types/reviews.types';
 import { FIELD_LIMITS } from '../../utilities/validationRules';
 import { useToast } from '../../components/ui/Toast';
 import { resolvePlatformIcon } from '../../components/ui/ProfileComponents/PlatformSelectionModal';
 import { ProfileReviewPreviewCard } from '../../components/ui/ProfileComponents/ProfileReviewPreviewCard';
+import { ReviewForm } from '../Games/GameReviews/ReviewForm';
+import { validateReviewForm } from '../../utilities/reviewValidation';
 
 /**
  * Main profile page component.
@@ -48,6 +50,8 @@ export const Profile: React.FC = () => {
   const [isClipWizardOpen, setIsClipWizardOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [isReviewBusy, setIsReviewBusy] = useState(false);
   const [isBlockConfirmOpen, setIsBlockConfirmOpen] = useState(false);
 
   const currentUser = AuthService.getCurrentUser();
@@ -165,6 +169,65 @@ export const Profile: React.FC = () => {
       toast.error(t('messages.profileUpdateError'));
     } finally {
       setIsBlockConfirmOpen(false);
+    }
+  };
+
+  const uploadAttachment = async (file?: File | null): Promise<UploadedReviewAttachment | null> => {
+    if (!file) {
+      return null;
+    }
+
+    return ReviewService.uploadAttachment(file);
+  };
+
+  const handleEditReview = (review: Review): void => {
+    setSelectedReview(null);
+    setEditingReview(review);
+  };
+
+  const handleSubmitReviewEdit = async (values: ReviewFormValues): Promise<void> => {
+    if (!editingReview) {
+      return;
+    }
+
+    const validationMessage = validateReviewForm(values);
+    if (validationMessage) {
+      toast.warning(validationMessage);
+      return;
+    }
+
+    try {
+      setIsReviewBusy(true);
+      const attachment = await uploadAttachment(values.file);
+      await ReviewService.update(editingReview.id, {
+        title: values.title.trim(),
+        content: values.content.trim(),
+        rating: values.rating,
+        imageUrl: attachment?.url ?? editingReview.attachmentUrl ?? editingReview.imageUrl,
+        mediaType: attachment?.mediaType ?? editingReview.attachmentType
+      });
+      toast.success(t('messages.reviewUpdated', { defaultValue: 'Reseña actualizada.' }));
+      setEditingReview(null);
+      await fetchData();
+    } catch {
+      toast.error(t('messages.profileUpdateError'));
+    } finally {
+      setIsReviewBusy(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string): Promise<void> => {
+    try {
+      setIsReviewBusy(true);
+      await ReviewService.delete(reviewId);
+      toast.success(t('messages.reviewDeleted', { defaultValue: 'Reseña eliminada.' }));
+      setSelectedReview(null);
+      await fetchData();
+    } catch {
+      toast.error(t('messages.profileUpdateError'));
+      throw new Error('reviewDeleteFailed');
+    } finally {
+      setIsReviewBusy(false);
     }
   };
 
@@ -388,9 +451,31 @@ export const Profile: React.FC = () => {
         />
       )}
 
+      {editingReview && (
+        <div className={styles.reviewEditOverlay} role="presentation" onMouseDown={() => setEditingReview(null)}>
+          <section
+            className={styles.reviewEditDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('sections.reviews')}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <ReviewForm
+              initialReview={editingReview}
+              isSubmitting={isReviewBusy}
+              onCancel={() => setEditingReview(null)}
+              onSubmit={handleSubmitReviewEdit}
+            />
+          </section>
+        </div>
+      )}
+
       <ReviewDetailModal
         review={selectedReview}
         isAuthenticated={AuthService.isAuthenticated()}
+        isBusy={isReviewBusy}
+        onEdit={handleEditReview}
+        onDelete={handleDeleteReview}
         onClose={() => setSelectedReview(null)}
       />
       <ConfirmationModal

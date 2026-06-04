@@ -251,6 +251,64 @@
   cursor: pointer;
 }
 
+.dropMeta {
+  display: grid;
+  gap: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.7rem;
+  color: #dbeafe;
+  text-align: left;
+}
+
+.statusNote {
+  display: block;
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.18);
+  padding: 0.75rem;
+  color: #f8fafc;
+}
+
+.joinButton,
+.claimButton {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 900;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.joinButton {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.claimButton {
+  background: #fde047;
+  color: #111827;
+}
+
+.winnerList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.winnerList strong {
+  flex-basis: 100%;
+}
+
+.winnerList span {
+  border: 1px solid rgba(253, 224, 71, 0.35);
+  border-radius: 999px;
+  background: rgba(253, 224, 71, 0.1);
+  padding: 0.35rem 0.6rem;
+  color: #fef3c7;
+}
+
 .empty,
 .loading {
   color: #cbd5e1;

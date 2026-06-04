@@ -39,6 +39,14 @@
   --radius: 8px;
 }
 
+.compact {
+  --icon-size: 20px;
+  --grid-columns: 26px 1fr;
+  --padding-size: 5px 9px;
+  --font-size: 0.82rem;
+  --radius: 8px;
+}
+
 .container:hover {
   border-color: #ff0051;
   box-shadow: 0 0 20px rgba(255, 0, 17, 0.4);

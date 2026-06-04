@@ -18,7 +18,7 @@ interface ReviewVoteControlsProps {
   currentUserVote?: Vote;
   myVote?: Vote;
   disabled?: boolean;
-  size?: 'small' | 'medium';
+  size?: 'compact' | 'small' | 'medium';
 }
 
 export const ReviewVoteControls = ({

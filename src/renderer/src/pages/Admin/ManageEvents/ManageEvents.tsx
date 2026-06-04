@@ -62,7 +62,9 @@ const fromEvent = (event: DropEvent): DropEventPayload => ({
 });
 
 const canEditEvent = (event: DropEvent): boolean => {
-  return event.status === 'UPCOMING' || event.status === 'SCHEDULED' || event.status === 'DRAFT';
+  const editableStatus = event.status === 'UPCOMING' || event.status === 'SCHEDULED' || event.status === 'DRAFT';
+  const editLockAt = new Date(event.startAt).getTime() - 10 * 60 * 1000;
+  return editableStatus && Date.now() < editLockAt && (event.winners?.length ?? 0) === 0;
 };
 
 export const AdminManageEvents = (): React.JSX.Element => {

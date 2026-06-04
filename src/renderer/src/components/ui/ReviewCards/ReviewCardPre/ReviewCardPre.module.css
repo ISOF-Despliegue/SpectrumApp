@@ -113,6 +113,11 @@
   justify-content: flex-end;
 }
 
+.compactScore {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .containerPre:hover {
   border-color: rgba(138, 43, 226, 0.8);
   box-shadow: 0 0 25px rgba(138, 43, 226, 0.15);
@@ -154,6 +159,39 @@
 
 .actionsCol, .interactions, .topActions {
   pointer-events: auto;
+}
+
+.homeVariant {
+  gap: 12px;
+  padding: 10px 12px;
+  min-height: 128px;
+}
+
+.homeVariant .gameCol {
+  transform: scale(0.82);
+  margin-inline: -8px;
+}
+
+.homeVariant .actionsCol {
+  min-width: 118px;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.homeVariant .topActions {
+  justify-content: flex-end;
+}
+
+.homeVariant .interactions {
+  justify-content: flex-end;
+}
+
+.homeVariant .reviewTitle {
+  font-size: 0.98rem;
+}
+
+.homeVariant .reviewSummary {
+  -webkit-line-clamp: 3;
 }
 
 .profileVariant {

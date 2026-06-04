@@ -11,7 +11,7 @@ interface LikeCardProps {
   disabled?: boolean;
   ariaLabel?: string;
   onToggle?: (active: boolean) => void;
-  size?: 'small' | 'medium';
+  size?: 'compact' | 'small' | 'medium';
 }
 
 export const LikeCard: React.FC<LikeCardProps> = ({

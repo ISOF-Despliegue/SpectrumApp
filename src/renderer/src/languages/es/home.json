@@ -10,7 +10,7 @@
   },
   "banner": {
     "fallbackTitle": "SPECTRUM",
-    "fallbackSubtitle": "Descubre juegos, reseñas y sorteos.",
+    "fallbackSubtitle": "Descubre juegos, resenas y sorteos.",
     "previous": "Ver banner anterior",
     "next": "Ver banner siguiente",
     "goTo": "Ver banner {{index}}"
@@ -20,8 +20,8 @@
     "loading": "Cargando inicio..."
   },
   "sections": {
-    "recentGames": "Juegos más recientes",
-    "popularReviews": "Reseñas populares hoy",
+    "recentGames": "Juegos mas recientes",
+    "popularReviews": "Resenas populares hoy",
     "weeklyDrop": "Sorteo de la semana"
   },
   "empty": {
@@ -30,21 +30,32 @@
     "weeklyDrops": "No hay sorteos esta semana."
   },
   "drops": {
-    "join": "Participar",
+    "join": "UNIRME AL SORTEO",
     "details": "Ver sorteo",
-    "joined": "Has entrado al sorteo.",
+    "joined": "Te has unido al sorteo.",
+    "joinedStatus": "Te has unido al sorteo.",
     "joinError": "No fue posible participar en este sorteo.",
-    "claim": "Canjear código",
+    "claim": "CANJEAR",
     "claimError": "No fue posible reclamar este sorteo.",
     "winner": "Ganador: {{username}}",
-    "winnerMessage": "Ganaste. Tu recompensa llegará a tu correo en las próximas 24 horas.",
+    "winners": "Ganadores: {{winners}}",
+    "winnersTitle": "Ganadores",
+    "winnerMessage": "FELICIDADES, ERES EL GANADOR. TU CODIGO HA SIDO ENVIADO A TU CORREO.",
     "finishedWithWinner": "Sorteo finalizado. Ganador: {{username}}.",
-    "claimUnavailable": "El sorteo ya no admite reclamos o no hay códigos disponibles.",
-    "aboutToStart": "El sorteo está por comenzar.",
-    "startsIn": "Faltan {{minutes}} min para que empiece.",
-    "modalTitle": "Has entrado al sorteo",
-    "revealActive": "La revelación está activa. Presiona reclamar para intentar obtener un código disponible.",
-    "claimSoon": "La reclamación se habilitará cuando llegue la hora de revelación.",
+    "claimUnavailable": "Los codigos ya fueron reclamados o el sorteo ya no admite canjes.",
+    "aboutToStart": "El sorteo esta por comenzar.",
+    "startsIn": "Faltan {{time}} para que inicie el registro.",
+    "closesIn": "Faltan {{time}} para que cierre el registro.",
+    "waitingReveal": "El codigo puede salir en cualquier momento, no despegues tu vista de la pantalla.",
+    "modalTitle": "Ver sorteo",
+    "revealActive": "La revelacion esta activa. Presiona CANJEAR para intentar obtener un codigo disponible.",
+    "claimSoon": "La reclamacion se habilitara cuando llegue la hora de revelacion.",
+    "registration": "Registro",
+    "reveal": "Revelacion",
+    "slots": "{{taken}}/{{total}} lugares",
+    "codes": "{{claimed}}/{{total}} codigos reclamados",
+    "full": "El sorteo acaba de llenar sus cupos. Gracias por intentarlo.",
+    "finished": "Sorteo finalizado.",
     "close": "Cerrar sorteo"
   },
   "reviews": {

@@ -11,7 +11,7 @@ interface DislikeCardProps {
   active?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
-  size?: 'small' | 'medium';
+  size?: 'compact' | 'small' | 'medium';
   onToggle?: (active: boolean) => void;
 }
 
