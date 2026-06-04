@@ -48,7 +48,7 @@ export interface DropEvent {
   finishedAt?: string | null;
   visibleUntil?: string | null;
   rewardSentAt?: string | null;
-  rewardDeliveryStatus: 'PENDING' | 'SENT';
+  rewardDeliveryStatus: 'PENDING' | 'SENT' | 'FAILED';
   participantsCount: number;
   participantCount?: number;
   rewardCodesAvailable: number;
@@ -63,7 +63,7 @@ export interface DropWinner {
   userId: string;
   username: string;
   claimedAt?: string | null;
-  deliveryStatus: 'PENDING' | 'SENT';
+  deliveryStatus: 'PENDING' | 'SENT' | 'FAILED';
 }
 
 export interface DropActionResult {
@@ -95,7 +95,6 @@ export interface DropEventPayload {
   totalSlots: number;
   publicChallengeCode?: string;
   accessKeys: string[];
-  publishNow?: boolean;
 }
 
 export type DropEventPage = PagedResult<DropEvent>;

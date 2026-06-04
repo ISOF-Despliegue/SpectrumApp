@@ -102,6 +102,24 @@
   color: #cbd5e0;
 }
 
+.dateTimeField {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.formGrid input[type='datetime-local'] {
+  width: 100%;
+  min-width: 0;
+  color-scheme: dark;
+}
+
+.formGrid input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1);
+  opacity: 0.85;
+}
+
 .autocomplete {
   position: relative;
 }
