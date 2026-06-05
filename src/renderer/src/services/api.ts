@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5283/api";
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined' && (window as any).electron) {
+    return "https://spectrum-server.tail0eee51.ts.net/api";
+  }
+  return import.meta.env.VITE_API_URL || "http://localhost:5283/api";
+};
+
+const API_BASE_URL = getBaseUrl();
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
