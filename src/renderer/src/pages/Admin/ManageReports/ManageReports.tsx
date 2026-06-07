@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './ManageReports.module.css';
-import { getReports, getReportDetails, updateReportStatus } from '../../../services/reports.service';
-import { toggleUserSuspension } from '../../../services/adminUsers.service';
+import { deleteReportedContent, getReports, getReportDetails, suspendReportedAuthor, updateReportStatus } from '../../../services/reports.service';
 import { ReportSummaryDto, ReportDetailsDto, ReportStatus, TargetType } from '../../../types/reports.types';
 import { ActionButton } from '../../../components/ui/ActionButton';
 import { Pagination } from '../../../components/ui/Pagination';
@@ -80,14 +79,15 @@ export const ManageReports = (): React.JSX.Element => {
     }
   };
 
-  const handleSuspendTargetUser = (userId: string): void => {
+  const handleSuspendTargetUser = (): void => {
     setConfirmAction({
       title: t('manageReports.confirmSuspendTitle'),
       message: t('manageReports.confirmSuspendMessage'),
       action: async () => {
         setIsProcessingAction(true);
         try {
-          await toggleUserSuspension(userId, true);
+          if (!selectedReportId) return;
+          await suspendReportedAuthor(selectedReportId, adminNotes.trim());
           toast.success(t('manageReports.userSuspended'));
         } catch (err: unknown) {
           const apiError = asApiError(err);
@@ -100,12 +100,33 @@ export const ManageReports = (): React.JSX.Element => {
   };
 
   const handleDeleteContent = (_targetId: string, targetType: TargetType): void => {
+    if (targetType !== 'REVIEW') {
+      toast.warning(t('manageReports.unsupportedDelete'));
+      return;
+    }
+
+    if (adminNotes.trim().length < 10) {
+      toast.warning(t('manageReviews.deleteReasonRequired'));
+      return;
+    }
+
     setConfirmAction({
       title: t('manageReports.confirmDeleteTitle'),
       message: t('manageReports.confirmDeleteMessage', { type: targetType }),
       action: async () => {
-        toast.success(t('manageReports.contentDeleted'));
-        await handleUpdateStatus('RESOLVED');
+        if (!selectedReportId) return;
+        setIsProcessingAction(true);
+        try {
+          await deleteReportedContent(selectedReportId, adminNotes.trim());
+          toast.success(t('manageReports.contentDeleted'));
+          setSelectedReportId(null);
+          setReportDetails(null);
+        } catch (err: unknown) {
+          const apiError = asApiError(err);
+          toast.error(apiError.response?.data?.title || t('manageReports.errorAction'));
+        } finally {
+          setIsProcessingAction(false);
+        }
       }
     });
   };
@@ -180,7 +201,7 @@ export const ManageReports = (): React.JSX.Element => {
             <div className={styles.actionGroup}>
               <h4>{t('manageReports.details.contentActions')}</h4>
               <div className={styles.buttonsInline}>
-                <ActionButton variant="suspend" onClick={() => handleSuspendTargetUser(reportDetails.targetId)} disabled={isProcessingAction}>
+                <ActionButton variant="suspend" onClick={handleSuspendTargetUser} disabled={isProcessingAction}>
                   {t('manageReports.details.suspendAuthor')}
                 </ActionButton>
                 <ActionButton variant="delete" onClick={() => handleDeleteContent(reportDetails.targetId, reportDetails.targetType)} disabled={isProcessingAction}>

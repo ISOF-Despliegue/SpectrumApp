@@ -4,6 +4,9 @@ export interface UserModerationDto {
   email: string;
   role: string;
   isSuspended: boolean;
+  isBanned: boolean;
+  isDeleted: boolean;
+  status: 'ACTIVE' | 'SUSPENDED' | 'BANNED' | 'DELETED';
   createdAt: string;
 }
 
@@ -20,7 +23,9 @@ export interface AdminUserDetailDto {
   email: string;
   role: string;
   isSuspended: boolean;
+  isBanned: boolean;
   isDeleted: boolean;
+  status: 'ACTIVE' | 'SUSPENDED' | 'BANNED' | 'DELETED';
   createdAt: string;
   avatarUrl?: string | null;
   totalReviews: number;

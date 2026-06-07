@@ -58,6 +58,7 @@
     "title": "User moderation",
     "searchPlaceholder": "Search by name or email...",
     "searchButton": "Search",
+    "filterStatus": "Status",
     "loading": "Loading users...",
     "empty": "No users found.",
     "errorLoad": "Error loading users.",
@@ -76,11 +77,15 @@
     },
     "status": {
       "active": "Active",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "banned": "Banned",
+      "deleted": "Deactivated"
     },
     "actions": {
       "reactivate": "Reactivate",
       "suspend": "Suspend",
+      "ban": "Ban",
+      "unban": "Unban",
       "viewProfile": "View profile"
     },
     "profile": {
@@ -107,6 +112,7 @@
     "statusUpdated": "Report marked as {{status}}.",
     "userSuspended": "User suspended preventively.",
     "contentDeleted": "The content was removed from the platform.",
+    "unsupportedDelete": "Only review content can be deleted from this flow for now.",
     "confirmSuspendTitle": "Suspend user",
     "confirmSuspendMessage": "Do you want to immediately suspend the user associated with this report?",
     "confirmDeleteTitle": "Delete content",
@@ -231,6 +237,10 @@
       "codeFormat": "Each real code must use format XXXX-XXXX-XXXX-XXXX.",
       "duplicateCodes": "Real codes cannot be duplicated.",
       "slots": "Total slots must be greater than zero.",
+      "startPast": "The start date cannot be in the past.",
+      "closeBeforeStart": "The join deadline cannot be before the start.",
+      "revealBeforeStart": "The reveal date cannot be before the start.",
+      "endBeforeReveal": "The end date cannot be before the reveal.",
       "dates": "Dates must follow start, join deadline, reveal, and end."
     },
     "pending": "Pending"

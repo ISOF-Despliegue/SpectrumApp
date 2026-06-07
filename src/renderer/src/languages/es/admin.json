@@ -59,6 +59,7 @@
     "title": "Moderación de usuarios",
     "searchPlaceholder": "Buscar por nombre o correo...",
     "searchButton": "Buscar",
+    "filterStatus": "Estado",
     "loading": "Cargando usuarios...",
     "empty": "No se encontraron usuarios.",
     "errorLoad": "Error al cargar los usuarios.",
@@ -77,11 +78,15 @@
     },
     "status": {
       "active": "Activo",
-      "suspended": "Suspendido"
+      "suspended": "Suspendido",
+      "banned": "Baneado",
+      "deleted": "Desactivado"
     },
     "actions": {
       "reactivate": "Reactivar",
       "suspend": "Suspender",
+      "ban": "Banear",
+      "unban": "Desbanear",
       "viewProfile": "Ver perfil"
     },
     "profile": {
@@ -108,6 +113,7 @@
     "statusUpdated": "Reporte marcado como {{status}}.",
     "userSuspended": "Usuario suspendido del sistema de forma preventiva.",
     "contentDeleted": "El contenido se eliminó de la plataforma.",
+    "unsupportedDelete": "Por ahora solo se puede eliminar contenido de tipo reseña desde este flujo.",
     "confirmSuspendTitle": "Suspender usuario",
     "confirmSuspendMessage": "¿Deseas aplicar una suspensión inmediata al usuario asociado a este reporte?",
     "confirmDeleteTitle": "Eliminar contenido",
@@ -232,6 +238,10 @@
       "codeFormat": "Cada código real debe tener formato XXXX-XXXX-XXXX-XXXX.",
       "duplicateCodes": "Los códigos reales no deben repetirse.",
       "slots": "Los lugares totales deben ser mayores a cero.",
+      "startPast": "La fecha de inicio no puede estar en el pasado.",
+      "closeBeforeStart": "La fecha de cierre no puede ser anterior al inicio.",
+      "revealBeforeStart": "La revelación no puede ser anterior al inicio.",
+      "endBeforeReveal": "La fecha de fin no puede ser anterior a la revelación.",
       "dates": "Las fechas deben seguir inicio, cierre, revelación y fin."
     },
     "pending": "Pendiente"

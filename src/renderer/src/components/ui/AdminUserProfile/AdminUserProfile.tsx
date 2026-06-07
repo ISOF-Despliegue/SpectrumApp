@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './AdminUserProfile.module.css';
 import { AdminUserDetailDto } from '../../../types/admin.types';
-import { getUserDetail, deleteUser, toggleUserSuspension } from '../../../services/adminUsers.service';
+import { getUserDetail, deleteUser, reactivateUser, toggleUserBan, toggleUserSuspension } from '../../../services/adminUsers.service';
 import { ActionButton } from '../../../components/ui/ActionButton';
 import { ProfileImageMedium } from '../../../components/ui/ProfileImageMedium';
 import { ConfirmationModal } from '../../../components/ui/ConfirmationModal';
@@ -28,6 +28,7 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isSuspendConfirmOpen, setIsSuspendConfirmOpen] = useState(false);
+  const [isBanConfirmOpen, setIsBanConfirmOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -52,14 +53,39 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
   const handleToggleSuspension = async (): Promise<void> => {
     if (!profile) return;
     try {
-      await toggleUserSuspension(profile.id, !profile.isSuspended);
-      setProfile({ ...profile, isSuspended: !profile.isSuspended });
-      toast.success(profile.isSuspended ? 'Usuario reactivado correctamente.' : 'Usuario desactivado correctamente.');
+      if (profile.isSuspended || profile.isDeleted || profile.isBanned) {
+        await reactivateUser(profile.id);
+        setProfile({ ...profile, isSuspended: false, isBanned: false, isDeleted: false, status: 'ACTIVE' });
+        toast.success(t('manageUsers.statusChanged'));
+      } else {
+        await toggleUserSuspension(profile.id, true);
+        setProfile({ ...profile, isSuspended: true, status: 'SUSPENDED' });
+        toast.success(t('manageUsers.statusChanged'));
+      }
     } catch (error: unknown) {
       const apiError = asApiError(error);
       toast.error(apiError.response?.data?.title || t('manageUsers.errorToggle'));
     } finally {
       setIsSuspendConfirmOpen(false);
+    }
+  };
+
+  const handleToggleBan = async (): Promise<void> => {
+    if (!profile) return;
+    try {
+      await toggleUserBan(profile.id, !profile.isBanned);
+      setProfile({
+        ...profile,
+        isBanned: !profile.isBanned,
+        isSuspended: !profile.isBanned,
+        status: !profile.isBanned ? 'BANNED' : 'ACTIVE'
+      });
+      toast.success(t('manageUsers.statusChanged'));
+    } catch (error: unknown) {
+      const apiError = asApiError(error);
+      toast.error(apiError.response?.data?.title || t('manageUsers.errorToggle'));
+    } finally {
+      setIsBanConfirmOpen(false);
     }
   };
 
@@ -79,6 +105,7 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
 
   if (isLoading) return <p className={styles.loadingText}>{t('manageUsers.loading')}</p>;
   if (!profile) return null;
+  const statusKey = (profile.status || (profile.isDeleted ? 'DELETED' : profile.isBanned ? 'BANNED' : profile.isSuspended ? 'SUSPENDED' : 'ACTIVE')).toLowerCase();
 
   return (
     <div className={styles.profileContainer}>
@@ -99,8 +126,8 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
           </p>
           <div className={styles.badges}>
             <span className={`${styles.badge} ${styles.badgeRole}`}>{profile.role}</span>
-            <span className={`${styles.badge} ${profile.isSuspended ? styles.badgeSuspended : styles.badgeActive}`}>
-              {profile.isSuspended ? t('manageUsers.status.suspended') : t('manageUsers.status.active')}
+            <span className={`${styles.badge} ${styles[`badge${statusKey}`]}`}>
+              {t(`manageUsers.status.${statusKey}`)}
             </span>
           </div>
         </div>
@@ -123,8 +150,17 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
             variant={profile.isSuspended ? 'change' : 'suspend'}
             onClick={() => setIsSuspendConfirmOpen(true)}
           >
-            {profile.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
+            {profile.isSuspended || profile.isDeleted || profile.isBanned ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
           </ActionButton>
+
+          {!profile.isDeleted && (
+            <ActionButton
+              variant={profile.isBanned ? 'change' : 'delete'}
+              onClick={() => profile.isBanned ? handleToggleBan() : setIsBanConfirmOpen(true)}
+            >
+              {profile.isBanned ? t('manageUsers.actions.unban') : t('manageUsers.actions.ban')}
+            </ActionButton>
+          )}
 
           <ActionButton
             variant="deleteProfile"
@@ -174,12 +210,22 @@ export const AdminUserProfile: React.FC<AdminUserProfileProps> = ({ userId, onBa
 
       <ConfirmationModal
         isOpen={isSuspendConfirmOpen}
-        title={profile.isSuspended ? t('manageUsers.confirmReactivateTitle') : t('manageUsers.confirmSuspendTitle')}
-        message={profile.isSuspended ? t('manageUsers.confirmReactivateMessage') : t('manageUsers.confirmSuspendMessage')}
-        confirmLabel={profile.isSuspended ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
-        variant={profile.isSuspended ? 'default' : 'danger'}
+        title={profile.isSuspended || profile.isDeleted || profile.isBanned ? t('manageUsers.confirmReactivateTitle') : t('manageUsers.confirmSuspendTitle')}
+        message={profile.isSuspended || profile.isDeleted || profile.isBanned ? t('manageUsers.confirmReactivateMessage') : t('manageUsers.confirmSuspendMessage')}
+        confirmLabel={profile.isSuspended || profile.isDeleted || profile.isBanned ? t('manageUsers.actions.reactivate') : t('manageUsers.actions.suspend')}
+        variant={profile.isSuspended || profile.isDeleted || profile.isBanned ? 'default' : 'danger'}
         onConfirm={handleToggleSuspension}
         onCancel={() => setIsSuspendConfirmOpen(false)}
+      />
+
+      <ConfirmationModal
+        isOpen={isBanConfirmOpen}
+        title={t('manageUsers.actions.ban')}
+        message={t('manageUsers.confirmSuspendMessage')}
+        confirmLabel={t('manageUsers.actions.ban')}
+        variant="danger"
+        onConfirm={handleToggleBan}
+        onCancel={() => setIsBanConfirmOpen(false)}
       />
 
       <ConfirmationModal

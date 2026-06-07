@@ -53,10 +53,19 @@ export const DropEventPanel = ({
   return (
     <section className={styles.panel}>
       <div className={styles.hero}>
-        {drop.imageUrl && <img className={styles.heroImage} src={drop.imageUrl} alt="" loading="lazy" />}
+        {drop.imageUrl ? (
+          <img className={styles.heroImage} src={drop.imageUrl} alt="" loading="lazy" />
+        ) : (
+          <div className={styles.heroImagePlaceholder} aria-hidden="true">
+            <span>{drop.gameTitle.slice(0, 2).toUpperCase()}</span>
+          </div>
+        )}
 
         <div className={styles.summary}>
-          <span className={styles.statusPill}>{drop.status}</span>
+          <div className={styles.titleMeta}>
+            <span className={styles.statusPill}>{drop.status}</span>
+            {isJoinedToDrop(drop) && <span className={styles.joinedPill}>{t('drops.joinedStatus')}</span>}
+          </div>
           <h1>{drop.title}</h1>
           <h2>
             {drop.gameTitle} · {drop.platform}

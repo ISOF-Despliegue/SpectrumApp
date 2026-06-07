@@ -31,3 +31,19 @@ export const updateReportStatus = async (
 ): Promise<void> => {
   await api.patch(`/admin/reports/${reportId}/status`, { status, adminNotes });
 };
+
+export const deleteReportedContent = async (reportId: string, adminNotes: string): Promise<void> => {
+  await api.post(`/admin/reports/${reportId}/delete-content`, {
+    status: 'RESOLVED',
+    adminNotes,
+    resolutionNotes: adminNotes
+  });
+};
+
+export const suspendReportedAuthor = async (reportId: string, adminNotes?: string): Promise<void> => {
+  await api.post(`/admin/reports/${reportId}/suspend-author`, {
+    status: 'PENDING',
+    adminNotes,
+    resolutionNotes: adminNotes
+  });
+};

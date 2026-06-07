@@ -74,16 +74,30 @@
   color: white;
 }
 
-.badgeActive {
+.badgeActive,
+.badgeactive {
   background: rgba(76, 175, 80, 0.2);
   color: #4CAF50;
   border: 1px solid #4CAF50;
 }
 
-.badgeSuspended {
+.badgeSuspended,
+.badgesuspended {
   background: rgba(244, 67, 54, 0.2);
   color: #F44336;
   border: 1px solid #F44336;
+}
+
+.badgebanned {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border: 1px solid #fbbf24;
+}
+
+.badgedeleted {
+  background: rgba(148, 163, 184, 0.18);
+  color: #cbd5e1;
+  border: 1px solid #94a3b8;
 }
 
 .metricsGrid {

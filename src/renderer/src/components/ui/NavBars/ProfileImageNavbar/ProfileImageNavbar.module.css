@@ -18,8 +18,17 @@
   border-color: #ad5c96;
 }
 
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
 .avatarImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
 }

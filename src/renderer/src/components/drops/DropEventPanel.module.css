@@ -11,13 +11,36 @@
   align-items: stretch;
 }
 
-.heroImage {
+.heroImage,
+.heroImagePlaceholder {
   width: 100%;
   min-height: 230px;
   max-height: 360px;
   border-radius: 8px;
-  object-fit: cover;
   background: #172033;
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+.heroImagePlaceholder {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.heroImagePlaceholder span {
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.16);
+  color: #e0f2fe;
+  font-size: 1.65rem;
+  font-weight: 900;
 }
 
 .summary {
@@ -46,7 +69,15 @@
   line-height: 1.55;
 }
 
-.statusPill {
+.titleMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.statusPill,
+.joinedPill {
   width: fit-content;
   border: 1px solid rgba(253, 224, 71, 0.4);
   border-radius: 999px;
@@ -54,6 +85,12 @@
   padding: 0.35rem 0.65rem;
   color: #fef3c7;
   font-weight: 800;
+}
+
+.joinedPill {
+  border-color: rgba(74, 222, 128, 0.36);
+  background: rgba(21, 128, 61, 0.18);
+  color: #bbf7d0;
 }
 
 .statusMessage,

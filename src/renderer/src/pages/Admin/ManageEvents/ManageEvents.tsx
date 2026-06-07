@@ -204,12 +204,28 @@ export const AdminManageEvents = (): React.JSX.Element => {
       return t('manageEvents.validation.slots');
     }
 
-    const hasValidDateOrder =
-      new Date(normalizeDateTimeLocalValue(form.startAt)) <
-        new Date(normalizeDateTimeLocalValue(form.joinDeadlineAt)) &&
-      new Date(normalizeDateTimeLocalValue(form.joinDeadlineAt)) <=
-        new Date(normalizeDateTimeLocalValue(form.revealAt)) &&
-      new Date(normalizeDateTimeLocalValue(form.revealAt)) < new Date(normalizeDateTimeLocalValue(form.endAt));
+    const startAt = new Date(normalizeDateTimeLocalValue(form.startAt));
+    const joinDeadlineAt = new Date(normalizeDateTimeLocalValue(form.joinDeadlineAt));
+    const revealAt = new Date(normalizeDateTimeLocalValue(form.revealAt));
+    const endAt = new Date(normalizeDateTimeLocalValue(form.endAt));
+
+    if (startAt.getTime() < Date.now()) {
+      return t('manageEvents.validation.startPast');
+    }
+
+    if (joinDeadlineAt < startAt) {
+      return t('manageEvents.validation.closeBeforeStart');
+    }
+
+    if (revealAt < startAt) {
+      return t('manageEvents.validation.revealBeforeStart');
+    }
+
+    if (endAt < revealAt) {
+      return t('manageEvents.validation.endBeforeReveal');
+    }
+
+    const hasValidDateOrder = startAt < joinDeadlineAt && joinDeadlineAt <= revealAt && revealAt < endAt;
 
     if (!hasValidDateOrder) {
       return t('manageEvents.validation.dates');

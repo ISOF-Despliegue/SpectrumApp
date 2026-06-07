@@ -10,6 +10,24 @@
   display: flex;
   gap: 15px;
   max-width: 600px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.statusFilter {
+  display: grid;
+  gap: 6px;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.statusFilter select {
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.78);
+  color: var(--text-color);
+  padding: 0 12px;
 }
 
 .tableContainer {
@@ -39,14 +57,32 @@
   color: var(--primary-color);
 }
 
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 700;
+}
+
 .statusActive {
   color: #4CAF50;
-  font-weight: 600;
+  background: rgba(76, 175, 80, 0.14);
 }
 
 .statusSuspended {
   color: #F44336;
-  font-weight: 600;
+  background: rgba(244, 67, 54, 0.14);
+}
+
+.statusBanned {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.14);
+}
+
+.statusDeleted {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.14);
 }
 
 .errorText {
