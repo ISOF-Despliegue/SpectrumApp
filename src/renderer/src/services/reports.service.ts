@@ -33,20 +33,20 @@ export const updateReportStatus = async (
 };
 
 export const deleteReportedContent = async (reportId: string, adminNotes: string): Promise<void> => {
-  // .NET mapea de forma nativa si mandamos el objeto plano con los requerimientos lógicos del DTO
-  await api.post(`admin/reports/${reportId}/delete-content`, {
-    newStatus: 'RESOLVED',
-    status: 'RESOLVED',
-    adminNotes: adminNotes,
-    resolutionNotes: adminNotes
+  // Mandamos las propiedades en PascalCase idéntico a las clases de C# para que no truene el serializador
+  await api.post(`/admin/reports/${reportId}/delete-content`, {
+    NewStatus: 'RESOLVED',
+    Status: 'RESOLVED',
+    AdminNotes: adminNotes,
+    ResolutionNotes: adminNotes
   });
 };
 
 export const suspendReportedAuthor = async (reportId: string, adminNotes?: string): Promise<void> => {
-  await api.post(`admin/reports/${reportId}/suspend-author`, {
-    newStatus: 'RESOLVED',
-    status: 'RESOLVED',
-    adminNotes: adminNotes,
-    resolutionNotes: adminNotes
+  await api.post(`/admin/reports/${reportId}/suspend-author`, {
+    NewStatus: 'RESOLVED',
+    Status: 'RESOLVED',
+    AdminNotes: adminNotes,
+    ResolutionNotes: adminNotes
   });
 };
