@@ -33,19 +33,20 @@ export const updateReportStatus = async (
 };
 
 export const deleteReportedContent = async (reportId: string, adminNotes: string): Promise<void> => {
-  await api.patch(`admin/reports/${reportId}/delete-content`, {
-    NewStatus: 'RESOLVED',
-    Status: 'RESOLVED',
-    AdminNotes: adminNotes,
-    ResolutionNotes: adminNotes
+  // .NET mapea de forma nativa si mandamos el objeto plano con los requerimientos lógicos del DTO
+  await api.post(`admin/reports/${reportId}/delete-content`, {
+    newStatus: 'RESOLVED',
+    status: 'RESOLVED',
+    adminNotes: adminNotes,
+    resolutionNotes: adminNotes
   });
 };
 
 export const suspendReportedAuthor = async (reportId: string, adminNotes?: string): Promise<void> => {
-  await api.patch(`admin/reports/${reportId}/suspend-author`, {
-    NewStatus: 'RESOLVED',
-    Status: 'RESOLVED',
-    AdminNotes: adminNotes,
-    ResolutionNotes: adminNotes
+  await api.post(`admin/reports/${reportId}/suspend-author`, {
+    newStatus: 'RESOLVED',
+    status: 'RESOLVED',
+    adminNotes: adminNotes,
+    resolutionNotes: adminNotes
   });
 };
