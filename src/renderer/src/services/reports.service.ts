@@ -33,17 +33,19 @@ export const updateReportStatus = async (
 };
 
 export const deleteReportedContent = async (reportId: string, adminNotes: string): Promise<void> => {
-  await api.post(`/admin/reports/${reportId}/delete-content`, {
-    status: 'RESOLVED',
-    adminNotes,
-    resolutionNotes: adminNotes
+  await api.post(`admin/reports/${reportId}/delete-content`, {
+    NewStatus: 'RESOLVED',
+    Status: 'RESOLVED',
+    AdminNotes: adminNotes,
+    ResolutionNotes: adminNotes
   });
 };
 
 export const suspendReportedAuthor = async (reportId: string, adminNotes?: string): Promise<void> => {
-  await api.post(`/admin/reports/${reportId}/suspend-author`, {
-    status: 'PENDING',
-    adminNotes,
-    resolutionNotes: adminNotes
+  await api.post(`admin/reports/${reportId}/suspend-author`, {
+    NewStatus: 'RESOLVED',
+    Status: 'RESOLVED',
+    AdminNotes: adminNotes,
+    ResolutionNotes: adminNotes
   });
 };
